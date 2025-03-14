@@ -1,21 +1,23 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 import random
+from dotenv import load_dotenv
+import os
 
-my_email = "kacagiderr@gmail.com"
-password = "arilthbsqqpzolzl"
+load_dotenv()
+my_email = os.getenv("KACA_GİDER_EMAİL")
+password = os.getenv("KACA_GİDER_EMAİL_PASSWORD")
 
 verification_code = random.randint(1000, 9999)
+
 
 def send_verification_mail(mail):
     msg = MIMEMultipart()
     msg['From'] = my_email
     msg['To'] = mail
     msg['Subject'] = "Subject: Hesabınızı Doğrulayın"
-    body = (f"Your verification code: {verification_code}")
+    body = f"Your verification code: {verification_code}"
     msg.attach(MIMEText(body, 'plain'))
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
