@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, jsonify, request
-from models.user import User
+from flask import Blueprint, jsonify, request
+from backend.models.user import User
 from werkzeug.security import check_password_hash, generate_password_hash
-from models.db import db
+from backend.models.db import db
 from mail_controller import send_verification_mail
 
 auth_bp = Blueprint('auth_bp', __name__)
