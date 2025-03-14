@@ -1,0 +1,39 @@
+.slick-prev, .slick-next {
+    width: 40px;
+    height: 40px;
+    background-color: black;
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+.card{
+    background-color: black !important;
+    color: white;
+    border-radius: 18px !important;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid rgb(251, 191, 36);
+}
+.product-info-container{
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    gap: 10px;
+}
+.info{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    color: white;
+    font-size: 12px !important;
+    font-weight: bold;
+    margin: 0;
+    background-color: #242424;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid rgb(251, 191, 36);
+    height: 25px;
+    width: 120px !important;
+}

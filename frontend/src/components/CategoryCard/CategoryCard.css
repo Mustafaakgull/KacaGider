@@ -1,0 +1,26 @@
+.card-container {
+    background-color: rgb(45,45,45) !important;
+    border-radius: 16px;
+    border: none;
+    width: 170px;
+    text-align: center;
+    color: #ffffff !important;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 1s ease, border 1s ease;
+}
+
+.card-container:hover {
+    border: 2px solid rgb(251, 191, 36);
+    scale: 1.1;
+}
+.category-card-container {
+    margin-top: 120px;
+}
+
+.category-icon{
+    font-size: 70px !important;
+    color: rgb(251, 191, 36);
+}
+
+

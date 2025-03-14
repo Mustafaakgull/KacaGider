@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    padding-top: 120px;
+    box-sizing: border-box;
+}
+
+.category-card-container {
+    margin-top: 120px;
+}
+
+.navbar{
+    background-color: rgb(251, 191, 36) !important;
+    color: #000000 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 5%;
+    font-size: 20px;
+    padding: 5px 20px;
+    box-sizing: border-box !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-list {
+    list-style: none;
+    display: flex;
+}
+
+.box, .user-rooms-box {
+    background-color: transparent;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    justify-content: center;
+    gap: 5px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.cup {
+    background-color: #242424;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 15px;
+    border-radius: 10px;
+    cursor: pointer !important;
+}
+
+.cup:hover {
+    background-color: #000;
+}
+
+.cup-icon {
+    font-size: 30px;
+    color: white;
+    margin-right: 5px;
+    display: flex;
+}
+
+.point {
+    color: #fff !important;
+    margin: 0;
+    font-weight: bold;
+}
+
+.icon {
+    padding: 0;
+    color: black;
+}
+
+.box:hover, .user-rooms-box:hover {
+    background-color: rgb(245, 158, 12) !important;
+    border: none;
+    border-radius: 10px;
+}
+
+.login-btn {
+    font-weight: bold;
+    color: #fff;
+    font-size: 16px;
+}
+
+.user-rooms-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: rgb(251, 191, 36);
+    color: black;
+    border-radius: 10px;
+}
+
+.user-rooms {
+    font-size: 20px;
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        background-color: rgb(251, 191, 36);
+    }
+
+    .user-rooms-box {
+        background-color: #242424;
+        color: rgb(251, 191, 36);
+    }
+
+    .cup {
+        background-color: #242424;
+    }
+
+    .box {
+        background-color: #242424;
+    }
+
+    .user-rooms-box:hover {
+        background-color: rgb(245, 158, 12) !important;
+    }
+}
+
+.box {
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+.box:hover, .user-rooms-box:hover {
+    background-color: rgb(245, 158, 12) !important;
+    border: none;
+    border-radius: 10px;
+}
+
+.card-container {
+    margin-top: 100px;
+}

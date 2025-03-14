@@ -1,0 +1,32 @@
+.login-dialog{
+    border: 3px solid white;
+}
+.register-dialog-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.form-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Reduced gap */
+    padding: 6px 0; /* Adjusted padding */
+}
+
+.input .MuiOutlinedInput-root {
+    background-color: rgb(51, 51, 51) !important;
+    border-radius: 4px !important;
+    padding: 5px;
+}
+
+.input .MuiInputLabel-root {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.input .MuiOutlinedInput-input {
+    color: #ffffff !important;
+    padding: 8px 14px !important;
+}
