@@ -1,14 +1,18 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
 from flask_restx import Api, Resource
 from werkzeug.security import check_password_hash, generate_password_hash
 from backend.models.user import User
 from backend.models.db import db
 from backend.controllers.mail_controller import send_verification_mail, verify_code
 import redis as r
-auth_bp = Blueprint('auth_bp', __name__)
-api = Api(auth_bp)
+test_call_bp = Blueprint('test_call_bp', __name__)
+api = Api(test_call_bp)
 
-@api.route('/register')
+
+# print(check_password_hash("scrypt:32768:8:1$J6fKjSZJxla229Cb$f7b1f22cf106b8748667f6ffc83a964aa2c573d309dc6ec474aeda0e3e82889b749009cc38d7d0adc74370059480cc8e28842e19cea6ad1eb00055d6fa3c266e","1"))
+
+
+@api.route('/register_test')
 class Register(Resource):
     def get(self):
         pass
@@ -24,11 +28,12 @@ class Register(Resource):
         new_user = User(username=username, email=email, password=hashed_password)
 
         try:
+            # logic change needed asap
             code = send_verification_mail(email)
             if verify_code(email, code) :
                 db.session.add(new_user)
                 db.session.commit()
-                return {"message": "User successfully registered"}, 201
+                return ({"message": "User successfully registered"}), 201
             return None
 
         except Exception as e:

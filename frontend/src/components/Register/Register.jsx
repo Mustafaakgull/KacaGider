@@ -3,14 +3,35 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import './Register.css'
 import ReCAPTCHA from "react-google-recaptcha";
+import io from "socket.io-client"
 
+
+const socket = io('http://localhost:5000');
 
 function RegisterDialog({ open, handleClose }) {
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+
+    const [form, setForm] = useState({ username: "", email: "",password: "" })
+
     function onChange(value) {
         console.log("Captcha value:", value);
+    }
+
+    const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(form)
+    };
+
+
+    function CheckInputs() {
+    socket.emit("check_values", form)
+    }
+    function RegisterationResponse() {
+        socket.on("registeration_response", (data) => {
+           if (data.success === true) {
+           // redirect to mini verification tab
+
+           }
+        })
     }
 
 
@@ -41,30 +62,33 @@ function RegisterDialog({ open, handleClose }) {
                 <Box className={'form-box'} sx={{ gap: 1.5 }}> {/* Reduced gap */}
                     <TextField
                         label="E-Mail"
+                        name="email"
                         variant="outlined"
                         fullWidth
                         size="small" // Smaller input size
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={form.email}
+                        onChange={handleChange}
                         className={'input'}
                     />
                     <TextField
                         label="Username"
+                        name="username"
                         variant="outlined"
                         fullWidth
                         size="small"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={form.username}
+                        onChange={handleChange}
                         className={'input'}
                     />
                     <TextField
                         label="Password"
+                        name="password"
                         type="password"
                         variant="outlined"
                         fullWidth
                         size="small"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={form.password}
+                        onChange={handleChange}
                         className={'input'}
                     />
                     <ReCAPTCHA
@@ -75,7 +99,7 @@ function RegisterDialog({ open, handleClose }) {
             </DialogContent>
 
             <DialogActions sx={{ px: 2, pb: 2 }}>
-                <Button
+                <Button onClick={CheckInputs}
                     fullWidth
                     variant="contained"
                     sx={{
