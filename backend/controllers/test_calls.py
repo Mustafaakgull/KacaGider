@@ -4,7 +4,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from backend.models.user import User
 from backend.models.db import db
 from backend.controllers.mail_controller import send_verification_mail, verify_code
-import redis as r
 test_call_bp = Blueprint('test_call_bp', __name__)
 api = Api(test_call_bp)
 
@@ -28,7 +27,6 @@ class Register(Resource):
         new_user = User(username=username, email=email, password=hashed_password)
 
         try:
-            # logic change needed asap
             code = send_verification_mail(email)
             if verify_code(email, code) :
                 db.session.add(new_user)
@@ -47,9 +45,7 @@ class Login(Resource):
         pass
 
     def post(self):
-
         data = request.get_json()
-
         username = data.get('username')
         password = data.get('password')
 

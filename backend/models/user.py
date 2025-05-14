@@ -8,8 +8,8 @@ from backend.models.db import db
 #     password = database.Column(database.String(100), nullable=False, )
 #     extend_existing = True
 
-    # def __repr__(self):
-    #     return f"<User {self.username}>"
+# def __repr__(self):
+#     return f"<User {self.username}>"
 class User(db.Model):
     __tablename__ = 'user'
     __table_args__ = {'extend_existing': True}

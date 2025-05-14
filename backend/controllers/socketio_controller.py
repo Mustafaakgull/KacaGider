@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_socketio import emit
 from backend.models.user import User
+
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -9,10 +10,12 @@ socketio = None
 current_count = 0
 current_text = ""
 
+
 def init_socketio(socketio_instance):
     global socketio
     socketio = socketio_instance
     register_handlers()
+
 
 def register_handlers():
     @socketio.on('check_values')
@@ -38,12 +41,10 @@ def register_handlers():
         if data.get("password") != data["password"]:
             pass
 
-
         if has_error:
             emit("registration_response", {"success": False, "errors": has_error})
         else:
             emit("registration_response", {"success": True})
-
 
     @socketio.on('connect')
     def handle_connect():

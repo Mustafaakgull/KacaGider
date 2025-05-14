@@ -14,6 +14,7 @@ import {Container} from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RegisterDialog from "../Register/Register.jsx"
+import VerifyCodeDialog from "../VerifyCode/VerifyCode.jsx"
 import LoginDialog from "../Login/Login.jsx"
 import {useState} from "react";
 
@@ -25,6 +26,7 @@ function Navbar() {
     };
 
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
+    const [verifyCodeDialogOpen, setVerifyCodeDialogOpen] = useState(false);
     const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
     const openRegisterDialog = () => {
@@ -124,7 +126,8 @@ function Navbar() {
                 )}
             </AppBar>
 
-            <RegisterDialog open={registerDialogOpen} handleClose={closeRegisterDialog}/>
+            <RegisterDialog open={registerDialogOpen} handleClose={closeRegisterDialog} openVerifyCodeDialog={() => setVerifyCodeDialogOpen(true)}/>
+            <VerifyCodeDialog open={verifyCodeDialogOpen} handleClose={() => setVerifyCodeDialogOpen(false)}/>
             <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}/>
         </>
     );
