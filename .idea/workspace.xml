@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f27552c7-75b6-48fb-a389-2fdcef454095" name="Changes" comment="login and register dialogs are integrated with backend, reset password and reset username methods are added. also register and login logic has updated">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/VerifyCode/VerifyCode.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/VerifyCode/VerifyCode.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/controllers/session_controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/KacaGider.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/KacaGider.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/controllers/auth_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/auth_controller.py" afterDir="false" />
@@ -16,18 +15,8 @@
       <change beforePath="$PROJECT_DIR$/backend/controllers/socketio_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/socketio_controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/controllers/test_calls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/test_calls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/controllers/user_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/user_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/helpers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Login/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Navbar2/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Navbar2/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Register/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Register/Register.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/alembic.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/env.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/script.py.mako" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/tables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,12 +51,12 @@
     &quot;assignee&quot;: &quot;Mustafaakgull&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:Mustafaakgull/KacaGider.git",
-    "accountId": "51770be1-d4f0-40ba-8139-6ede58793a05"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:Mustafaakgull/KacaGider.git&quot;,
+    &quot;accountId&quot;: &quot;51770be1-d4f0-40ba-8139-6ede58793a05&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -93,7 +82,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "/Users/mustafa/Desktop/Webstorm/src/main.js",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "settings.editor.selected.configurable": "editor.preferences.completion",
     "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -143,7 +132,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-WS-243.26053.12" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PY-251.25410.159" />
+        <option value="bundled-python-sdk-e0ed3721d81e-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.159" />
       </set>
     </attachedChunks>
   </component>
@@ -161,18 +151,42 @@
       <workItem from="1747043905402" duration="349000" />
       <workItem from="1747044282392" duration="1535000" />
       <workItem from="1747232006651" duration="14909000" />
+      <workItem from="1747386487163" duration="1086000" />
+      <workItem from="1747388042567" duration="440000" />
+      <workItem from="1747389250231" duration="20056000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="login and register dialogs are integrated with backend, reset password and reset username methods are added. also register and login logic has updated" />
     <option name="LAST_COMMIT_MESSAGE" value="login and register dialogs are integrated with backend, reset password and reset username methods are added. also register and login logic has updated" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/controllers/user_controller.py</url>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/KacaGider$test_calls.coverage" NAME="test_calls Coverage Results" MODIFIED="1747045242788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/controllers" />
-    <SUITE FILE_PATH="coverage/KacaGider$app.coverage" NAME="app Coverage Results" MODIFIED="1747045485081" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/KacaGider$app.coverage" NAME="app Coverage Results" MODIFIED="1747402018306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
   </component>
 </project>

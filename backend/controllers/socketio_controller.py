@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_socketio import emit
-from backend.models.user import User
+from backend.models.tables import User
 
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
@@ -46,19 +46,3 @@ def register_handlers():
         else:
             emit("registration_response", {"success": True})
 
-    @socketio.on('connect')
-    def handle_connect():
-        emit('update_count', {'count': current_count})
-        emit('update_text', {'text': current_text})
-
-    @socketio.on('click')
-    def handle_click():
-        global current_count
-        current_count += 1
-        emit('update_count', {'count': current_count}, broadcast=True)
-
-    @socketio.on('text_update')
-    def handle_text_update(data):
-        global current_text
-        current_text = data['text']
-        emit('update_text', {'text': current_text}, broadcast=True)
