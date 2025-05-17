@@ -66,7 +66,7 @@ function Navbar() {
                                     textDecoration: 'none',
                                 }}
                             >
-                                KACA GIDER?
+                                KACA GIDER???
                             </Typography>
                         </Box>
                         <Box sx={{display: {xs: 'none', md: 'flex'}, flexDirection: 'row', alignItems: 'center'}}>
