@@ -1,9 +1,11 @@
 from flask import Blueprint, request
 from flask_restx import Api, Resource
 from werkzeug.security import check_password_hash, generate_password_hash
-from backend.models.user import User
+from backend.models.tables import User
 from backend.models.db import db
 from backend.controllers.mail_controller import send_verification_mail, verify_code
+from backend.controllers.session_controller import create_session
+from backend.models.redis_client import redis_client
 test_call_bp = Blueprint('test_call_bp', __name__)
 api = Api(test_call_bp)
 
@@ -39,7 +41,7 @@ class Register(Resource):
             return {"message": str(e)}, 400
 
 
-@api.route('/login')
+@api.route('/login_test')
 class Login(Resource):
     def get(self):
         pass
@@ -54,7 +56,17 @@ class Login(Resource):
         if not user:
             return {"message": "User not found"}, 404
 
-        if check_password_hash(user.password, password):
-            return {"message": "Login successful"}, 200
+        elif user.password == password:
+
+            return {"message": "Login successful","session_id":f"{create_session(username)}"}, 200
+
+        elif check_password_hash(user.password, password):
+            response = create_session(username)
+            return {"message": "Login successful","response":f"{response}","response_else":""}, 200
         else:
             return {"message": "Wrong Password"}, 401
+@api.route('/session_test')
+class session(Resource):
+    def get(self):
+        # not working right now
+        return {"message": f"{request.cookies.get('session_id')}","m2": f"{redis_client.get("session:omerke")}"}, 200

@@ -1,8 +1,7 @@
 Flask~=3.1.0
 flask_sqlalchemy
 flask-restx
-Flask-Migrate
-Flask-Session
+flask-socketio
 mysqlclient
 python-dotenv~=1.0.1
 alembic~=1.15.1

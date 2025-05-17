@@ -4,16 +4,18 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask
 from backend.models.db import db
-from flask_migrate import Migrate
 from flask_socketio import SocketIO
 from controllers.socketio_controller import socketio_bp, init_socketio
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # This will allow all domains
+
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:incirseverim123@localhost:3306/kaca_gider'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:incirseverim123@localhost:3306/kaca_gider'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:13041998@localhost:3306/kaca_gider'
 db.init_app(app)
-migrate = Migrate(app, db)
 
 from controllers.auth_controller import auth_bp
 from controllers.user_controller import user_bp
@@ -33,4 +35,5 @@ if __name__ == '__main__':
         host='127.0.0.1',
         port=5000,
         use_reloader=False,
-        allow_unsafe_werkzeug=True)
+        allow_unsafe_werkzeug=True,
+        )
