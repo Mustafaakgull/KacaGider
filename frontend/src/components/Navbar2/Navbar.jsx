@@ -72,7 +72,7 @@ function Navbar() {
                         <Box sx={{display: {xs: 'none', md: 'flex'}, flexDirection: 'row', alignItems: 'center'}}>
                             <Box className="user-rooms-box" sx={{mr: 2}}>
                                 <PeopleAltOutlinedIcon className="user-icon" fontSize="large"/>
-                                <p className="user-rooms">User Rooms</p>
+                                <p className="user-rooms">User Rooms denemepush</p>
                             </Box>
                             <Box sx={{mr: 2}} className="cup" onClick={openRegisterDialog}>
                                 <PersonAddIcon className="cup-icon" fontSize="large"/>
