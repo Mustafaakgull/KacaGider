@@ -5,6 +5,7 @@ from backend.models.tables import User
 from backend.models.db import db
 from backend.controllers.mail_controller import send_verification_mail, verify_code
 from backend.controllers.session_controller import create_session, delete_session
+
 auth_bp = Blueprint('auth_bp', __name__)
 api = Api(auth_bp)
 
@@ -19,7 +20,8 @@ class Register(Resource):
         email = data.get('email')
         try:
             send_verification_mail(email)
-            return {"message": "verification code sent","email": email,"username": username,"password": password}, 200
+            return {"message": "verification code sent", "email": email, "username": username,
+                    "password": password}, 200
         except Exception as e:
             return {"message": str(e)}, 400
 
@@ -45,10 +47,12 @@ class Login(Resource):
         else:
             return {"message": "Wrong Password"}, 401
 
+
 @api.route('/logout')
 class Logout(Resource):
     def get(self):
         pass
+
     def post(self):
         delete_session(request.cookies.get('session_id'))
         return {"message": "Logout successful"}, 200

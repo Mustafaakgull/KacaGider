@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_socketio import emit
 from backend.models.tables import User
-
+from backend.models.redis_client import redis_client
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -45,4 +45,13 @@ def register_handlers():
             emit("registration_response", {"success": False, "errors": has_error})
         else:
             emit("registration_response", {"success": True})
+
+
+def game_handlers():
+    @socketio.on('guess_button_clicked')
+    def handle_guess_button_clicked(data):
+#         assuming data is price and user
+#         redis_client.
+        pass
+
 
