@@ -26,6 +26,7 @@ class User(db.Model):
             "email": self.email
         }
 
+
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
     __table_args__ = {'extend_existing': True}
@@ -36,6 +37,8 @@ class Vehicle(db.Model):
     transmission = db.Column(db.String(100), nullable=False)
     fuel_type = db.Column(db.String(100), nullable=False)
     model_year = db.Column(db.String(100), nullable=False)
+    model_name = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.String(100), nullable=False)
 
     def to_dict(self):
         return {
@@ -44,8 +47,11 @@ class Vehicle(db.Model):
             "km": self.km,
             "transmission": self.transmission,
             "fuel_type": self.fuel_type,
-            "model_year": self.model_year
+            "model_year": self.model_year,
+            "model_name": self.model_name,
+            "price": self.price,
         }
+
 
 class House(db.Model):
     __tablename__ = 'house'
@@ -57,6 +63,7 @@ class House(db.Model):
     room_count = db.Column(db.String(100), nullable=False)
     square_meter = db.Column(db.String(100), nullable=False)
     building_age = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.String(100), nullable=False)
 
     def to_dict(self):
         return {
@@ -65,5 +72,6 @@ class House(db.Model):
             "district": self.district,
             "room_count": self.room_count,
             "square_meter": self.square_meter,
-            "building_age": self.building_age
+            "building_age": self.building_age,
+            "price": self.price,
         }
