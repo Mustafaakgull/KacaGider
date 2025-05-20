@@ -21,6 +21,10 @@ import {useState} from "react";
 function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
+    const [registerUsername, setRegisterUsername] = useState("");
+    const [registerEmail, setRegisterEmail] = useState("");
+    const [registerPassword, setRegisterPassword] = useState("");
+
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
     };
@@ -126,8 +130,25 @@ function Navbar() {
                 )}
             </AppBar>
 
-            <RegisterDialog open={registerDialogOpen} handleClose={closeRegisterDialog} openVerifyCodeDialog={() => setVerifyCodeDialogOpen(true)}/>
-            <VerifyCodeDialog open={verifyCodeDialogOpen} handleClose={() => setVerifyCodeDialogOpen(false)}/>
+            <RegisterDialog
+                open={registerDialogOpen}
+                handleClose={closeRegisterDialog}
+                openVerifyCodeDialog={() => setVerifyCodeDialogOpen(true)}
+                setUsername={setRegisterUsername}
+                setEmail={setRegisterEmail}
+                setPassword={setRegisterPassword}
+                username={registerUsername}
+                email={registerEmail}
+                password={registerPassword}
+            />
+
+            <VerifyCodeDialog
+                open={verifyCodeDialogOpen}
+                handleClose={() => setVerifyCodeDialogOpen(false)}
+                username={registerUsername}
+                email={registerEmail}
+                password={registerPassword}
+            />
             <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}/>
         </>
     );

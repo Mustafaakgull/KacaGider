@@ -8,11 +8,9 @@ import axios from "axios";
 
 const url = "http://127.0.0.1:5000";
 
-function RegisterDialog({ open, handleClose, openVerifyCodeDialog }) {
+function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, setEmail, setPassword, username, email, password }) {
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+
     const [captchaToken, setCaptchaToken] = useState(null);
 
     const handleChange = (event) => {
@@ -26,7 +24,8 @@ function RegisterDialog({ open, handleClose, openVerifyCodeDialog }) {
         } else if (name === "captcha") {
             setCaptchaToken(value);
         }
-    }
+    };
+
 
 
     const handleRegister = () => {
@@ -34,10 +33,17 @@ function RegisterDialog({ open, handleClose, openVerifyCodeDialog }) {
             alert("Please fill in all fields");
             return;
         }
+        const data= {
+            username: username,
+            password: password,
+            email: email,
+        }
         try {
             axios.post(url + '/register', {
-                email: email,
-            }).then(r => alert(r))
+                username: data.username,
+                password: data.password,
+                email: data.email,
+            }).then(r => r)
         }
         catch (error) {
             console.error("Error during registration:", error);
