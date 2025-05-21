@@ -3,35 +3,54 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import './Register.css'
 import ReCAPTCHA from "react-google-recaptcha";
-import io from "socket.io-client"
+import axios from "axios";
 
 
-const socket = io('http://localhost:5000');
+const url = "http://127.0.0.1:5000";
 
-function RegisterDialog({ open, handleClose }) {
+function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, setEmail, setPassword, username, email, password }) {
 
-    const [form, setForm] = useState({ username: "", email: "",password: "" })
 
-    function onChange(value) {
-        console.log("Captcha value:", value);
-    }
+    const [captchaToken, setCaptchaToken] = useState(null);
 
-    const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    console.log(form)
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        if (name === "username") {
+            setUsername(value);
+        } else if (name === "email") {
+            setEmail(value);
+        } else if (name === "password") {
+            setPassword(value);
+        } else if (name === "captcha") {
+            setCaptchaToken(value);
+        }
     };
 
 
-    function CheckInputs() {
-    socket.emit("check_values", form)
-    }
-    function RegisterationResponse() {
-        socket.on("registeration_response", (data) => {
-           if (data.success === true) {
-           // redirect to mini verification tab
 
-           }
-        })
+    const handleRegister = () => {
+        if (!email || !username || !password) {
+            alert("Please fill in all fields");
+            return;
+        }
+        const data= {
+            username: username,
+            password: password,
+            email: email,
+        }
+        try {
+            axios.post(url + '/register', {
+                username: data.username,
+                password: data.password,
+                email: data.email,
+            }).then(r => r)
+        }
+        catch (error) {
+            console.error("Error during registration:", error);
+        }
+
+        handleClose();
+        openVerifyCodeDialog();
     }
 
 
@@ -65,8 +84,8 @@ function RegisterDialog({ open, handleClose }) {
                         name="email"
                         variant="outlined"
                         fullWidth
-                        size="small" // Smaller input size
-                        value={form.email}
+                        size="small"
+                        value={email}
                         onChange={handleChange}
                         className={'input'}
                     />
@@ -76,7 +95,7 @@ function RegisterDialog({ open, handleClose }) {
                         variant="outlined"
                         fullWidth
                         size="small"
-                        value={form.username}
+                        value={username}
                         onChange={handleChange}
                         className={'input'}
                     />
@@ -87,19 +106,19 @@ function RegisterDialog({ open, handleClose }) {
                         variant="outlined"
                         fullWidth
                         size="small"
-                        value={form.password}
+                        value={password}
                         onChange={handleChange}
                         className={'input'}
                     />
                     <ReCAPTCHA
                         sitekey="6LdQ0PIqAAAAAI7ot30prHy0ue9j9O2Ly5TeYzWB"
-                        onChange={onChange}
+                        onChange={handleChange}
                     />
                 </Box>
             </DialogContent>
 
             <DialogActions sx={{ px: 2, pb: 2 }}>
-                <Button onClick={CheckInputs}
+                <Button onClick={handleRegister}
                     fullWidth
                     variant="contained"
                     sx={{

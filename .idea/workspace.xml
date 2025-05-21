@@ -4,10 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="f27552c7-75b6-48fb-a389-2fdcef454095" name="Changes" comment="First Commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/controllers/auth_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/auth_controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/user.py" afterDir="false" />
+=======
+    <list default="true" id="f27552c7-75b6-48fb-a389-2fdcef454095" name="Changes" comment="login and register dialogs are integrated with backend, reset password and reset username methods are added. also register and login logic has updated">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/controllers/game_logic_controller.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/create_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/auth_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/auth_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/session_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/session_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/socketio_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/socketio_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/helpers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/tables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" />
+>>>>>>> 8f88d040e55c5cfe3c2bed18f84d129583d13b4f
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,8 +61,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Mustafaakgull/KacaGider.git&quot;,
-    &quot;accountId&quot;: &quot;6a59b822-94b4-4c10-a561-99ee59485705&quot;
+    &quot;url&quot;: &quot;git@github.com:Mustafaakgull/KacaGider.git&quot;,
+    &quot;accountId&quot;: &quot;51770be1-d4f0-40ba-8139-6ede58793a05&quot;
   }
 }</component>
   <component name="ProblemsViewState">
@@ -65,7 +82,7 @@
     "Python.test_calls.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "last_opened_file_path": "C:/Users/yigid/PycharmProjects/KacaGider/backend/controllers",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -73,7 +90,11 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "/Users/mustafa/Desktop/Webstorm/src/main.js",
+<<<<<<< HEAD
     "settings.editor.selected.configurable": "editor.preferences.inline.completion",
+=======
+    "settings.editor.selected.configurable": "editor.preferences.completion",
+>>>>>>> 8f88d040e55c5cfe3c2bed18f84d129583d13b4f
     "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -123,8 +144,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PY-251.25410.122" />
-        <option value="bundled-python-sdk-880ecab49056-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.122" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PY-251.25410.159" />
+        <option value="bundled-python-sdk-e0ed3721d81e-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.159" />
       </set>
     </attachedChunks>
   </component>
@@ -140,16 +161,52 @@
       <workItem from="1746989069882" duration="2970000" />
       <workItem from="1747032013635" duration="5743000" />
       <workItem from="1747043905402" duration="349000" />
+<<<<<<< HEAD
       <workItem from="1747044282392" duration="2228000" />
       <workItem from="1747054787254" duration="970000" />
+=======
+      <workItem from="1747044282392" duration="1535000" />
+      <workItem from="1747232006651" duration="14909000" />
+      <workItem from="1747386487163" duration="1086000" />
+      <workItem from="1747388042567" duration="440000" />
+      <workItem from="1747389250231" duration="20056000" />
+>>>>>>> 8f88d040e55c5cfe3c2bed18f84d129583d13b4f
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="login and register dialogs are integrated with backend, reset password and reset username methods are added. also register and login logic has updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="login and register dialogs are integrated with backend, reset password and reset username methods are added. also register and login logic has updated" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/controllers/user_controller.py</url>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+>>>>>>> 8f88d040e55c5cfe3c2bed18f84d129583d13b4f
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/KacaGider$test_calls.coverage" NAME="test_calls Coverage Results" MODIFIED="1747045242788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/controllers" />
-    <SUITE FILE_PATH="coverage/KacaGider$app.coverage" NAME="app Coverage Results" MODIFIED="1747045485081" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/KacaGider$app.coverage" NAME="app Coverage Results" MODIFIED="1747402018306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
   </component>
 </project>
