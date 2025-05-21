@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_socketio import emit
 from backend.models.tables import User
 from backend.models.redis_client import redis_client
@@ -15,6 +15,8 @@ def init_socketio(socketio_instance):
     global socketio
     socketio = socketio_instance
     register_handlers()
+    game_handlers()
+    chat_handler()
 
 
 def register_handlers():
@@ -55,3 +57,21 @@ def game_handlers():
         pass
 
 
+def chat_handler():
+    @socketio.on('connect')
+    def handle_connect():
+        print('Client connected')
+
+    @socketio.on('disconnect')
+    def handle_disconnect():
+        print('Client disconnected')
+
+    @socketio.on('send_message')
+    def handle_message(data):
+        username = redis_client.hget(f"session:{request.cookies.get('session_id')}", "username")
+        message = data.get('message', '')
+
+        emit('receive_message', {
+            'username': username,
+            'message': message
+        }, broadcast=True)

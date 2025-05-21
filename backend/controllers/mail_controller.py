@@ -38,7 +38,6 @@ def verify_code(email, code):
     if not saved_code:
         return False
 
-    # Redis'ten gelen değer bytes türünde olabilir, decode et
     saved_code = saved_code.decode() if isinstance(saved_code, bytes) else saved_code
 
     if code == saved_code:

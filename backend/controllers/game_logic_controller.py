@@ -33,13 +33,14 @@ def clicked_guess(guessed_price):
 
 
 def game_finished(game_session):
+    session_cookie = request.cookies.get("session_id")
+
     all_guessed_prices = redis_client.hgetall(f"guessed_prices:{game_session}")
-    all_guessed_prices = {k.decode(): v.decode() for k, v in all_guessed_prices.items()}
     for guessed_price in all_guessed_prices:
     #     todo tüm fiyatları al, sonra puanları hesapla hepsini leaderboard a göm
 
-    user = redis_client.hgetall(f"session:{session_cookie}")
-    redis_client.zadd(f"leaderboard:{user['current_room']}", {f"{user['username']}": percentage_to_keep})
+        user = redis_client.hgetall(f"session:{session_cookie}")
+        redis_client.zadd(f"leaderboard:{user['current_room']}", {f"{user['username']}": percentage_to_keep})
 
     pass
 
