@@ -3,12 +3,17 @@ from backend.models.db import db
 from backend.models.tables import User, House, Vehicle
 from backend.controllers.session_controller import create_game_session
 # noinspection PyUnresolvedReferences
-from flask import make_response, request
-
+from flask import make_response, request, Blueprint
+from flask_socketio import emit
+from flask_restx import Api, Resource
 SESSION_TIME = 3600
 GAME_TIME = 100
 
+test_game_logic_bp = Blueprint('test_game_logic_bp', __name__)
 
+api = Api(test_game_logic_bp)
+
+@api.route('/click_guess')
 def clicked_guess(guessed_price):
     cookie_session = request.cookies.get("session_id")
 
@@ -31,7 +36,7 @@ def clicked_guess(guessed_price):
     else:
         return {"message": "maximum number of guesses reached"}, 400
 
-
+@api.route('/game_finished')
 def game_finished(game_session):
     cookie_session = request.cookies.get("session_id")
 

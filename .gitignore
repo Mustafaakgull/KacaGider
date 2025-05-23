@@ -26,6 +26,7 @@ dist-ssr
 .idea/workspace.xml
 
 # Byte-compiled / optimized / DLL files
+backend/controllers/__pycache__/*
 __pycache__/
 *.py[cod]
 *$py.class

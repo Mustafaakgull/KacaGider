@@ -1,7 +1,3 @@
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask
 from backend.models.db import db
 from flask_socketio import SocketIO
@@ -19,7 +15,7 @@ db.init_app(app)
 
 from controllers.auth_controller import auth_bp
 from controllers.user_controller import user_bp
-from controllers.test_calls import test_call_bp
+from backend.controllers.test_calls import test_call_bp
 
 app.register_blueprint(test_call_bp)
 app.register_blueprint(user_bp)
@@ -28,6 +24,17 @@ app.register_blueprint(socketio_bp)
 
 init_socketio(socketio)
 
+# sonra silincek, test için
+from backend.models.redis_client import redis_client
+
+redis_client.hset(f"test:car", mapping={
+    "km": 7500,
+    "model_name": "audi",
+    "model_year": "2022",
+    "transmission_type": "otomatik",
+    "fuel_type": "benzin",
+    "price": 1000000,
+})
 if __name__ == '__main__':
     socketio.run(
         app,
