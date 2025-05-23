@@ -23,6 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.idea/workspace.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
