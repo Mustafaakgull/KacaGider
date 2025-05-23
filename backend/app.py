@@ -9,12 +9,12 @@ from controllers.socketio_controller import socketio_bp, init_socketio
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # This will allow all domains
+CORS(app, resources={r"/*": {"origins": "*"}})  # geliştirme için
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:incirseverim123@localhost:3306/kaca_gider'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:13041998@localhost:3306/kaca_gider'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:incirseverim123@localhost:3306/kaca_gider'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:13041998@localhost:3306/kaca_gider'
 db.init_app(app)
 
 from controllers.auth_controller import auth_bp

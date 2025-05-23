@@ -38,8 +38,35 @@ def verify_code(email, code):
     if not saved_code:
         return False
 
+    saved_code = saved_code.decode() if isinstance(saved_code, bytes) else saved_code
+
     if code == saved_code:
         redis_client.delete(f"verify:{email}")
         return True
     else:
-        return jsonify({"error": "Invalid code"}), 400
+        return False
+
+
+# def verify_code(email, code):
+#     saved_code = redis_client.get(f"verify:{email}")
+#     if not saved_code:
+#         print("CODE NOT FOUND IN REDIS")
+#         return False
+#
+#     if isinstance(saved_code, bytes):
+#         saved_code = saved_code.decode()
+#
+#     print(f"[DEBUG] Comparing codes: user={code} redis={saved_code}")
+#     return code == saved_code
+
+
+#
+# def verify_code(email, code):
+#     saved_code = redis_client.get(name=f"verify:{email}")
+#     if not saved_code:
+#         return False
+#
+#     if code == saved_code.decode():  # ✅ decode şart
+#         redis_client.delete(f"verify:{email}")
+#         return True
+#     return False

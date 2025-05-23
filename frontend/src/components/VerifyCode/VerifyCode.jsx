@@ -14,12 +14,19 @@ function VerifyCodeDialog({ open, handleClose, email, username, password }) {
     }, [open]);
 
     const handleVerify = () => {
+        const data = {
+            email: email,
+            username: username,
+            password: password,
+            code: code.join("")
+        }
+        console.log(typeof data, data);
         try{
             axios.post(url + '/verify', {
-                email: email,
-                username: username,
-                password: password,
-                code: code.join("")
+                email: data.email,
+                username: data.username,
+                password: data.password,
+                code: data.code,
             }).then(r => {
                 alert(r.data);
                 handleClose();

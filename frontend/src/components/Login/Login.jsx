@@ -20,24 +20,24 @@ function LoginDialog({ open, handleClose }) {
             alert("Please complete the CAPTCHA");
         }
         try {
-            axios.post(url + 'login', {
-                username,
-                password,
+            axios.post(url + '/login', {
+                username: username,
+                password: password,
             }).then(r => {
-                console.log(r.data);
-                if (r.data === "Login successfully") {
-                    alert("Login successfully");
+                console.log("r.data", r.data.message);
+                if (r.data.message === "Login successful") {
+                    alert("Login successfulls");
                     handleClose();
-                } else if (r.data === "Invalid username or password") {
+                } else if (r.data.message === "Invalid username or password") {
                     alert("Invalid username or password");
                 } else {
-                    alert("Login failed");
+                    alert("Login failed2");
                 }
             });
             handleClose();
         } catch (e) {
             console.error("Login error:", e);
-            alert("Login failed");
+            alert("Login failed1");
         }
     }
 

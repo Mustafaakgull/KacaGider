@@ -21,6 +21,10 @@ import {useState} from "react";
 function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
+    const [registerUsername, setRegisterUsername] = useState("");
+    const [registerEmail, setRegisterEmail] = useState("");
+    const [registerPassword, setRegisterPassword] = useState("");
+
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
     };
@@ -66,13 +70,13 @@ function Navbar() {
                                     textDecoration: 'none',
                                 }}
                             >
-                                KACA GIDER?
+                                KACA GIDER???
                             </Typography>
                         </Box>
                         <Box sx={{display: {xs: 'none', md: 'flex'}, flexDirection: 'row', alignItems: 'center'}}>
                             <Box className="user-rooms-box" sx={{mr: 2}}>
                                 <PeopleAltOutlinedIcon className="user-icon" fontSize="large"/>
-                                <p className="user-rooms">User Rooms</p>
+                                <p className="user-rooms">User Rooms denemepush</p>
                             </Box>
                             <Box sx={{mr: 2}} className="cup" onClick={openRegisterDialog}>
                                 <PersonAddIcon className="cup-icon" fontSize="large"/>
@@ -126,8 +130,25 @@ function Navbar() {
                 )}
             </AppBar>
 
-            <RegisterDialog open={registerDialogOpen} handleClose={closeRegisterDialog} openVerifyCodeDialog={() => setVerifyCodeDialogOpen(true)}/>
-            <VerifyCodeDialog open={verifyCodeDialogOpen} handleClose={() => setVerifyCodeDialogOpen(false)}/>
+            <RegisterDialog
+                open={registerDialogOpen}
+                handleClose={closeRegisterDialog}
+                openVerifyCodeDialog={() => setVerifyCodeDialogOpen(true)}
+                setUsername={setRegisterUsername}
+                setEmail={setRegisterEmail}
+                setPassword={setRegisterPassword}
+                username={registerUsername}
+                email={registerEmail}
+                password={registerPassword}
+            />
+
+            <VerifyCodeDialog
+                open={verifyCodeDialogOpen}
+                handleClose={() => setVerifyCodeDialogOpen(false)}
+                username={registerUsername}
+                email={registerEmail}
+                password={registerPassword}
+            />
             <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}/>
         </>
     );
