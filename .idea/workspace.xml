@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f27552c7-75b6-48fb-a389-2fdcef454095" name="Changes" comment="adding session system, configuring auth methods, dropping migrate and adding new tables">
-      <change afterPath="$PROJECT_DIR$/backend/controllers/game_logic_controller.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/create_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/auth_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/auth_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/session_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/session_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/socketio_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/socketio_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/helpers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/models/tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/tables.py" afterDir="false" />
-    </list>
+    <list default="true" id="f27552c7-75b6-48fb-a389-2fdcef454095" name="Changes" comment="added game_logic_controller, changes in session logic, and overall improvements" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,26 +55,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.app.executor": "Run",
-    "Python.create_db.executor": "Run",
-    "Python.test_calls.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/yigid/PycharmProjects/KacaGider/backend/controllers",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "/Users/mustafa/Desktop/Webstorm/src/main.js",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.create_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_calls.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/yigid/PycharmProjects/KacaGider/backend/controllers&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/Users/mustafa/Desktop/Webstorm/src/main.js&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\yigid\PycharmProjects\KacaGider\backend\controllers" />
@@ -178,7 +168,7 @@
       <workItem from="1747389250231" duration="20361000" />
       <workItem from="1747554264540" duration="6358000" />
       <workItem from="1747588663593" duration="2124000" />
-      <workItem from="1747643110001" duration="17726000" />
+      <workItem from="1747643110001" duration="18431000" />
     </task>
     <task id="LOCAL-00001" summary="adding session system, configuring auth methods, dropping migrate and adding new tables">
       <option name="closed" value="true" />
@@ -188,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747416375658</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added game_logic_controller, changes in session logic, and overall improvements">
+      <option name="closed" value="true" />
+      <created>1747677835939</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747677835939</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,7 +206,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="login and register dialogs are integrated with backend, reset password and reset username methods are added. also register and login logic has updated" />
     <MESSAGE value="adding session system, configuring auth methods, dropping migrate and adding new tables" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding session system, configuring auth methods, dropping migrate and adding new tables" />
+    <MESSAGE value="added game_logic_controller, changes in session logic, and overall improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="added game_logic_controller, changes in session logic, and overall improvements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
