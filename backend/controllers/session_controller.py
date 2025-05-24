@@ -34,6 +34,12 @@ def create_session(username):
         samesite='Lax',  # controls cross-site behavior
         max_age=SESSION_TIME
     )
+
+    # SONRA SİLİNECEK
+    print("response" + response)
+    print("session id "+session_id)
+    print()
+
     return response
 
 

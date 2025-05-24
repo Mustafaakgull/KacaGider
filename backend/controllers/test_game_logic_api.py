@@ -13,7 +13,6 @@ test_game_logic_bp = Blueprint('test_game_logic_bp', __name__)
 
 api = Api(test_game_logic_bp)
 
-@api.route('/click_guess')
 def clicked_guess(guessed_price):
     cookie_session = request.cookies.get("session_id")
 
@@ -25,9 +24,14 @@ def clicked_guess(guessed_price):
 
         # TODO REAL PRICE WILL BE IN ANOTHER REDIS DB THAT COMES FROM SCRAPING
         real_price = redis_client.hget(f"test:car", "price")
+        real_price = int(real_price)
         percentage_to_keep = (guessed_price / real_price) * 100
         redis_client.hset(f"guessed_prices:{user['current_room']}_{user['username']}", mapping={f"{user['username']}": guessed_price})
-
+        print(percentage_to_keep)
+        print(real_price)
+        print(guessed_price)
+        print(user)
+        print(user["current_room"])
         if percentage_to_keep < 100:
             return {"message": "successfully guessed", "hint": "You need to guess higher"}, 200
         else:
@@ -36,7 +40,7 @@ def clicked_guess(guessed_price):
     else:
         return {"message": "maximum number of guesses reached"}, 400
 
-@api.route('/game_finished')
+
 def game_finished(game_session):
     cookie_session = request.cookies.get("session_id")
 
@@ -55,6 +59,7 @@ def game_finished(game_session):
             continue
 
         guessed_price = int(data[username])
+        real_price = int(real_price)
 
         percentage_to_keep = (guessed_price / real_price) * 100
         leaderboard_key = f"leaderboard:{user['current_room']}"
@@ -63,6 +68,18 @@ def game_finished(game_session):
         print(f"Added {username} with score {percentage_to_keep} to {leaderboard_key}")
 
 
+
+
+
+@api.route('/click_guess')
+class click_guess(Resource):
+    def get(self):
+        clicked_guess(request.get_json().get("guessed_price"))
+
+@api.route('/game_finished')
+class game_finished(Resource):
+    def get(self):
+        game_finished(request.get_json().get("game_session"))
 
 
 def new_games():
