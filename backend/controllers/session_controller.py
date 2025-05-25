@@ -58,7 +58,7 @@ def join_game_session(game_session):
     redis_client.hset(f"session:{request.cookies.get('session_id')}", "current_room", game_session)
 
 
-def check_session_user():
+def get_session_username():
     return redis_client.hget(f"session:{request.cookies.get('session_id')}", "username")
 
 
