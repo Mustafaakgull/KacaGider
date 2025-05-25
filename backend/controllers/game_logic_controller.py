@@ -27,12 +27,12 @@ def clicked_guess(guessed_price):
         print(user)
 
         if percentage_to_keep < 100:
-            return {"message": "successfully guessed", "hint": "You need to guess higher"}, 200
+            return {"message": "successfully guessed", "hint": "You need to guess higher", "status": 200}
         else:
-            return {"message": "successfully guessed", "hint": "You need to guess lower"}, 200
+            return {"message": "successfully guessed", "hint": "You need to guess lower", "status": 200}
 
     else:
-        return {"message": "maximum number of guesses reached"}, 400
+        return {"message": "maximum number of guesses reached", "status": 400}
 
 
 def game_finished(game_session):
@@ -64,4 +64,4 @@ def game_finished(game_session):
 
 def new_games():
     scrape_vehicle("otomobil")
-    scrape_vehicle("motorsiklet")
+    scrape_vehicle("motosiklet")
