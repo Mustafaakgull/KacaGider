@@ -20,8 +20,13 @@ def clicked_guess(guessed_price):
 
         # TODO REAL PRICE WILL BE IN ANOTHER REDIS DB THAT COMES FROM SCRAPING
         real_price = redis_client.hget(f"test:car", "price")
+        real_price = int(real_price)
         percentage_to_keep = (guessed_price / real_price) * 100
         redis_client.hset(f"guessed_prices:{user['current_room']}_{user['username']}", mapping={f"{user['username']}": guessed_price})
+        print(percentage_to_keep)
+        print(real_price)
+        print(guessed_price)
+        print(user)
 
         if percentage_to_keep < 100:
             return {"message": "successfully guessed", "hint": "You need to guess higher"}, 200
@@ -50,6 +55,7 @@ def game_finished(game_session):
             continue
 
         guessed_price = int(data[username])
+        real_price = int(real_price)
 
         percentage_to_keep = (guessed_price / real_price) * 100
         leaderboard_key = f"leaderboard:{user['current_room']}"

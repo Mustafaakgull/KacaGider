@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from flask_socketio import emit
 from backend.models.tables import User
 from backend.models.redis_client import redis_client
+from backend.controllers.game_logic_controller import clicked_guess, game_finished
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -51,58 +52,8 @@ def register_handlers():
 
 def game_handlers():
 
-    SESSION_TIME = 3600
-    GAME_TIME = 100
-
-    @socketio.on('guess_button_clicked')
-    def clicked_guess(guessed_price):
-        cookie_session = request.cookies.get("session_id")
-
-        user = redis_client.hgetall(f"session:{cookie_session}")
-
-        if int(user["guess_count"]) <= 3:
-
-            redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
-
-            # TODO REAL PRICE WILL BE IN ANOTHER REDIS DB THAT COMES FROM SCRAPING
-            real_price = redis_client.hget(f"test:car", "price")
-            percentage_to_keep = (guessed_price / real_price) * 100
-            redis_client.hset(f"guessed_prices:{user['current_room']}_{user['username']}",
-                              mapping={f"{user['username']}": guessed_price})
-
-            if percentage_to_keep < 100:
-                return {"message": "successfully guessed", "hint": "You need to guess higher"}, 200
-            else:
-                return {"message": "successfully guessed", "hint": "You need to guess lower"}, 200
-
-        else:
-            return {"message": "maximum number of guesses reached"}, 400
-
-    @socketio.on('guess_button_clicked')
-    def game_finished(game_session):
-
-        cookie_session = request.cookies.get("session_id")
-        user = redis_client.hgetall(f"session:{cookie_session}")
-        keys = redis_client.keys(f"guessed_prices:{game_session}:*")
-        real_price = redis_client.hget(f"test:car", "price")
-
-        for key in keys:
-            _, room, username = key.split(":")
-            data = redis_client.hgetall(key)
-
-            # guess count reset
-            redis_client.hset(f"session:{cookie_session}", "guess_count", 0)
-
-            if username not in data:
-                continue
-
-            guessed_price = int(data[username])
-
-            percentage_to_keep = (guessed_price / real_price) * 100
-            leaderboard_key = f"leaderboard:{user['current_room']}"
-            redis_client.zadd(leaderboard_key, {username: percentage_to_keep})
-            redis_client.hset(key, username, 0)
-            print(f"Added {username} with score {percentage_to_keep} to {leaderboard_key}")
+    socketio.on('guess_button_clicked')(clicked_guess)
+    socketio.on('game_finished')(game_finished)
 
 
 def chat_handler():
