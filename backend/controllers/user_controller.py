@@ -13,7 +13,4 @@ class ListUsers(Resource):
         users = User.query.all()
         user_dicts = [user.to_dict() for user in users]
 
-        return jsonify({"message": user_dicts})
-
-    def post(self):
-        pass
+        return {"message": user_dicts}
