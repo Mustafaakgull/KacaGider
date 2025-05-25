@@ -1,10 +1,8 @@
 from backend.models.redis_client import redis_client
-from backend.models.db import db
-from backend.models.tables import User, House, Vehicle
 from backend.controllers.session_controller import create_game_session
 # noinspection PyUnresolvedReferences
 from flask import make_response, request
-
+from scraping import scrape_vehicle
 SESSION_TIME = 3600
 GAME_TIME = 100
 
@@ -64,23 +62,6 @@ def game_finished(game_session):
         print(f"Added {username} with score {percentage_to_keep} to {leaderboard_key}")
 
 
-
-
 def new_games():
-    car = Vehicle.query.filter_by(type="car").first()
-    car_dict = car.to_dict()
-    create_game_session(car)
-    redis_client.hset("public_room_car", mapping=car_dict)
-    redis_client.expire("public_room_car", SESSION_TIME)
-
-    motorcycle = Vehicle.query.filter_by(type="motorcycle").first()
-    motorcycle_dict = motorcycle.to_dict()
-    create_game_session(motorcycle)
-    redis_client.hset(f"public_room_motorcycle", mapping=motorcycle_dict)
-    redis_client.expire("public_room_motorcycle", SESSION_TIME)
-
-    house = House.query.first()
-    house_dict = house.to_dict()
-    create_game_session(house)
-    redis_client.hset(f"public_room_house", mapping=house_dict)
-    redis_client.expire("public_room_house", SESSION_TIME)
+    scrape_vehicle("otomobil")
+    scrape_vehicle("motorsiklet")
