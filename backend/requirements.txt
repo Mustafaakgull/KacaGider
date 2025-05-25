@@ -9,3 +9,5 @@ SQLAlchemy~=2.0.27
 Werkzeug~=3.1.3
 redis
 flask-cors
+requests
+bs4
