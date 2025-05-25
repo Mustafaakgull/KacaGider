@@ -6,7 +6,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
 
-function LoginDialog({ open, handleClose }) {
+function LoginDialog({ open, handleClose, onLoginSuccess }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [captchaToken, setCaptchaToken] = useState(null);
@@ -14,6 +14,17 @@ function LoginDialog({ open, handleClose }) {
     function onChange(value) {
         console.log("Captcha value:", value);
     }
+
+    axios.post("http://127.0.0.1:5000/login", {
+        username,
+        password
+    }, {
+        withCredentials: true
+    })
+        .then(res => {
+            onLoginSuccess(username); // <- burası önemli
+            handleClose();
+        })
 
     const handleLogin=() => {
         if (captchaToken === null) {

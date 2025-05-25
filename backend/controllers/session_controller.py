@@ -36,7 +36,7 @@ def create_session(username):
     )
 
     # SONRA SİLİNECEK
-    print("response" + response)
+    print("response" + str(response))
     print("session id "+session_id)
     print()
 

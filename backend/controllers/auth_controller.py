@@ -5,6 +5,8 @@ from backend.models.tables import User
 from backend.models.db import db
 from backend.controllers.mail_controller import send_verification_mail, verify_code
 from backend.controllers.session_controller import create_session, delete_session
+from backend.models.redis_client import redis_client
+
 
 auth_bp = Blueprint('auth_bp', __name__)
 api = Api(auth_bp)
@@ -104,3 +106,18 @@ class ResetUsername(Resource):
         User.query.filter_by(email=email).update({"username": new_username})
         db.session.commit()
         return {"message": "Username reset successfully"}, 200
+
+@api.route('/whoami')
+class WhoAmI(Resource):
+    def get(self):
+        session_id = request.cookies.get("session_id")
+        if not session_id:
+            return {"username": None}, 401
+
+        username = redis_client.hget(f"session:{session_id}", "username")
+        if username:
+            print('username', username.decode())
+            return {"username": username.decode()}, 200
+
+        return {"username": None}, 401
+

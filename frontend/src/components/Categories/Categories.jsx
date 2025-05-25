@@ -10,8 +10,6 @@ function Categories() {
     const categories = [
         {id: 1, name: 'Car', player: 26},
         {id: 2, name: 'Bike', player: 15},
-        {id: 3, name: 'Bus', player: 40},
-        {id: 4, name: 'Truck', player: 20}
     ];
 
     return (

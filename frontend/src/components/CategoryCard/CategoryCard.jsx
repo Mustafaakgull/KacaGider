@@ -1,15 +1,16 @@
 import './CategoryCard.css';
 import CarRentalIcon from '@mui/icons-material/CarRental';
-import BikeScooterIcon from '@mui/icons-material/BikeScooter';
-import BusAlertIcon from '@mui/icons-material/BusAlert';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Car } from "phosphor-react";
+
+import { FaMotorcycle } from "react-icons/fa";
+
+
+
 
 const iconMap = {
-    Car: <CarRentalIcon className={'category-icon'} />,
-    Bike: <BikeScooterIcon className={'category-icon'} />,
-    Bus: <BusAlertIcon className={'category-icon'} />,
-    Truck: <LocalShippingIcon className={'category-icon'} />
+    Car: <Car size={66} className={'category-icon'}/>,
+    Bike: <FaMotorcycle size={66} className={'category-icon'} />,
 };
 
 function CategoryCard({ category }) {

@@ -28,7 +28,6 @@ function VerifyCodeDialog({ open, handleClose, email, username, password }) {
                 password: data.password,
                 code: data.code,
             }).then(r => {
-                alert(r.data);
                 handleClose();
             })
         }
