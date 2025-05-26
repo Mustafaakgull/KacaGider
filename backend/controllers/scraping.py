@@ -32,7 +32,7 @@ def scrape_vehicle(type):
     soup2 = BeautifulSoup(car_page_res, "html.parser")
     photos = soup2.find_all("div", class_="swiper-slide")
     values = soup2.find_all("div", class_="property-item")
-
+    price = soup2.find("div", class_="desktop-information-price").get_text(strip=True)
     for info in values:
         info_key_list.append(info.find('div', class_="property-key").get_text(strip=True))
         info_value_list.append(info.find('div', class_="property-value").get_text(strip=True))
@@ -42,6 +42,7 @@ def scrape_vehicle(type):
     photo_link_list = photo_link_list[:len(photo_link_list) // 2]
 
     result = dict(zip(info_key_list, info_value_list))
+    result.update({"fiyat": price})
     print(page_url)
     print(result)
     print(photo_link_list)

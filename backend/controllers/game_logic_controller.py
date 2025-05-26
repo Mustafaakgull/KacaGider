@@ -20,7 +20,7 @@ def clicked_guess(guessed_price):
         real_price = redis_client.hget(f"test:car", "price")
         real_price = int(real_price)
         percentage_to_keep = (guessed_price / real_price) * 100
-        redis_client.hset(f"guessed_prices:{user['current_room']}_{user['username']}", mapping={f"{user['username']}": guessed_price})
+        redis_client.hset(f"guessed_prices:{user['current_room']}",{user['username']}, guessed_price)
         print(percentage_to_keep)
         print(real_price)
         print(guessed_price)
@@ -37,29 +37,22 @@ def clicked_guess(guessed_price):
 
 def game_finished(game_session):
     cookie_session = request.cookies.get("session_id")
-
-    user = redis_client.hgetall(f"session:{cookie_session}")
-    keys = redis_client.keys(f"guessed_prices:{game_session}:*")
     real_price = redis_client.hget(f"test:car", "price")
 
-    for key in keys:
-        _, room, username = key.split(":")
-        data = redis_client.hgetall(key)
+    data = redis_client.hgetall(f"guessed_prices:{game_session}")
 
-        # guess count reset
-        redis_client.hset(f"session:{cookie_session}", "guess_count", 0)
+    # burada muhtemelen gerekli userların countu 0 olmayacak da 1 tanesinin olacak, bug var muhtemel
+    redis_client.hset(f"session:{cookie_session}", "guess_count", 0)
 
-        if username not in data:
-            continue
+    real_price = int(real_price)
 
-        guessed_price = int(data[username])
-        real_price = int(real_price)
-
-        percentage_to_keep = (guessed_price / real_price) * 100
-        leaderboard_key = f"leaderboard:{user['current_room']}"
-        redis_client.zadd(leaderboard_key, {username: percentage_to_keep})
-        redis_client.hset(key, username, 0)
-        print(f"Added {username} with score {percentage_to_keep} to {leaderboard_key}")
+    for user,guess in data.items():
+        int(guess)
+        percentage_to_keep = (guess / real_price) * 100
+        leaderboard_key = f"leaderboard:{game_session}"
+        redis_client.zadd(leaderboard_key, {user: percentage_to_keep})
+        redis_client.hset(f"guessed_prices:{game_session}", user, 0)
+        print(f"Added {user} with score {percentage_to_keep} to {leaderboard_key}")
 
 
 def new_games():

@@ -3,6 +3,7 @@ from flask_socketio import emit
 from backend.models.tables import User
 from backend.models.redis_client import redis_client
 from backend.controllers.game_logic_controller import clicked_guess, game_finished
+from backend.controllers.session_controller import join_game_session
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -54,11 +55,36 @@ def game_handlers():
 
     socketio.on('guess_button_clicked')(clicked_guess)
     socketio.on('game_finished')(game_finished)
+    @socketio.on("join_game_room")
+    def join_game_room(data):
+        join_game_session(data)
+# when user go back to the main page it will probably not revert it back it is a bug
 
-# todo send scraped data to frontend as json
-# todo send leaderboard data to frontend
-# todo mini_leaderboard data to frontend
-# todo user count data to frontend
+def info_handler():
+
+    @socketio.on("take_vehicle_data")
+    def send_vehicle_data(type):
+        data = redis_client.hgetall(f"info:{type}")
+        emit("vehicle_data:", data)
+
+    @socketio.on("take_leaderboard_data")
+    def send_leaderboard_data():
+        leaderboard = redis_client.zrevrange("leaderboard", 0, -1, withscores=True)
+        data = [{"username": name, "score": int(score)} for name, score in leaderboard]
+
+        emit("leaderboard_data", data)
+    @socketio.on("take_top3_leaderboard_data")
+    def send_top3_from_leaderboard():
+        leaderboard = redis_client.zrevrange("leaderboard", 0, 9, withscores=True)
+
+        data = [{"username": name, "score": int(score)} for name, score in leaderboard]
+
+        emit("leaderboard_data_top3", data)
+    @socketio.on("take_user_count")
+    def send_user_count(room):
+        data = redis_client.hlen(room)
+        emit("room_user_count", data)
+
 
 def chat_handler():
     @socketio.on('connect')
