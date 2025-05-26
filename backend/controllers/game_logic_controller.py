@@ -2,7 +2,7 @@ from backend.models.redis_client import redis_client
 from backend.controllers.session_controller import create_game_session
 # noinspection PyUnresolvedReferences
 from flask import make_response, request
-from scraping import scrape_vehicle
+from backend.controllers.scraping import scrape_vehicle
 SESSION_TIME = 3600
 GAME_TIME = 100
 

@@ -55,6 +55,10 @@ def game_handlers():
     socketio.on('guess_button_clicked')(clicked_guess)
     socketio.on('game_finished')(game_finished)
 
+# todo send scraped data to frontend as json
+# todo send leaderboard data to frontend
+# todo mini_leaderboard data to frontend
+# todo user count data to frontend
 
 def chat_handler():
     @socketio.on('connect')

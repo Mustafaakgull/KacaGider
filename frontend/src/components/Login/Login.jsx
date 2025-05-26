@@ -21,12 +21,17 @@ function LoginDialog({ open, handleClose, onLoginSuccess }) {
     }, {
         withCredentials: true
     })
-        .then(res => {
-            onLoginSuccess(username); // <- burası önemli
-            handleClose();
-        })
+        .then(r => {
+                console.log("r.data", r.data.message);
+                if (r.data.message === "Login successful") {
+                    onLoginSuccess(username); // <- burada çağır
+                    handleClose();
+                }
+            }
+        )
 
-    const handleLogin=() => {
+
+            const handleLogin=() => {
         if (captchaToken === null) {
             alert("Please complete the CAPTCHA");
         }
