@@ -44,8 +44,8 @@ class Login(Resource):
             return {"message": "User not found"}, 404
 
         if check_password_hash(user.password, password):
-            create_session(username)
-            return {"message": "Login successful"}, 200
+            res = create_session(username)
+            return res
         else:
             return {"message": "Wrong Password"}, 401
 
@@ -116,8 +116,8 @@ class WhoAmI(Resource):
 
         username = redis_client.hget(f"session:{session_id}", "username")
         if username:
-            print('username', username.decode())
-            return {"username": username.decode()}, 200
+            print('username', username)
+            return {"username": username}, 200
 
         return {"username": None}, 401
 

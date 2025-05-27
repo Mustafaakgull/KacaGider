@@ -32,7 +32,7 @@ def create_session(username):
         # secure=True,  # Normalde bunu kullanmamız lazım, sadece https ten veri atmasi için, hostingi ayarlayınca değişecek
         secure=False,
         samesite='Lax',  # controls cross-site behavior
-        max_age=SESSION_TIME
+        # max_age=SESSION_TIME
     )
 
     # SONRA SİLİNECEK

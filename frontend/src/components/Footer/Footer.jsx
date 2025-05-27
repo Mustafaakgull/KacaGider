@@ -24,7 +24,6 @@ function Footer() {
                     © 2025 Kacagider. All rights are reserved.
                 </Typography>
                 <Box sx={{ display: "flex", gap: 2 }}>
-                    <Button onClick={() => setContactDialogOpen(true)}>Contact</Button>
                 </Box>
             </Container>
         </Box>

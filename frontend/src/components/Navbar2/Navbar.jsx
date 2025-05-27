@@ -10,7 +10,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import {Container} from "@mui/material";
+import {Button, Container} from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RegisterDialog from "../Register/Register.jsx"
@@ -36,22 +36,6 @@ function Navbar() {
     const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
     const [loggedInUser, setLoggedInUser] = useState(null);
-
-    console.log("Navbar2 rendered");
-
-
-    useEffect(() => {
-        console.log("useEffect çalıştı");
-        axios.get("http://127.0.0.1:5000/whoami", {
-            withCredentials: true
-        }).then(res => {
-            console.log("whoami response", res.data);  // ekle ve bak
-            console.log("whoami response username", res.data.username);  // ekle ve bak
-            setLoggedInUser(res.data.username);
-        }).catch(() => {
-            setLoggedInUser(null);
-        });
-    }, []);
 
 
     const openRegisterDialog = () => {
@@ -100,19 +84,22 @@ function Navbar() {
                                 <p className="user-rooms">User Rooms denemepush</p>
                             </Box>
                             {loggedInUser ? (
-                                <Box sx={{ mr: 2 }} className="cup">
-                                    <Typography sx={{ color: "white", fontWeight: "bold" }}>
-                                        Welcome, {loggedInUser}
-                                    </Typography>
+                                <Box sx={{mr: 2}} className="cup">
+                                    <Button>
+                                        <Typography sx={{color: "white", fontWeight: "bold"}}>
+                                            Welcome, {loggedInUser}
+                                        </Typography>
+                                    </Button>
+
                                 </Box>
                             ) : (
                                 <>
-                                    <Box sx={{ mr: 2 }} className="cup" onClick={openRegisterDialog}>
-                                        <PersonAddIcon className="cup-icon" fontSize="large" />
+                                    <Box sx={{mr: 2}} className="cup" onClick={openRegisterDialog}>
+                                        <PersonAddIcon className="cup-icon" fontSize="large"/>
                                         <p className="point">Register</p>
                                     </Box>
-                                    <Box sx={{ mr: 2 }} className="cup" onClick={openLoginDialog}>
-                                        <LoginIcon className="cup-icon" fontSize="large" />
+                                    <Box sx={{mr: 2}} className="cup" onClick={openLoginDialog}>
+                                        <LoginIcon className="cup-icon" fontSize="large"/>
                                         <p className="login-btn">Login</p>
                                     </Box>
                                 </>
@@ -181,7 +168,8 @@ function Navbar() {
                 email={registerEmail}
                 password={registerPassword}
             />
-            <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}   onLoginSuccess={(username) => setLoggedInUser(username)}/>
+            <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}
+                         onLoginSuccess={(username) => setLoggedInUser(username)}/>
         </>
     );
 }

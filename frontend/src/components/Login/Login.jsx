@@ -1,21 +1,22 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Box } from "@mui/material";
+import {Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Box} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
+import {useState} from "react";
 import './Login.css'
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
 
-function LoginDialog({ open, handleClose, onLoginSuccess }) {
+function LoginDialog({open, handleClose, onLoginSuccess}) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [captchaToken, setCaptchaToken] = useState(null);
     const url = "http://127.0.0.1:5000"
+
     function onChange(value) {
         console.log("Captcha value:", value);
     }
 
-    axios.post("http://127.0.0.1:5000/login", {
+    /*axios.post("http://127.0.0.1:5000/login", {
         username,
         password
     }, {
@@ -23,26 +24,24 @@ function LoginDialog({ open, handleClose, onLoginSuccess }) {
     })
         .then(r => {
                 console.log("r.data", r.data.message);
-                if (r.data.message === "Login successful") {
-                    onLoginSuccess(username); // <- burada çağır
-                    handleClose();
-                }
+                alert("axiosqwe");
             }
-        )
+        )*/
 
 
-            const handleLogin=() => {
-        if (captchaToken === null) {
+    const handleLogin = () => {
+        if (captchaToken === "") {
             alert("Please complete the CAPTCHA");
         }
         try {
             axios.post(url + '/login', {
                 username: username,
                 password: password,
-            }).then(r => {
+            }, {withCredentials: true}).then(r => {
                 console.log("r.data", r.data.message);
                 if (r.data.message === "Login successful") {
-                    alert("Login successfulls");
+                    onLoginSuccess(username)
+                    alert("Login successfulls12312");
                     handleClose();
                 } else if (r.data.message === "Invalid username or password") {
                     alert("Invalid username or password");
@@ -50,7 +49,6 @@ function LoginDialog({ open, handleClose, onLoginSuccess }) {
                     alert("Login failed2");
                 }
             });
-            handleClose();
         } catch (e) {
             console.error("Login error:", e);
             alert("Login failed1");
@@ -73,15 +71,15 @@ function LoginDialog({ open, handleClose, onLoginSuccess }) {
                 }
             }}
         >
-            <DialogTitle  className={'register-dialog-title'} sx={{ py: 1, px: 2 }}>
+            <DialogTitle className={'register-dialog-title'} sx={{py: 1, px: 2}}>
                 Login
-                <IconButton onClick={handleClose} sx={{ color: "#fff" }} >
-                    <CloseIcon />
+                <IconButton onClick={handleClose} sx={{color: "#fff"}}>
+                    <CloseIcon/>
                 </IconButton>
             </DialogTitle>
 
-            <DialogContent sx={{ px: 2, py: 1 }}>
-                <Box className={'form-box'} sx={{ gap: 1.5 }}>
+            <DialogContent sx={{px: 2, py: 1}}>
+                <Box className={'form-box'} sx={{gap: 1.5}}>
                     <TextField
                         label="Username"
                         variant="outlined"
@@ -108,7 +106,7 @@ function LoginDialog({ open, handleClose, onLoginSuccess }) {
                 </Box>
             </DialogContent>
 
-            <DialogActions sx={{ px: 2, pb: 2 }}>
+            <DialogActions sx={{px: 2, pb: 2}}>
                 <Button
                     onClick={handleLogin}
                     fullWidth

@@ -19,6 +19,7 @@ def init_socketio(socketio_instance):
     register_handlers()
     game_handlers()
     chat_handler()
+    info_handler()
 
 
 def register_handlers():
@@ -75,7 +76,7 @@ def info_handler():
         emit("leaderboard_data", data)
     @socketio.on("take_top3_leaderboard_data")
     def send_top3_from_leaderboard():
-        leaderboard = redis_client.zrevrange("leaderboard", 0, 9, withscores=True)
+        leaderboard = redis_client.zrevrange("leaderboard", 0, 3, withscores=True)
 
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
