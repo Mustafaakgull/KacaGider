@@ -99,9 +99,7 @@ class ResetPassword(Resource):
 class ResetUsername(Resource):
     def post(self):
         data = request.get_json()
-        session_id = request.cookies.get('session_id')
-        our_key = f'session:{session_id}'
-        username = redis_client.hget(our_key, "username")
+        username = get_session_username()
         new_username = data.get('new_username')
         if User.query.filter_by(username=new_username).first():
             return {"message": "Username already exists"}, 400
