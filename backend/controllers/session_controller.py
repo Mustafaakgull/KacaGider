@@ -29,9 +29,9 @@ def create_session(username):
         'session_id',
         session_id,
         httponly=True,
-        # secure=True,  # Normalde bunu kullanmamız lazım, sadece https ten veri atmasi için, hostingi ayarlayınca değişecek
-        secure=False,
-        samesite='Lax',  # controls cross-site behavior
+        secure=True,  # Normalde bunu kullanmamız lazım, sadece https ten veri atmasi için, hostingi ayarlayınca değişecek
+        # secure=False,
+        samesite='None',  # controls cross-site behavior
         # max_age=SESSION_TIME
     )
 
