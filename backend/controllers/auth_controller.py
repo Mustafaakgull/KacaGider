@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from backend.models.tables import User
 from backend.models.db import db
 from backend.controllers.mail_controller import send_verification_mail, verify_code
-from backend.controllers.session_controller import create_session, delete_session
+from backend.controllers.session_controller import create_session, delete_session, get_session_username
 from backend.models.redis_client import redis_client
 
 
@@ -88,9 +88,8 @@ class Verify(Resource):
 class ResetPassword(Resource):
     def post(self):
         data = request.get_json()
-        username = data.get('username')
+        username = get_session_username()
         new_password = data.get('new_password')
-
         User.query.filter_by(username=username).update({"password": generate_password_hash(new_password)})
         db.session.commit()
         return {"message": "Password reset successfully"}, 200
@@ -100,7 +99,7 @@ class ResetPassword(Resource):
 class ResetUsername(Resource):
     def post(self):
         data = request.get_json()
-        username = data.get('username')
+        username = get_session_username()
         new_username = data.get('new_username')
         if User.query.filter_by(username=new_username).first():
             return {"message": "Username already exists"}, 400
