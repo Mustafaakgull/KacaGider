@@ -88,10 +88,10 @@ class Verify(Resource):
 class ResetPassword(Resource):
     def post(self):
         data = request.get_json()
-        email = data.get('email')
+        username = data.get('username')
         new_password = data.get('new_password')
 
-        User.query.filter_by(email=email).update({"password": generate_password_hash(new_password)})
+        User.query.filter_by(username=username).update({"password": generate_password_hash(new_password)})
         db.session.commit()
         return {"message": "Password reset successfully"}, 200
 
@@ -100,10 +100,11 @@ class ResetPassword(Resource):
 class ResetUsername(Resource):
     def post(self):
         data = request.get_json()
-        email = data.get('email')
+        username = data.get('username')
         new_username = data.get('new_username')
-
-        User.query.filter_by(email=email).update({"username": new_username})
+        if User.query.filter_by(username=new_username).first():
+            return {"message": "Username already exists"}, 400
+        User.query.filter_by(username=username).update({"username": new_username})
         db.session.commit()
         return {"message": "Username reset successfully"}, 200
 
