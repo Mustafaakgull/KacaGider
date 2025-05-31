@@ -10,13 +10,16 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import {Button, Container} from "@mui/material";
+import {Button, Container, Menu, MenuItem} from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import RegisterDialog from "../Register/Register.jsx"
 import VerifyCodeDialog from "../VerifyCode/VerifyCode.jsx"
 import LoginDialog from "../Login/Login.jsx"
+import EditProfileDialog from '../EditProfile/EditProfile.jsx';
 import {useEffect, useState} from "react";
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import axios from "axios";
 
@@ -26,6 +29,13 @@ function Navbar() {
     const [registerUsername, setRegisterUsername] = useState("");
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+    const [newUsername, setNewUsername] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
@@ -84,14 +94,73 @@ function Navbar() {
                                 <p className="user-rooms">User Rooms denemepush</p>
                             </Box>
                             {loggedInUser ? (
-                                <Box sx={{mr: 2}} className="cup">
-                                    <Button>
-                                        <Typography sx={{color: "white", fontWeight: "bold"}}>
+                                <Box sx={{ mr: 2 }} className="cup">
+                                    <Button onClick={(e) => setAnchorEl(e.currentTarget)}>
+                                        <Typography sx={{ color: "white", fontWeight: "bold" }}>
                                             Welcome, {loggedInUser}
                                         </Typography>
                                     </Button>
 
+                                    <Menu
+                                        anchorEl={anchorEl}
+                                        open={Boolean(anchorEl)}
+                                        onClose={() => setAnchorEl(null)}
+                                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                                        PaperProps={{
+                                            sx: {
+                                                backgroundColor: '#1e1e1e',
+                                                borderRadius: 2,
+                                                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
+                                                color: 'white',
+                                                minWidth: 180,
+                                                mt: 1
+                                            }
+                                        }}
+                                        MenuListProps={{
+                                            sx: {
+                                                padding: 0
+                                            }
+                                        }}
+                                    >
+                                        <MenuItem
+                                            onClick={() => {
+                                                setEditDialogOpen(true);
+                                                setAnchorEl(null);
+                                            }}
+                                            sx={{
+                                                paddingY: 1.5,
+                                                paddingX: 2,
+                                                '&:hover': {
+                                                    backgroundColor: '#FFC107',
+                                                    color: '#000',
+                                                },
+                                            }}
+                                        >
+                                            <SettingsIcon sx={{marginRight: 2}} fontSize="medium"/>
+                                            Edit Profile
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={async () => {
+                                                await axios.post("http://127.0.0.1:5000/logout", {}, { withCredentials: true });
+                                                setLoggedInUser(null);
+                                                setAnchorEl(null);
+                                            }}
+                                            sx={{
+                                                paddingY: 1.5,
+                                                paddingX: 2,
+                                                '&:hover': {
+                                                    backgroundColor: '#FFC107',
+                                                    color: '#000',
+                                                },
+                                            }}
+                                        >
+                                            <LogoutIcon sx={{marginRight: 2}} color={"warning"} fontSize="medium"/>
+                                            Log Out
+                                        </MenuItem>
+                                    </Menu>
+
                                 </Box>
+
                             ) : (
                                 <>
                                     <Box sx={{mr: 2}} className="cup" onClick={openRegisterDialog}>
@@ -170,6 +239,16 @@ function Navbar() {
             />
             <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}
                          onLoginSuccess={(username) => setLoggedInUser(username)}/>
+            <EditProfileDialog
+                open={editDialogOpen}
+                onClose={() => setEditDialogOpen(false)}
+                email={registerEmail}
+                onUpdateSuccess={(newUsername) => setLoggedInUser(newUsername)}
+            />
+
+
+
+
         </>
     );
 }

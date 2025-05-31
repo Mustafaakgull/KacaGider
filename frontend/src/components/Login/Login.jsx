@@ -7,27 +7,14 @@ import axios from "axios";
 
 
 function LoginDialog({open, handleClose, onLoginSuccess}) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
     const [captchaToken, setCaptchaToken] = useState(null);
     const url = "http://127.0.0.1:5000"
 
     function onChange(value) {
         console.log("Captcha value:", value);
     }
-
-    /*axios.post("http://127.0.0.1:5000/login", {
-        username,
-        password
-    }, {
-        withCredentials: true
-    })
-        .then(r => {
-                console.log("r.data", r.data.message);
-                alert("axiosqwe");
-            }
-        )*/
-
 
     const handleLogin = () => {
         if (captchaToken === "") {
@@ -39,6 +26,7 @@ function LoginDialog({open, handleClose, onLoginSuccess}) {
                 password: password,
             }, {withCredentials: true}).then(r => {
                 console.log("r.data", r.data.message);
+
                 if (r.data.message === "Login successful") {
                     onLoginSuccess(username)
                     alert("Login successfulls12312");
