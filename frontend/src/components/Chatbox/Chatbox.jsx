@@ -40,10 +40,10 @@ function ChatRoom() {
         <Box
             sx={{
                 position: 'fixed',
-                bottom: 16,
-                right: 16,
-                width: isOpen ? 360 : 200,
-                height: isOpen ? 420 : 56,
+                bottom: 0,
+                right: 0,
+                width: isOpen ? 450 : 450,
+                height: isOpen ? 750 : 54,
                 borderRadius: 2,
                 bgcolor: '#111',
                 color: '#fff',
@@ -120,7 +120,7 @@ function ChatRoom() {
                             fullWidth
                             size="small"
                             variant="outlined"
-                            placeholder="Mesaj yaz..."
+                            placeholder="write message..."
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
@@ -128,7 +128,7 @@ function ChatRoom() {
                                 sx: {
                                     bgcolor: '#222',
                                     color: '#fff',
-                                    borderRadius: '20px', // 👈 daha yuvarlak köşe
+                                    borderRadius: '20px',
                                     '& input': { color: '#fff' },
                                 },
                             }}

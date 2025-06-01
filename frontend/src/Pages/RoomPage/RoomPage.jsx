@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import ProductCard from "../../components/ProductTable/ProductTable.jsx";
+import Grid from '@mui/material/Unstable_Grid2';
 import GuessControls from "../../components/GuessControls/GuessControls.jsx";
 import GuessCounter from "../../components/GuessCounter/GuessCounter.jsx";
 // import io from "socket.io-client";
@@ -65,37 +66,27 @@ function RoomPage() {
             }}
         >
 
-            {listing && (
-                <Stack
-                    direction="row"
-                    sx={{ width: "100%", mt: 4 }}
-                    justifyContent="space-between"
-                    alignItems="flex-start"
-                >
-                    {/* 2 kolon boşluk */}
-                    <Box sx={{ flexBasis: "16.66%" }} />
+            {
+                listing && (
+                    <Grid container spacing={1} sx={{ mt: 2, width: "100%" }} justifyContent="center">
 
-                    {/* 4 kolonluk ProductCard */}
-                    <Box sx={{ flexBasis: "33.33%", maxWidth: "33.33%" }}>
-                        <ProductCard
-                            listing={listing}
-                            guessCount={guessCount}
-                            setGuessCount={setGuessCount}
-                        />
-                    </Box>
+                        {/* ProductCard - daha geniş (7/12) */}
+                        <Grid xs={12} md={6}>
+                            <ProductCard
+                                listing={listing}
+                                guessCount={guessCount}
+                                setGuessCount={setGuessCount}
+                            />
+                        </Grid>
 
-                    {/* 1 kolon boşluk */}
-                    <Box sx={{ flexBasis: "8.33%" }} />
+                        {/* Leaderboard - geri kalan alan (3/12) */}
+                        <Grid xs={12} md={3}>
+                            <LeaderBoard leaderboard={leaderboard} />
+                        </Grid>
+                    </Grid>
 
-                    {/* 3 kolonluk LeaderBoard */}
-                    <Box sx={{ flexBasis: "25%", maxWidth: "25%" }}>
-                        <LeaderBoard leaderboard={leaderboard} />
-                    </Box>
-
-                    {/* 2 kolon boşluk */}
-                    <Box sx={{ flexBasis: "16.66%" }} />
-                </Stack>
-            )}
+                )
+            }
             <Chatbox />
 
         </Box>

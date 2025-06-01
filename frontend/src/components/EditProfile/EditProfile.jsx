@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -42,6 +42,13 @@ function EditProfileDialog({ open, onClose, email, onUpdateSuccess }) {
             console.error(e);
         }
     };
+
+    useEffect(() => {
+        if (!open) {
+            setNewUsername('');
+            setNewPassword('');
+        }
+    }, [open]);
 
     return (
         <Dialog open={open} onClose={onClose} PaperProps={{ sx: { backgroundColor: '#1e1e1e', borderRadius: 3 } }}>

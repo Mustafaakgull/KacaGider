@@ -1,5 +1,8 @@
 import './Navbar.css';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom'; // en üstte
+
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,7 +20,7 @@ import RegisterDialog from "../Register/Register.jsx"
 import VerifyCodeDialog from "../VerifyCode/VerifyCode.jsx"
 import LoginDialog from "../Login/Login.jsx"
 import EditProfileDialog from '../EditProfile/EditProfile.jsx';
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -25,6 +28,8 @@ import axios from "axios";
 
 function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+    const navigate = useNavigate(); // Navbar fonksiyonu içinde
+
 
     const [registerUsername, setRegisterUsername] = useState("");
     const [registerEmail, setRegisterEmail] = useState("");
@@ -33,13 +38,7 @@ function Navbar() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
-    const [newUsername, setNewUsername] = useState("");
-    const [newPassword, setNewPassword] = useState("");
 
-
-    const toggleMobileMenu = () => {
-        setMobileMenuOpen(!mobileMenuOpen);
-    };
 
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
     const [verifyCodeDialogOpen, setVerifyCodeDialogOpen] = useState(false);
@@ -69,15 +68,17 @@ function Navbar() {
             <AppBar position="fixed" className="navbar">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters sx={{justifyContent: 'space-between'}}>
-                        <Box sx={{flexDirection: 'row', display: 'flex', alignItems: 'center'}}>
-                            <PriceCheckIcon fontSize="large" sx={{mr: 2}}/>
+                        <Box
+                            sx={{ flexDirection: 'row', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                            onClick={() => navigate('/')} // 👈 hem ikon hem yazı tıklanır
+                        >
+                            <PriceCheckIcon fontSize="large" sx={{ mr: 2 }} />
                             <Typography
                                 variant="h6"
                                 noWrap
-                                component="a"
                                 sx={{
                                     mr: 2,
-                                    display: {xs: 'none', md: 'flex'},
+                                    display: { xs: 'none', md: 'flex' },
                                     fontFamily: 'monospace',
                                     fontWeight: 700,
                                     letterSpacing: '.3rem',
@@ -88,11 +89,14 @@ function Navbar() {
                                 KACA GIDER???
                             </Typography>
                         </Box>
+
+
                         <Box sx={{display: {xs: 'none', md: 'flex'}, flexDirection: 'row', alignItems: 'center'}}>
-                            <Box className="user-rooms-box" sx={{mr: 2}}>
+                            <Box className="user-rooms-box" sx={{mr: 2}} onClick={() => navigate("/user-rooms")} style={{ cursor: 'pointer' }}>
                                 <PeopleAltOutlinedIcon className="user-icon" fontSize="large"/>
-                                <p className="user-rooms">User Rooms denemepush</p>
+                                <p className="user-rooms">User Rooms</p>
                             </Box>
+
                             {loggedInUser ? (
                                 <Box sx={{ mr: 2 }} className="cup">
                                     <Button onClick={(e) => setAnchorEl(e.currentTarget)}>

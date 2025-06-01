@@ -1,150 +1,123 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from "react";
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    FormControlLabel,
-    Switch,
-    TextField,
-    IconButton,
-    Stack,
-    Box,
-    Checkbox, InputAdornment,
-} from '@mui/material';
-import {
-    DirectionsCar,
-    Home,
-    LocalShipping,
-    TwoWheeler,
-    Close, QuestionMark, Repeat, Timer,
-} from '@mui/icons-material';
-import './PrivateRoom.css';
+    Dialog, DialogTitle, DialogContent,
+    TextField, Button, Grid, Typography, Box, Card, CardContent
+} from "@mui/material";
+import { DriveEta, TwoWheeler } from "@mui/icons-material";
 
-function PrivateRoom({open, onClose}) {
-    const [isPublic, setIsPublic] = useState(false);
-    const [categories, setCategories] = useState([
-        {name: 'Car', icon: <DirectionsCar/>, selected: false},
-        {name: 'House', icon: <Home/>, selected: false},
-        {name: 'Tractor', icon: <LocalShipping/>, selected: false},
-        {name: 'Motorcycle', icon: <TwoWheeler/>, selected: false},
-    ]);
-    const [turnCount, setTurnCount] = useState(20);
-    const [turnTime, setTurnTime] = useState(57);
-    const [guessCount, setGuessCount] = useState(10);
+const categories = [
+    { key: "car", label: "CAR", icon: <DriveEta sx={{ fontSize: 46 }} /> },
+    { key: "motorcycle", label: "MOTORCYCLE", icon: <TwoWheeler sx={{ fontSize: 46 }} /> },
+];
+
+export default function PrivateRoom({ open, onClose, onCreate }) {
+    const [roomName, setRoomName] = useState("");
+    const [password, setPassword] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
+
+    const handleCreate = () => {
+        if (!roomName || !selectedCategory) return;
+        onCreate({ roomName, password, category: selectedCategory });
+        setRoomName("");
+        setPassword("");
+        setSelectedCategory("");
+    };
+
+    useEffect(() => {
+        if (!open) {
+            setRoomName("");
+            setSelectedCategory("");
+            setPassword("");
+        }
+    }, [open]);
 
     return (
         <Dialog
             open={open}
             onClose={onClose}
+            maxWidth="sm"
             fullWidth
-            maxWidth="md"
-            className="private-room-dialog"
+            PaperProps={{ style: { backgroundColor: "#1e1e1e", color: "#f0f0f0" } }}
         >
-            <DialogTitle className="private-room-title">
-                <span className='private-room-title-paragraph'>CREATE PRIVATE ROOM</span>
-                <IconButton
-                    onClick={onClose}
-                    className="private-room-close-button"
-                >
-                    <Close/>
-                </IconButton>
+            <DialogTitle sx={{ textAlign: "center", color: "#ffffff" }}>
+                CREATE PRIVATE ROOM
             </DialogTitle>
-            <DialogContent className="private-room-content">
-                <FormControlLabel
-                    control={<Checkbox checked={isPublic} onChange={() => setIsPublic(!isPublic)}
-                                       className="private-room-checkbox"/>}
-                    label="Make it public (Other players can see and join your room)"
-                    className="private-room-public-label"
-                />
-                <Stack spacing={2} direction={"row"} className="private-room-categories">
-                    {categories.map((category, index) => (
-                        <Box key={index} width={{xs: '48%', sm: '32%', md: '23%'}}>
-                            <Button
-                                variant={category.selected ? 'contained' : 'outlined'}
-                                color="primary"
-                                startIcon={category.icon}
-                                className="private-room-category-button"
-                            >
-                                {category.name}
-                            </Button>
-                        </Box>
-                    ))}
-                </Stack>
-                <Stack spacing={2} className="private-room-game-settings">
-                    <Stack direction="row" spacing={2}>
-                        <TextField
-                            label="Rounds"
-                            type="number"
-                            value={turnCount}
-                            onChange={(e) => setTurnCount(parseInt(e.target.value))}
-                            fullWidth
-                            className="private-room-text-field"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Repeat style={{color: '#fff'}}/>
-                                    </InputAdornment>
-                                ),
-                                style: {color: '#fff'},
-                            }}
-                            InputLabelProps={{
-                                style: {color: '#fff'},
-                            }}
-                        />
-                        <TextField
-                            label="Round Time"
-                            type="number"
-                            value={turnTime}
-                            onChange={(e) => setTurnTime(parseInt(e.target.value))}
-                            fullWidth
-                            className="private-room-text-field"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Timer style={{color: '#fff'}}/>
-                                    </InputAdornment>
-                                ),
-                                style: {color: '#fff'},
-                            }}
-                            InputLabelProps={{
-                                style: {color: '#fff'},
-                            }}
-                        />
-                        <TextField
-                            label="Number of Guesses"
-                            type="number"
-                            value={guessCount}
-                            onChange={(e) => setGuessCount(parseInt(e.target.value))}
-                            fullWidth
-                            className="private-room-text-field"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <QuestionMark style={{color: '#fff'}}/>
-                                    </InputAdornment>
-                                ),
-                                style: {color: '#fff'},
-                            }}
-                            InputLabelProps={{
-                                style: {color: '#fff'},
-                            }}
-                        />
-                    </Stack>
-                </Stack>
+            <DialogContent disablePadding>
+                <Box sx={{ px: 3, pt: 2 }}>
+                    <TextField
+                        fullWidth
+                        label="Room Name"
+                        variant="filled"
+                        value={roomName}
+                        onChange={e => setRoomName(e.target.value)}
+                        sx={{
+                            mb: 2,
+                            input: { color: "#fff" },
+                            label: { color: "#bbb" },
+                            backgroundColor: "#2c2c2c",
+                            borderRadius: 1
+                        }}
+                    />
+                    <Typography variant="subtitle1" sx={{ color: "#bbb", mb: 1 }}>
+                        Select Category
+                    </Typography>
+                    <Grid container spacing={2} sx={{ mb: 2 }}>
+                        {categories.map(cat => (
+                            <Grid item xs={6} key={cat.key}>
+                                <Card
+                                    onClick={() => setSelectedCategory(cat.key)}
+                                    sx={{
+                                        width: "100%",
+                                        height: 100,
+                                        cursor: "pointer",
+                                        backgroundColor: selectedCategory === cat.key ? "#ffc107" : "#2c2c2c",
+                                        color: selectedCategory === cat.key ? "#000" : "#fff",
+                                        border: selectedCategory === cat.key ? "2px solid #ffc107" : "1px solid #444",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        transition: "none"
+                                    }}
+                                >
+                                    <CardContent sx={{ textAlign: "center", p: 1 }}>
+                                        <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+                                            {cat.icon}
+                                            <Typography variant="caption">{cat.label}</Typography>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                    <TextField
+                        fullWidth
+                        label="Password"
+                        type="password"
+                        variant="filled"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        sx={{
+                            input: { color: "#fff" },
+                            label: { color: "#bbb" },
+                            backgroundColor: "#2c2c2c",
+                            borderRadius: 1,
+                            mb: 3
+                        }}
+                    />
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={handleCreate}
+                        sx={{
+                            backgroundColor: "#ffc107",
+                            color: "#fff",
+                            height: 40,
+                        }}
+                    >
+                        CREATE ROOM
+                    </Button>
+                </Box>
             </DialogContent>
-            <DialogActions className="private-room-actions">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className="private-room-create-button"
-                >
-                    Create Room
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 }
-
-export default PrivateRoom;

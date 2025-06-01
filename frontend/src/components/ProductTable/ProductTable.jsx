@@ -18,27 +18,17 @@ import ColorLensIcon from '@mui/icons-material/ColorLens';
 import PersonIcon from '@mui/icons-material/Person';
 import {socket} from "../../SocketioConnection.jsx";
 
-
-
-const ProductCard = ({  listing }) => {
-    console.log("lsiting",listing);
-    const [price, setPrice] = useState(0);
+const ProductCard = ({ listing }) => {
+    const [price, setPrice] = useState("");
     const [guessCount, setGuessCount] = useState(0);
     const [feedback, setFeedback] = useState("");
 
-
-
-
-    if (!listing) return null; // veya <CircularProgress />
+    if (!listing) return null;
 
     const images = typeof listing.photos === "string"
         ? JSON.parse(listing.photos)
         : listing.photos || [];
-    console.log("lsiting", listing);
-    console.log("listin data",listing.data);
-    console.log("listing data data",listing.data.data);
 
-    console.log("imagessss", images);
     const product = listing.data;
 
     const handleChange = (e) => {
@@ -48,20 +38,6 @@ const ProductCard = ({  listing }) => {
         }
     };
 
-
-
-
-    // const settings = {
-    //     dots: true,
-    //     infinite: true,
-    //     speed: 500,
-    //     slidesToShow: 1,
-    //     slidesToScroll: 1,
-    //     arrows: true,
-    //     fade: true,
-    //     waitForAnimate: false
-    // };
-
     return (
         <Card
             className={'card'}
@@ -70,7 +46,7 @@ const ProductCard = ({  listing }) => {
                 maxWidth: "100%",
                 margin: "auto",
                 padding: 5,
-                backgroundColor: "#424242", // gri arka plan
+                backgroundColor: "rgb(40,40,40)",
                 borderRadius: 2
             }}
         >
@@ -99,20 +75,15 @@ const ProductCard = ({  listing }) => {
                 ))}
             </Slider>
 
-
-
-
             <CardContent className={'product-info-container'}>
-                {/* Araç adı */}
                 <Typography
                     className={'name info'}
                     variant="h6"
-                    sx={{ color: "white", mb: 2 }}
+                    sx={{ color: "white", mb: 2, display: "flex", justifyContent: "center", textAlign: "center" }}
                 >
                     {product["Marka"]} {product["Model"]}
                 </Typography>
 
-                {/* Diğer özellikler: 2'şerli Grid şeklinde */}
                 <Box
                     sx={{
                         display: "grid",
@@ -122,67 +93,93 @@ const ProductCard = ({  listing }) => {
                 >
                     {[
                         {
-                            label: "Yıl",
-                            value: product["Yıl"],
+                            key: "Yıl",
+                            label: "Year",
                             icon: <CalendarTodayIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            label: "Kilometre",
-                            value: product["Kilometre"],
+                            key: "Kilometre",
+                            label: "Kilometer",
                             icon: <SpeedIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            label: "Yakıt Tipi",
-                            value: product["Yakıt Tipi"],
+                            key: "Yakıt Tipi",
+                            label: "Fuel Type",
                             icon: <LocalGasStationIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            label: "Vites Tipi",
-                            value: product["Vites Tipi"],
+                            key: "Vites Tipi",
+                            label: "Gearbox",
                             icon: <SettingsIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            label: "Motor Gücü",
-                            value: product["Motor Gücü"],
+                            key: "Motor Gücü",
+                            label: "Engine Power",
                             icon: <FlashOnIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            label: "Ağır Hasarlı",
-                            value: product["Ağır Hasarlı"],
+                            key: "Ağır Hasarlı",
+                            label: "Damaged",
                             icon: <WarningIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            label: "Boya-değişen",
-                            value: product["Boya-değişen"],
+                            key: "Boya-değişen",
+                            label: "Paint/Changed Parts",
                             icon: <ColorLensIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            label: "Kimden",
-                            value: product["Kimden"],
+                            key: "Kimden",
+                            label: "Seller",
                             icon: <PersonIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
-                    ].map(({ label, value, icon }, i) => (
-                        <Box
-                            key={i}
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                backgroundColor: "#616161",
-                                border: "1px solid #fbc02d",
-                                borderRadius: 1,
-                                px: 1.5,
-                                py: 1,
-                                color: "white",
-                            }}
-                        >
-                            {icon}
-                            <Typography variant="body2" sx={{ ml: 1 }}>
-                                <strong>{label}:</strong> {value}
-                            </Typography>
-                        </Box>
-                    ))}
-                </Box>
+                    ].map(({ key, label, icon }, i) => {
+                        let value = product[key];
 
+                        if (label === "Gearbox")
+                            value = value === "Manuel" ? "Manual"
+                                : value === "Otomatik" ? "Automatic"
+                                    : value === "Yarı Otomatik" ? "Semi-Automatic"
+                                        : value;
+
+                        if (label === "Fuel Type")
+                            value = value === "Benzin" ? "Petrol"
+                                : value === "Dizel" ? "Diesel"
+                                    : value === "Hibrit" ? "Hybrid"
+                                        : value === "Elektrik" ? "Electric"
+                                            : value;
+
+                        if (label === "Seller")
+                            value = value === "Bireysel" ? "Individual"
+                                : value === "Galeriden" ? "Dealer"
+                                    : value;
+
+                        if (label === "Damaged" || label === "Paint/Changed Parts")
+                            value = value === "Evet" ? "Yes"
+                                : value === "Hayır" ? "No"
+                                    : value;
+
+                        return (
+                            <Box
+                                key={i}
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    backgroundColor: "#111",
+                                    border: "1px solid #fff",
+                                    borderRadius: 1,
+                                    px: 1.5,
+                                    py: 1,
+                                    color: "white",
+                                }}
+                            >
+                                {icon}
+                                <Typography variant="body2" sx={{ ml: 1 }}>
+                                    <strong>{label}:</strong> {value}
+                                </Typography>
+                            </Box>
+                        );
+                    })}
+                </Box>
             </CardContent>
 
             <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -192,6 +189,7 @@ const ProductCard = ({  listing }) => {
                     value={price}
                     onChange={handleChange}
                     disabled={guessCount >= 3}
+                    placeholder={"0"}
                     label="Your Guess"
                     fullWidth
                     sx={{
@@ -235,7 +233,7 @@ const ProductCard = ({  listing }) => {
                     fullWidth
                     variant="contained"
                     disabled={guessCount >= 3}
-                    sx={{ mt: 4, color: '#fff', backgroundColor: '#fbc02d' }}
+                    sx={{ mt: 2, color: '#fff', backgroundColor: '#fbc02d' }}
                 >
                     Submit Guess
                 </Button>
