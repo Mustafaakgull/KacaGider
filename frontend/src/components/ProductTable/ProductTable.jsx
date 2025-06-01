@@ -8,6 +8,16 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import SpeedIcon from '@mui/icons-material/Speed';
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import SettingsIcon from '@mui/icons-material/Settings';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
+import WarningIcon from '@mui/icons-material/Warning';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
+import PersonIcon from '@mui/icons-material/Person';
+import {socket} from "../../SocketioConnection.jsx";
+
 
 
 const ProductCard = ({  listing }) => {
@@ -56,7 +66,8 @@ const ProductCard = ({  listing }) => {
         <Card
             className={'card'}
             sx={{
-                maxWidth: 500,
+                width: 500,
+                maxWidth: "100%",
                 margin: "auto",
                 padding: 5,
                 backgroundColor: "#424242", // gri arka plan
@@ -92,40 +103,86 @@ const ProductCard = ({  listing }) => {
 
 
             <CardContent className={'product-info-container'}>
-                <Typography className={'name info'} variant="h6" sx={{ color: "white" }}>
+                {/* Araç adı */}
+                <Typography
+                    className={'name info'}
+                    variant="h6"
+                    sx={{ color: "white", mb: 2 }}
+                >
                     {product["Marka"]} {product["Model"]}
                 </Typography>
 
-                {[
-                    { label: "Yıl", value: product["Yıl"] },
-                    { label: "Kilometre", value: product["Kilometre"] },
-                    { label: "Yakıt Tipi", value: product["Yakıt Tipi"] },
-                    { label: "Vites Tipi", value: product["Vites Tipi"] },
-                    { label: "Motor Gücü", value: product["Motor Gücü"] },
-                    { label: "Ağır Hasarlı", value: product["Ağır Hasarlı"] },
-                    { label: "Boya-değişen", value: product["Boya-değişen"] },
-                    { label: "Kimden ", value: product["Kimden"] },
+                {/* Diğer özellikler: 2'şerli Grid şeklinde */}
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, 1fr)",
+                        gap: 1,
+                    }}
+                >
+                    {[
+                        {
+                            label: "Yıl",
+                            value: product["Yıl"],
+                            icon: <CalendarTodayIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                        {
+                            label: "Kilometre",
+                            value: product["Kilometre"],
+                            icon: <SpeedIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                        {
+                            label: "Yakıt Tipi",
+                            value: product["Yakıt Tipi"],
+                            icon: <LocalGasStationIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                        {
+                            label: "Vites Tipi",
+                            value: product["Vites Tipi"],
+                            icon: <SettingsIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                        {
+                            label: "Motor Gücü",
+                            value: product["Motor Gücü"],
+                            icon: <FlashOnIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                        {
+                            label: "Ağır Hasarlı",
+                            value: product["Ağır Hasarlı"],
+                            icon: <WarningIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                        {
+                            label: "Boya-değişen",
+                            value: product["Boya-değişen"],
+                            icon: <ColorLensIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                        {
+                            label: "Kimden",
+                            value: product["Kimden"],
+                            icon: <PersonIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                        },
+                    ].map(({ label, value, icon }, i) => (
+                        <Box
+                            key={i}
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                backgroundColor: "#616161",
+                                border: "1px solid #fbc02d",
+                                borderRadius: 1,
+                                px: 1.5,
+                                py: 1,
+                                color: "white",
+                            }}
+                        >
+                            {icon}
+                            <Typography variant="body2" sx={{ ml: 1 }}>
+                                <strong>{label}:</strong> {value}
+                            </Typography>
+                        </Box>
+                    ))}
+                </Box>
 
-
-
-                ].map(({ label, value }, i) => (
-                    <Box
-                        key={i}
-                        sx={{
-                            backgroundColor: "#616161",
-                            border: "1px solid #fbc02d",
-                            borderRadius: 1,
-                            px: 2,
-                            py: 1,
-                            mt: 1,
-                            color: "white"
-                        }}
-                    >
-                        <Typography variant="body2">
-                            <strong>{label}:</strong> {value}
-                        </Typography>
-                    </Box>
-                ))}
             </CardContent>
 
             <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

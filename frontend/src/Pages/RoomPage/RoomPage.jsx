@@ -7,6 +7,7 @@ import GuessCounter from "../../components/GuessCounter/GuessCounter.jsx";
 import { SocketContext } from '../../SocketioConnection.jsx';
 import LeaderBoard from "../../components/LiveLeaderboard/LiveLeaderboard.jsx";
 import Chatbox from "../../components/Chatbox/Chatbox.jsx";
+import Stack from "@mui/material/Stack";
 
 
 function RoomPage() {
@@ -52,7 +53,7 @@ function RoomPage() {
         <Box
             sx={{
                 display: "flex",
-                flexDirection: "row", // 👈 değiştirildi
+                flexDirection: "row",
                 alignItems: "flex-start",
                 justifyContent: "center",
                 minHeight: "100vh",
@@ -64,20 +65,39 @@ function RoomPage() {
             }}
         >
 
-        {listing && (
-                <>
-                    <ProductCard
-                        listing={listing}
-                        guessCount={guessCount}
-                        setGuessCount={setGuessCount}
-                    />
+            {listing && (
+                <Stack
+                    direction="row"
+                    sx={{ width: "100%", mt: 4 }}
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                >
+                    {/* 2 kolon boşluk */}
+                    <Box sx={{ flexBasis: "16.66%" }} />
 
-                    <LeaderBoard leaderboard={leaderboard} />
-                    <Chatbox />
+                    {/* 4 kolonluk ProductCard */}
+                    <Box sx={{ flexBasis: "33.33%", maxWidth: "33.33%" }}>
+                        <ProductCard
+                            listing={listing}
+                            guessCount={guessCount}
+                            setGuessCount={setGuessCount}
+                        />
+                    </Box>
 
-                </>
+                    {/* 1 kolon boşluk */}
+                    <Box sx={{ flexBasis: "8.33%" }} />
 
+                    {/* 3 kolonluk LeaderBoard */}
+                    <Box sx={{ flexBasis: "25%", maxWidth: "25%" }}>
+                        <LeaderBoard leaderboard={leaderboard} />
+                    </Box>
+
+                    {/* 2 kolon boşluk */}
+                    <Box sx={{ flexBasis: "16.66%" }} />
+                </Stack>
             )}
+            <Chatbox />
+
         </Box>
     );
 }
