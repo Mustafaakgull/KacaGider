@@ -3,7 +3,7 @@ from flask_socketio import emit
 from backend.models.tables import User
 from backend.models.redis_client import redis_client
 from backend.controllers.game_logic_controller import clicked_guess, game_finished
-from backend.controllers.session_controller import join_game_session
+from backend.controllers.session_controller import join_game_session, get_session_username
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -109,7 +109,7 @@ def chat_handler():
 
     @socketio.on('send_message')
     def handle_message(data):
-        username = redis_client.hget(f"session:{request.cookies.get('session_id')}", "username")
+        username = get_session_username()
         message = data.get('message', '')
 
         emit('receive_message', {

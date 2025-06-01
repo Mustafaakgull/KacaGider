@@ -1,24 +1,32 @@
 import React from 'react';
-import { Card, CardContent, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 
-function LiveLeaderboard({ leaderboard }) {
+function Leaderboard({ leaderboard }) {
     return (
-        <Card sx={{ m: 2 }}>
-            <CardContent>
-                <Typography variant="h6">🏆 Live Leaderboard</Typography>
-                <List>
-                    {leaderboard.map((user, index) => (
-                        <ListItem key={index}>
-                            <ListItemText
-                                primary={`${index + 1}. ${user.username}`}
-                                secondary={`Score: ${user.score}`}
-                            />
-                        </ListItem>
-                    ))}
-                </List>
-            </CardContent>
-        </Card>
+        <Box
+            sx={{
+                width: 300,
+                backgroundColor: "#222",
+                borderRadius: 2,
+                padding: 2,
+                boxShadow: 3,
+            }}
+        >
+            <Typography variant="h6" gutterBottom>
+                Leaderboard
+            </Typography>
+            <List dense>
+                {leaderboard.map((user, index) => (
+                    <ListItem key={user.username}>
+                        <ListItemText
+                            primary={`${index + 1}. ${user.username}`}
+                            secondary={`Score: ${user.score}`}
+                        />
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
     );
 }
 
-export default LiveLeaderboard;
+export default Leaderboard;

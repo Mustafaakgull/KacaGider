@@ -100,7 +100,14 @@ const ProductCard = ({  listing }) => {
                     { label: "Yıl", value: product["Yıl"] },
                     { label: "Kilometre", value: product["Kilometre"] },
                     { label: "Yakıt Tipi", value: product["Yakıt Tipi"] },
-                    { label: "Vites Tipi", value: product["Vites Tipi"] }
+                    { label: "Vites Tipi", value: product["Vites Tipi"] },
+                    { label: "Motor Gücü", value: product["Motor Gücü"] },
+                    { label: "Ağır Hasarlı", value: product["Ağır Hasarlı"] },
+                    { label: "Boya-değişen", value: product["Boya-değişen"] },
+                    { label: "Kimden ", value: product["Kimden"] },
+
+
+
                 ].map(({ label, value }, i) => (
                     <Box
                         key={i}
