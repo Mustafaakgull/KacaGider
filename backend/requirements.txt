@@ -1,7 +1,8 @@
 Flask~=3.1.0
-flask_sqlalchemy
+flask_sqlalchemy~=3.1.1
 flask-restx
 flask-socketio
+eventlet  # eğer flask-socketio async kullanıyorsan
 mysqlclient
 python-dotenv~=1.0.1
 alembic~=1.15.1
@@ -10,4 +11,4 @@ Werkzeug~=3.1.3
 redis
 flask-cors
 requests
-bs4
+beautifulsoup4  # ✅ bs4 yerine bu yazılmalı
