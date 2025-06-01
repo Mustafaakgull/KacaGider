@@ -5,11 +5,14 @@ from backend.models.redis_client import redis_client
 
 
 def scrape_vehicle(type_of):
+    # kiralik-araclar, motosiklet, otomobil, suanlık bu kadar
+    # kiralik-araclar içeriği daha farklı
 
-    if type_of == "":
+    if type_of == "" or None:
         type_of = "otomobil"
 
     page_num = random.randint(1, 50)
+    minimal_page_num = random.randint(1, 10)
     list_item_num = random.randint(0, 49)
     info_key_list = []
     info_value_list = []
@@ -17,6 +20,8 @@ def scrape_vehicle(type_of):
     car_page_links = []
 
     main_url_for_cars = f"https://www.arabam.com/ikinci-el/{type_of}?take=50&page={page_num}"
+    if type_of == "kiralik-araclar":
+        main_url_for_cars = f"https://www.arabam.com/ikinci-el/{type_of}?take=50&page={minimal_page_num}"
     main_response = requests.get(main_url_for_cars)
     main_res = main_response.text
     soup1 = BeautifulSoup(main_res, 'html.parser')
@@ -43,13 +48,9 @@ def scrape_vehicle(type_of):
 
     result = dict(zip(info_key_list, info_value_list))
     result.update({"fiyat": price})
-    print(page_url)
-    print(result)
-    print(photo_link_list)
-    print(type(photo_link_list[1]))
     redis_client.hset(f"info:{type_of}", mapping=result)
     redis_client.delete(f"photos:{type_of}")
     redis_client.rpush(f"photos:{type_of}", *photo_link_list)
     res = redis_client.lrange(f"photos:{type_of}", 0, -1)
-    print(res)
+
 # scrape_vehicle("otomobil")

@@ -29,10 +29,9 @@ def create_session(username):
         'session_id',
         session_id,
         httponly=True,
-        secure=True,  # Normalde bunu kullanmamız lazım, sadece https ten veri atmasi için, hostingi ayarlayınca değişecek
-        # secure=False,
-        samesite='None',  # controls cross-site behavior
-        # max_age=SESSION_TIME
+        secure=True,
+        samesite='None',
+        max_age=SESSION_TIME
     )
 
     # SONRA SİLİNECEK
@@ -53,7 +52,7 @@ def create_game_session(game_type):
 def create_private_game_session(game_type):
     redis_client.zadd(f"leaderboard:private_room_{game_type}")
 
-# TODO SOCKET
+
 def join_game_session(game_session):
     redis_client.hset(f"session:{request.cookies.get('session_id')}", "current_room", game_session)
 

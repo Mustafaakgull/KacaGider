@@ -25,7 +25,9 @@ app.register_blueprint(socketio_bp)
 
 init_socketio(socketio)
 
-scrape_vehicle("")
+from backend.controllers.timer import fetch_data_every
+fetch_data_every(5)
+
 if __name__ == '__main__':
     socketio.run(
         app,

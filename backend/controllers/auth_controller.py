@@ -52,11 +52,8 @@ class Login(Resource):
 
 @api.route('/logout')
 class Logout(Resource):
-    def get(self):
-        pass
-
     def post(self):
-        delete_session(request.cookies.get('session_id'))
+        delete_session()
         return {"message": "Logout successful"}, 200
 
 

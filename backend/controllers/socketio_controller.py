@@ -56,10 +56,13 @@ def game_handlers():
 
     socketio.on('guess_button_clicked')(clicked_guess)
     socketio.on('game_finished')(game_finished)
+
     @socketio.on("join_game_room")
     def join_game_room(data):
         join_game_session(data)
 # when user go back to the main page it will probably not revert it back it is a bug
+    
+
 
 def info_handler():
 
@@ -70,6 +73,7 @@ def info_handler():
         photos = redis_client.lrange(f"photos:{type}", 0, -1)
         emit("vehicle_data:", {"data": data, "photos": photos})
         print("vehicle_data:", data)
+
     @socketio.on("take_leaderboard_data")
     def send_leaderboard_data():
         leaderboard = redis_client.zrevrange("leaderboard", 0, -1, withscores=True)
@@ -77,6 +81,7 @@ def info_handler():
 
         emit("leaderboard_data", data)
         print("leaderboard_data:", data)
+
     @socketio.on("take_top3_leaderboard_data")
     def send_top3_from_leaderboard():
         leaderboard = redis_client.zrevrange("leaderboard", 0, 3, withscores=True)
@@ -85,6 +90,7 @@ def info_handler():
 
         emit("leaderboard_data_top3", data)
         print("leaderboard_data_top3:", data)
+
     @socketio.on("take_user_count")
     def send_user_count(room):
         data = redis_client.hlen(room)
@@ -110,9 +116,3 @@ def chat_handler():
             'username': username,
             'message': message
         }, broadcast=True)
-
-
-
-
-
-
