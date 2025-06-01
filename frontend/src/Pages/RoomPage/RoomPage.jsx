@@ -78,7 +78,6 @@ function RoomPage() {
             {listing && (
                 <>
                     <ProductCard
-                        socket={socket}
                         listing={listing}
                         guessCount={guessCount}
                         setGuessCount={setGuessCount}

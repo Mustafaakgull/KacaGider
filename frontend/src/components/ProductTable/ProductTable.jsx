@@ -1,9 +1,9 @@
 import GuessControls from "../GuessControls/GuessControls.jsx";
 import {Button, Card, CardContent, Slider, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useEffect, useState} from "react";
+import { useState} from "react";
 
-const ProductCard = ({ socket, listing }) => {
+const ProductCard = ({listing }) => {
     const [price, setPrice] = useState(0);
     const [guessCount, setGuessCount] = useState(0);
     const [feedback, setFeedback] = useState("");
@@ -20,30 +20,6 @@ const ProductCard = ({ socket, listing }) => {
         }
     };
 
-    const sendGuess = () => {
-        if (guessCount >= 3 || !socket) return;
-
-        socket.emit("make_guess", { guess: price });
-
-        socket.once("guess_feedback", (data) => {
-            setFeedback(data.message);
-        });
-
-        setGuessCount(prev => prev + 1);
-    };
-
-    useEffect(() => {
-        const resetGuess = () => {
-            setGuessCount(0);
-            setFeedback("");
-            setPrice(0);
-        };
-
-        socket?.on("round_end_results", resetGuess);
-        return () => {
-            socket?.off("round_end_results", resetGuess);
-        };
-    }, [socket]);
 
     const settings = {
         dots: true,
@@ -133,7 +109,6 @@ const ProductCard = ({ socket, listing }) => {
                 <Button
                     fullWidth
                     variant="contained"
-                    onClick={sendGuess}
                     disabled={guessCount >= 3}
                     sx={{ mt: 4, color: '#fff', backgroundColor: '#fbc02d' }}
                 >
