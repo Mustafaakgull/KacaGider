@@ -6,27 +6,19 @@ import Categories from "./components/Categories/Categories.jsx";
 import ProductTable from "./components/ProductTable/ProductTable.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import Contact from "./components/Contact/Contact.jsx";
+import RoomPage from "./Pages/RoomPage/RoomPage.jsx";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
     return (
-        <Stack spacing={2}>
-            <Box>
-                <Navbar/>
-            </Box>
-            <Categories/>
-            <Contact/>
-            <Stack direction="row" spacing={2} justifyContent="center">
-                <Box sx={{border: '2px solid white'}} flex={2}></Box>
-                <Box sx={{border: '2px solid white'}} flex={5}>
-                    <ProductTable/>
-                </Box>
-                <Box sx={{border: '2px solid white'}} flex={2}></Box>
-            </Stack>
-            <Box>
-                <Footer/>
-            </Box>
-
-        </Stack>
+        <Router>
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<Categories />} />
+                <Route path="/room/:category" element={<RoomPage />} />
+            </Routes>
+            <Footer />
+        </Router>
 
     );
 }
