@@ -1,11 +1,11 @@
 from flask import Flask, session
 from backend.models.db import db
-from backend.models.tables import User,Vehicle,House
+from backend.models.tables import User
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://root:13041998@localhost/kaca_gider'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://root:@localhost/kaca_gider'
 db.init_app(app)
 
 # from controllers.auth_controller import auth_bp

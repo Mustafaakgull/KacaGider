@@ -47,10 +47,11 @@ function RoomPage() {
 
     // 🔹 Listen for the server's response
     socket.on("vehicle_data:", (data) => {
+        console.log("imöei siktim", data);
       console.log("Received vehicle data:", data.data);
       console.log("photos", data.photos)
       console.log("photo1", data.photos["1"]) // fotolara erismek icin böyle
-      setListing(data.data)
+      setListing(data)
       // You can update state here if needed
     });
 
@@ -78,14 +79,12 @@ function RoomPage() {
             {listing && (
                 <>
                     <ProductCard
-                        socket={socket}
                         listing={listing}
                         guessCount={guessCount}
                         setGuessCount={setGuessCount}
                     />
 
-                    <GuessCounter count={guessCount} />
-                    <GuessControls socket={socket} />
+
                 </>
             )}
         </Box>

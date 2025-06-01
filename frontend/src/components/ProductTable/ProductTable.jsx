@@ -1,17 +1,35 @@
 import GuessControls from "../GuessControls/GuessControls.jsx";
-import {Button, Card, CardContent, Slider, TextField} from "@mui/material";
+import {Button, Card, CardContent, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useEffect, useState} from "react";
+import { useState} from "react";
+import Box from "@mui/material/Box";
+import Slider from "react-slick";
 
-const ProductCard = ({ socket, listing }) => {
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
+
+const ProductCard = ({  listing }) => {
+    console.log("lsiting",listing);
     const [price, setPrice] = useState(0);
     const [guessCount, setGuessCount] = useState(0);
     const [feedback, setFeedback] = useState("");
 
+
+
+
     if (!listing) return null; // veya <CircularProgress />
 
-    const images = listing?.photos || []; // photos Redis'e eklenmişse
-    const product = listing;
+    const images = typeof listing.photos === "string"
+        ? JSON.parse(listing.photos)
+        : listing.photos || [];
+    console.log("lsiting", listing);
+    console.log("listin data",listing.data);
+    console.log("listing data data",listing.data.data);
+
+    console.log("imagessss", images);
+    const product = listing.data;
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -20,68 +38,87 @@ const ProductCard = ({ socket, listing }) => {
         }
     };
 
-    const sendGuess = () => {
-        if (guessCount >= 3 || !socket) return;
 
-        socket.emit("make_guess", { guess: price });
 
-        socket.once("guess_feedback", (data) => {
-            setFeedback(data.message);
-        });
 
-        setGuessCount(prev => prev + 1);
-    };
-
-    useEffect(() => {
-        const resetGuess = () => {
-            setGuessCount(0);
-            setFeedback("");
-            setPrice(0);
-        };
-
-        socket?.on("round_end_results", resetGuess);
-        return () => {
-            socket?.off("round_end_results", resetGuess);
-        };
-    }, [socket]);
-
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: true,
-        fade: true,
-        waitForAnimate: false
-    };
+    // const settings = {
+    //     dots: true,
+    //     infinite: true,
+    //     speed: 500,
+    //     slidesToShow: 1,
+    //     slidesToScroll: 1,
+    //     arrows: true,
+    //     fade: true,
+    //     waitForAnimate: false
+    // };
 
     return (
-        <Card className={'card'} sx={{ maxWidth: 500, margin: "auto", padding: 5 }}>
-            <Slider {...settings}>
-                {images?.map((img, i) => (
-                    <div key={i}>
-                        <img src={img} alt={`product-${i}`} style={{ width: "100%", borderRadius: 8 }} />
+        <Card
+            className={'card'}
+            sx={{
+                maxWidth: 500,
+                margin: "auto",
+                padding: 5,
+                backgroundColor: "#424242", // gri arka plan
+                borderRadius: 2
+            }}
+        >
+            <Slider
+                dots={"true"}
+                infinite={"true"}
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                arrows={"true"}
+                fade={"true"}
+            >
+                {images.map((img, index) => (
+                    <div key={index}>
+                        <img
+                            src={img}
+                            alt={`image-${index}`}
+                            style={{
+                                width: "100%",
+                                maxHeight: "350px",
+                                objectFit: "cover",
+                                borderRadius: "8px"
+                            }}
+                        />
                     </div>
                 ))}
             </Slider>
 
+
+
+
             <CardContent className={'product-info-container'}>
-                <Typography className={'name info'} variant="h6">
+                <Typography className={'name info'} variant="h6" sx={{ color: "white" }}>
                     {product["Marka"]} {product["Model"]}
                 </Typography>
-                <Typography className={'model-year info'}>
-                    {product["Yıl"]}
-                </Typography>
-                <Typography className={'km info'}>
-                    {product["Kilometre"]}
-                </Typography>
-                <Typography className={'fuel info'}>
-                    {product["Yakıt Tipi"]}
-                </Typography>
-                <Typography className={'transmission info'}>
-                    {product["Vites Tipi"]}
-                </Typography>
+
+                {[
+                    { label: "Yıl", value: product["Yıl"] },
+                    { label: "Kilometre", value: product["Kilometre"] },
+                    { label: "Yakıt Tipi", value: product["Yakıt Tipi"] },
+                    { label: "Vites Tipi", value: product["Vites Tipi"] }
+                ].map(({ label, value }, i) => (
+                    <Box
+                        key={i}
+                        sx={{
+                            backgroundColor: "#616161",
+                            border: "1px solid #fbc02d",
+                            borderRadius: 1,
+                            px: 2,
+                            py: 1,
+                            mt: 1,
+                            color: "white"
+                        }}
+                    >
+                        <Typography variant="body2">
+                            <strong>{label}:</strong> {value}
+                        </Typography>
+                    </Box>
+                ))}
             </CardContent>
 
             <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -133,7 +170,6 @@ const ProductCard = ({ socket, listing }) => {
                 <Button
                     fullWidth
                     variant="contained"
-                    onClick={sendGuess}
                     disabled={guessCount >= 3}
                     sx={{ mt: 4, color: '#fff', backgroundColor: '#fbc02d' }}
                 >

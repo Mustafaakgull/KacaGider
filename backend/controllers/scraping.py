@@ -52,5 +52,6 @@ def scrape_vehicle(type_of):
     redis_client.delete(f"photos:{type_of}")
     redis_client.rpush(f"photos:{type_of}", *photo_link_list)
     res = redis_client.lrange(f"photos:{type_of}", 0, -1)
+    print("res: ", res)
 
 # scrape_vehicle("otomobil")
