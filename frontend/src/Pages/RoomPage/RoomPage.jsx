@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
 import ProductCard from "../../components/ProductTable/ProductTable.jsx";
 import GuessControls from "../../components/GuessControls/GuessControls.jsx";
@@ -9,11 +8,7 @@ import { SocketContext } from '../../SocketioConnection.jsx';
 import LeaderBoard from "../../components/LiveLeaderboard/LiveLeaderboard.jsx";
 import Chatbox from "../../components/Chatbox/Chatbox.jsx";
 
-// socket bağlantısı
-// const socket = io("http://localhost:5000", {
-//     withCredentials: true,
-//     transports: ["websocket"],
-// });
+
 function RoomPage() {
 
     const socket = useContext(SocketContext);
