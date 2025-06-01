@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     libxml2-dev \
     libxslt1-dev \
+    pkg-config \   # ✅ BURASI YENİ
     && apt-get clean
 
 WORKDIR /app
