@@ -4,10 +4,10 @@ import random
 from backend.models.redis_client import redis_client
 
 
-def scrape_vehicle(type):
+def scrape_vehicle(type_of):
 
-    if type == "":
-        type = "otomobil"
+    if type_of == "":
+        type_of = "otomobil"
 
     page_num = random.randint(1, 50)
     list_item_num = random.randint(0, 49)
@@ -16,7 +16,7 @@ def scrape_vehicle(type):
     photo_link_list = []
     car_page_links = []
 
-    main_url_for_cars = f"https://www.arabam.com/ikinci-el/{type}?take=50&page={page_num}"
+    main_url_for_cars = f"https://www.arabam.com/ikinci-el/{type_of}?take=50&page={page_num}"
     main_response = requests.get(main_url_for_cars)
     main_res = main_response.text
     soup1 = BeautifulSoup(main_res, 'html.parser')
@@ -46,6 +46,10 @@ def scrape_vehicle(type):
     print(page_url)
     print(result)
     print(photo_link_list)
-    redis_client.hset(f"info:{type}", mapping=result)
-
+    print(type(photo_link_list[1]))
+    redis_client.hset(f"info:{type_of}", mapping=result)
+    redis_client.delete(f"photos:{type_of}")
+    redis_client.rpush(f"photos:{type_of}", *photo_link_list)
+    res = redis_client.lrange(f"photos:{type_of}", 0, -1)
+    print(res)
 # scrape_vehicle("otomobil")

@@ -65,15 +65,18 @@ def info_handler():
 
     @socketio.on("take_vehicle_data")
     def send_vehicle_data(type):
+        print(type)
         data = redis_client.hgetall(f"info:{type}")
-        emit("vehicle_data:", data)
-
+        photos = redis_client.lrange(f"photos:{type}", 0, -1)
+        emit("vehicle_data:", {"data": data, "photos": photos})
+        print("vehicle_data:", data)
     @socketio.on("take_leaderboard_data")
     def send_leaderboard_data():
         leaderboard = redis_client.zrevrange("leaderboard", 0, -1, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
         emit("leaderboard_data", data)
+        print("leaderboard_data:", data)
     @socketio.on("take_top3_leaderboard_data")
     def send_top3_from_leaderboard():
         leaderboard = redis_client.zrevrange("leaderboard", 0, 3, withscores=True)
@@ -81,10 +84,12 @@ def info_handler():
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
         emit("leaderboard_data_top3", data)
+        print("leaderboard_data_top3:", data)
     @socketio.on("take_user_count")
     def send_user_count(room):
         data = redis_client.hlen(room)
         emit("room_user_count", data)
+        print("room_user_count:", data)
 
 
 def chat_handler():

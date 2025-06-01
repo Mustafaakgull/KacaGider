@@ -8,9 +8,11 @@ import Footer from "./components/Footer/Footer.jsx";
 import Contact from "./components/Contact/Contact.jsx";
 import RoomPage from "./Pages/RoomPage/RoomPage.jsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {socket, SocketContext} from "./SocketioConnection.jsx";
 
 function App() {
     return (
+        <SocketContext.Provider value={socket}>
         <Router>
             <Navbar />
             <Routes>
@@ -19,7 +21,7 @@ function App() {
             </Routes>
             <Footer />
         </Router>
-
+         </SocketContext.Provider>
     );
 }
 
