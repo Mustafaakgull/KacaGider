@@ -8,7 +8,7 @@ app = Flask(__name__)
 #CORS(app, resources={r"/*": {"origins": "*"}})  # geliştirme için
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:incirseverim123@localhost:3306/kaca_gider'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/kaca_gider'
