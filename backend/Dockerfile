@@ -1,9 +1,8 @@
 FROM python:3.11-slim
 
-# sistem bağımlılıkları (mysqlclient ve bs4 için gerekli)
 RUN apt-get update && apt-get install -y \
     gcc \
-    default-libmysqlclient-dev \
+    libmariadb-dev \
     build-essential \
     libssl-dev \
     libffi-dev \
@@ -15,7 +14,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
 COPY . .
 
