@@ -2,9 +2,10 @@ import './CategoryCard.css';
 import CarRentalIcon from '@mui/icons-material/CarRental';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Car } from "phosphor-react";
-
+import React, {useContext} from "react";
 import { FaMotorcycle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { SocketContext } from '../../SocketioConnection.jsx';
 
 
 
@@ -14,10 +15,13 @@ const iconMap = {
 };
 
 function CategoryCard({ category }) {
+    const socket = useContext(SocketContext);
     const navigate = useNavigate(); // ← hook tanımı
     const handleClick = () => {
         const path = category.name.toLowerCase(); // örn. 'Car' → 'car'
+        socket.emit("join_game_room", `/room/${path}`)
         navigate(`/room/${path}`);
+
     };
     return (
         <Card className="card-container" onClick={handleClick}>

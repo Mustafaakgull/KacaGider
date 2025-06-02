@@ -1,7 +1,7 @@
 import GuessControls from "../GuessControls/GuessControls.jsx";
 import {Button, Card, CardContent, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useState} from "react";
+import {useContext, useState} from "react";
 import Box from "@mui/material/Box";
 import Slider from "react-slick";
 
@@ -16,9 +16,10 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import WarningIcon from '@mui/icons-material/Warning';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import PersonIcon from '@mui/icons-material/Person';
-import {socket} from "../../SocketioConnection.jsx";
+import { SocketContext } from '../../SocketioConnection.jsx';
 
 const ProductCard = ({ listing }) => {
+    const socket = useContext(SocketContext);
     const [price, setPrice] = useState("");
     const [guessCount, setGuessCount] = useState(0);
     const [feedback, setFeedback] = useState("");
@@ -38,6 +39,9 @@ const ProductCard = ({ listing }) => {
         }
     };
 
+    const handleSubmit = () => {
+        socket.emit("guess_button_clicked", price);
+    };
     return (
         <Card
             className={'card'}
@@ -234,6 +238,10 @@ const ProductCard = ({ listing }) => {
                     variant="contained"
                     disabled={guessCount >= 3}
                     sx={{ mt: 2, color: '#fff', backgroundColor: '#fbc02d' }}
+                    onClick={() => {
+                        handleSubmit();
+                        alert("clicked")
+                    }}
                 >
                     Submit Guess
                 </Button>

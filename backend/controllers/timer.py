@@ -8,9 +8,8 @@ def fetch_data_every(interval):
     def task():
         while True:
             print(f"[{time.ctime()}] Fetching new data...")
-            scrape_vehicle("otomobil")
-            # scrape_vehicle("motosiklet")
-            # scrape_vehicle("kiralik-araclar")
+            scrape_vehicle()
+
             # game_finished()
             time.sleep(interval)
     thread = threading.Thread(target=task, daemon=True)

@@ -1,5 +1,5 @@
 from flask import Flask
-from models.db import db
+from backend.models.db import db
 from flask_socketio import SocketIO
 from controllers.socketio_controller import socketio_bp, init_socketio
 from flask_cors import CORS
@@ -11,7 +11,7 @@ CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:incirseverim123@localhost:3306/kaca_gider'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/kaca_gider'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:13041998@localhost:3306/kaca_gider'
 db.init_app(app)
 
 from controllers.auth_controller import auth_bp

@@ -109,13 +109,14 @@ class ResetUsername(Resource):
 class WhoAmI(Resource):
     def get(self):
         session_id = request.cookies.get("session_id")
+        print("session_id", session_id)
         if not session_id:
             return {"username": None}, 401
 
         username = redis_client.hget(f"session:{session_id}", "username")
         if username:
             print('username', username)
-            return {"username": username}, 200
+            return {"username": username, "session_id": session_id}
 
         return {"username": None}, 401
 

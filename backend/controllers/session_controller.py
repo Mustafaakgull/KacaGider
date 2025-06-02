@@ -1,18 +1,16 @@
 from datetime import datetime
-
 from backend.models.redis_client import redis_client
-
-# noinspection PyUnresolvedReferences
 from flask import make_response, request
 import uuid
 import datetime
-
 SESSION_TIME = 3600
 GAME_TIME = 100
-
+session_id_global = None
 
 def create_session(username):
     session_id = str(uuid.uuid4())
+    global session_id_global
+    session_id_global = session_id
     print("sonradan sil, session id: "+session_id)
     redis_client.hset(f"session:{session_id}", mapping={
         "username": username,
@@ -37,24 +35,44 @@ def create_session(username):
     # SONRA SİLİNECEK
     print("response" + str(response))
     print("session id "+session_id)
-    print()
-
+    print("global session id "+session_id_global)
     return response
 
 
-def create_game_session(game_type):
+def create_game_session(room_name):
     # game_session_id = str(uuid.uuid4())
-    redis_client.hset(f"guessed_prices:public_room_{game_type}", mapping={})
-    redis_client.zadd(f"leaderboard:public_room_{game_type}")
+    redis_client.hset(f"guessed_prices:{room_name}", mapping={})
+    redis_client.zadd(f"leaderboard:{room_name}")
 
 
-# TODO
-def create_private_game_session(game_type):
-    redis_client.zadd(f"leaderboard:private_room_{game_type}")
+def generate_id():
+    words = ["sunny", "mountain", "red", "wolf", "cloud", "green", "silent"]
+    selected = random.sample(words, 3)
+    suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    return '-'.join(selected + [suffix])
 
 
-def join_game_session(game_session):
-    redis_client.hset(f"session:{request.cookies.get('session_id')}", "current_room", game_session)
+def create_private_game_session(password, category):
+    private_game_id = generate_id()
+    redis_client.zadd(f"leaderboard:{private_game_id}")
+    redis_client.hset(f"guessed_prices:{private_game_id}", mapping={})
+    redis_client.hset(f"{private_game_id}", mapping={
+        "password": password,
+        "category": category
+    })
+    return {"private_room_name": private_game_id, "category": category}
+
+
+def join_private_game_session(private_room_name, password):
+    if password == redis_client.hget(f"{private_room_name}", "password"):
+        redis_client.hset(f"session:{request.cookies.get('session_id')}", mapping={
+            "current_room": private_room_name
+        })
+
+
+def join_game_session(room_name):
+    room_name = room_name_converter(room_name)
+    redis_client.hset(f"session:{request.cookies.get('session_id')}", "current_room", room_name)
 
 
 def get_session_username():

@@ -1,5 +1,5 @@
 import { Box, Typography, Button } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import RoomCard from '../../components/RoomCard/RoomCard';
 
 const dummyRooms = [
