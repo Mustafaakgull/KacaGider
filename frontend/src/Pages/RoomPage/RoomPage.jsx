@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import ProductCard from "../../components/ProductTable/ProductTable.jsx";
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid2 from '@mui/material/Unstable_Grid2';
 import GuessControls from "../../components/GuessControls/GuessControls.jsx";
 import GuessCounter from "../../components/GuessCounter/GuessCounter.jsx";
 // import io from "socket.io-client";
@@ -68,22 +68,22 @@ function RoomPage() {
 
             {
                 listing && (
-                    <Grid container spacing={1} sx={{ mt: 2, width: "100%" }} justifyContent="center">
+                    <Grid2 container spacing={1} sx={{ mt: 2, width: "100%" }} justifyContent="center">
 
                         {/* ProductCard - daha geniş (7/12) */}
-                        <Grid xs={12} md={6}>
+                        <Grid2 xs={12} md={6}>
                             <ProductCard
                                 listing={listing}
                                 guessCount={guessCount}
                                 setGuessCount={setGuessCount}
                             />
-                        </Grid>
+                        </Grid2>
 
                         {/* Leaderboard - geri kalan alan (3/12) */}
-                        <Grid xs={12} md={3}>
+                        <Grid2 xs={12} md={3}>
                             <LeaderBoard leaderboard={leaderboard} />
-                        </Grid>
-                    </Grid>
+                        </Grid2>
+                    </Grid2>
 
                 )
             }
