@@ -31,6 +31,9 @@ def scrape_vehicle(type_of):
         car_page_links.append(cars.find('a')['href'])
 
     page_url = "https://www.arabam.com" + car_page_links[list_item_num]
+    print("pageurl", page_url)
+    print("pagenum", page_num)
+    print("mainurlcorcars",main_url_for_cars)
     response = requests.get(page_url)
     car_page_res = response.text
 
