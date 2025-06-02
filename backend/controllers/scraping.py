@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import random
 from backend.models.redis_client import redis_client
-
+import re
 
 def scrape_vehicle():
     success = False
@@ -39,6 +39,7 @@ def scrape_vehicle():
                 photos = soup2.find_all("div", class_="swiper-slide")
                 values = soup2.find_all("div", class_="property-item")
                 price = soup2.find("div", class_="desktop-information-price").get_text(strip=True)
+                price = re.sub(r"[^\d]", "", price)
                 for info in values:
                     info_key_list.append(info.find('div', class_="property-key").get_text(strip=True))
                     info_value_list.append(info.find('div', class_="property-value").get_text(strip=True))

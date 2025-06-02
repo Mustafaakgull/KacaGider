@@ -36,6 +36,7 @@ def create_session(username):
     print("response" + str(response))
     print("session id "+session_id)
     print("global session id "+session_id_global)
+    print("redis_client ssesses", redis_client.hgetall(f"session:{session_id}"))
     return response
 
 
@@ -68,11 +69,6 @@ def join_private_game_session(private_room_name, password):
         redis_client.hset(f"session:{request.cookies.get('session_id')}", mapping={
             "current_room": private_room_name
         })
-
-
-def join_game_session(room_name):
-    room_name = room_name_converter(room_name)
-    redis_client.hset(f"session:{request.cookies.get('session_id')}", "current_room", room_name)
 
 
 def get_session_username():

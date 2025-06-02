@@ -19,7 +19,7 @@ function CategoryCard({ category }) {
     const navigate = useNavigate(); // ← hook tanımı
     const handleClick = () => {
         const path = category.name.toLowerCase(); // örn. 'Car' → 'car'
-        socket.emit("join_game_room", `/room/${path}`)
+        socket.emit("join_room", `${path}`)
         navigate(`/room/${path}`);
 
     };

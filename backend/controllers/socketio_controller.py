@@ -6,7 +6,7 @@ import backend.controllers.session_controller
 from backend.models.tables import User
 from backend.models.redis_client import redis_client
 from backend.controllers.game_logic_controller import game_finished, room_name_converter
-from backend.controllers.session_controller import join_game_session, get_session_username
+from backend.controllers.session_controller import  get_session_username
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -60,15 +60,20 @@ def game_handlers():
     def clicked_guess(guessed_price):
         # cookie_session = request.cookies.get("session_id")
         cookie_session = backend.controllers.session_controller.session_id_global
+        print("global sesion", cookie_session)
         user = redis_client.hgetall(f"session:{cookie_session}")
+        print("user", user)
         if int(user["guess_count"]) <= 3:
 
             redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
             real_price = redis_client.hget(f"info:{user['current_room']}", "fiyat")
-            real_price = int(real_price)
-            percentage_price = (guessed_price / real_price) * 100
-
-            redis_client.hset(f"guessed_prices:{user['current_room']}", {user['username']}, guessed_price)
+            print("user current room", user["current_room"])
+            print("realş", real_price)
+            percentage_price = (guessed_price / int(real_price)) * 100
+            print("user current room", user["current_room"])
+            print("user username", user["username"])
+            print("guessed price", guessed_price)
+            redis_client.hset(f"guessed_prices:{str(user['current_room'])}", user['username'], str(guessed_price))
 
             if percentage_price < 100:
                 emit("hint_message", "You need to guess higher")
@@ -84,8 +89,14 @@ def game_handlers():
         scrape_vehicle()
 
     @socketio.on("join_room")
-    def join_game_room(data):
-        join_game_session(data)
+    def join_game_session(room_name):
+        cookie_session = backend.controllers.session_controller.session_id_global
+        room_name = room_name_converter(room_name)
+        print("user before join", redis_client.hgetall(f"session:{cookie_session}"))
+        redis_client.hset(f"session:{cookie_session}", "current_room", room_name)
+        print("user after join", redis_client.hgetall(f"session:{cookie_session}"))
+
+
 # when user go back to the main page it will probably not revert it back it is a bug
 # no just call it again when go back into main page
 
