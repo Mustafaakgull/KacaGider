@@ -69,4 +69,7 @@ class Login(Resource):
 class session(Resource):
     def get(self):
         # not working right now
-        return {"message": f"{request.cookies.get('session_id')}","m2": f"{redis_client.get("session:omerke")}"}, 200
+        return {
+            "message": f"{request.cookies.get('session_id')}",
+            "m2": f"{redis_client.get('session:omerke')}"
+        }, 200
