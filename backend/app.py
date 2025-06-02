@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from models.db import db
 from flask_socketio import SocketIO
@@ -32,8 +33,9 @@ if __name__ == '__main__':
     socketio.run(
         app,
         debug=True,
-        host='127.0.0.1',
+        host='0.0.0.0',  # ✅ tüm dış istekleri dinle
         port=5000,
         use_reloader=False,
         allow_unsafe_werkzeug=True,
-        )
+    )
+
