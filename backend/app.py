@@ -4,6 +4,7 @@ from models.db import db
 from flask_socketio import SocketIO
 from controllers.socketio_controller import socketio_bp, init_socketio
 from flask_cors import CORS
+from models.redis_client import redis_client
 from controllers.scraping import scrape_vehicle
 app = Flask(__name__)
 #CORS(app, resources={r"/*": {"origins": "*"}})  # geliştirme için
@@ -32,6 +33,16 @@ init_socketio(socketio)
 
 from controllers.timer import fetch_data_every
 fetch_data_every(20)
+
+@app.route("/test-redis")
+def test_redis():
+    try:
+        redis_client.set("testkey", "hello")
+        value = redis_client.get("testkey")
+        return {"message": value}, 200
+    except Exception as e:
+        return {"error": str(e)}, 500
+
 
 if __name__ == '__main__':
     socketio.run(
