@@ -30,10 +30,13 @@ def scrape_vehicle(type_of):
     for cars in listed_cars:
         car_page_links.append(cars.find('a')['href'])
 
-    page_url = "https://www.arabam.com" + car_page_links[list_item_num]
-    print("pageurl", page_url)
-    print("pagenum", page_num)
-    print("mainurlcorcars",main_url_for_cars)
+    if car_page_links and list_item_num < len(car_page_links):
+        page_url = "https://www.arabam.com" + car_page_links[list_item_num]
+    else:
+        print("Geçerli bir link bulunamadı.")
+        return
+
+
     response = requests.get(page_url)
     car_page_res = response.text
 
