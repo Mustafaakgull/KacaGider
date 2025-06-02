@@ -1,5 +1,4 @@
 import { Box, Typography, Button } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import RoomCard from '../../components/RoomCard/RoomCard';
 
 const dummyRooms = [
@@ -31,13 +30,26 @@ export default function UserRoomsPage() {
                 </Button>
             </Box>
 
-            <Grid container spacing={3}>
+            {/* Responsive Card Container */}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 3,
+                }}
+            >
                 {dummyRooms.map(room => (
-                    <Grid xs={12} sm={6} md={4} lg={3} key={room.id}> {/* ✅ Responsive Grid v2 */}
+                    <Box
+                        key={room.id}
+                        sx={{
+                            flex: "0 0 calc(25% - 24px)",
+                            minWidth: "280px",             // minimum width for small screens
+                        }}
+                    >
                         <RoomCard room={room} />
-                    </Grid>
+                    </Box>
                 ))}
-            </Grid>
+            </Box>
         </Box>
     );
 }

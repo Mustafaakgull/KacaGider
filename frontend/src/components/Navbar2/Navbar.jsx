@@ -178,12 +178,7 @@ function Navbar() {
                                 </>
                             )}
 
-                            <Box sx={{mr: 2}} className="box">
-                                <LightModeOutlinedIcon fontSize="large"/>
-                            </Box>
-                            <Box sx={{mr: 2}} className="box">
-                                <NotificationsNoneOutlinedIcon fontSize="large"/>
-                            </Box>
+
                         </Box>
                     </Toolbar>
                 </Container>
@@ -249,9 +244,6 @@ function Navbar() {
                 email={registerEmail}
                 onUpdateSuccess={(newUsername) => setLoggedInUser(newUsername)}
             />
-
-
-
 
         </>
     );
