@@ -1,7 +1,6 @@
 import threading
 import time
-from backend.controllers.scraping import scrape_vehicle
-from backend.controllers.game_logic_controller import game_finished
+from controllers.scraping import scrape_vehicle
 
 
 def fetch_data_every(interval):

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from backend.models.redis_client import redis_client
+from models.redis_client import redis_client
 
 # noinspection PyUnresolvedReferences
 from flask import make_response, request

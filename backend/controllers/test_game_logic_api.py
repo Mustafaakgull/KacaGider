@@ -1,7 +1,5 @@
-from backend.models.redis_client import redis_client
-from backend.models.db import db
-from backend.models.tables import User
-from backend.controllers.session_controller import create_game_session
+from models.redis_client import redis_client
+from controllers.session_controller import create_game_session
 # noinspection PyUnresolvedReferences
 from flask import make_response, request, Blueprint
 from flask_socketio import emit

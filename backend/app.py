@@ -17,7 +17,7 @@ db.init_app(app)
 
 from controllers.auth_controller import auth_bp
 from controllers.user_controller import user_bp
-from backend.controllers.test_calls import test_call_bp
+from controllers.test_calls import test_call_bp
 
 app.register_blueprint(test_call_bp)
 app.register_blueprint(user_bp)
@@ -26,7 +26,7 @@ app.register_blueprint(socketio_bp)
 
 init_socketio(socketio)
 
-from backend.controllers.timer import fetch_data_every
+from controllers.timer import fetch_data_every
 fetch_data_every(20)
 
 if __name__ == '__main__':

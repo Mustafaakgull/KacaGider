@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 import random
 from dotenv import load_dotenv
 from flask import jsonify
-from backend.models.redis_client import redis_client
+from models.redis_client import redis_client
 
 load_dotenv()
 # my_email = os.getenv("KACA_GİDER_EMAİL")

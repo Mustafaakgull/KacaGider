@@ -1,6 +1,6 @@
 from flask import Flask, session
-from backend.models.db import db
-from backend.models.tables import User
+from models.db import db
+from models.tables import User
 
 app = Flask(__name__)
 

@@ -1,10 +1,9 @@
 from flask import Blueprint, request
 from flask_socketio import emit
-from backend.models.tables import User
-from backend.models.redis_client import redis_client
-from backend.controllers.game_logic_controller import clicked_guess, game_finished
-from backend.controllers.session_controller import join_game_session, get_session_username
-# from backend.helpers import check_password_strength
+from models.tables import User
+from models.redis_client import redis_client
+from controllers.game_logic_controller import clicked_guess, game_finished
+from controllers.session_controller import join_game_session, get_session_username
 socketio_bp = Blueprint('socketio_bp', __name__)
 
 # Initialize these as None, will be set later
