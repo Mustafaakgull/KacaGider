@@ -14,11 +14,10 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY . .
+
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-
-COPY . .
 
 EXPOSE 5000
 
