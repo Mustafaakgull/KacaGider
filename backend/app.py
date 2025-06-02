@@ -1,5 +1,5 @@
 from flask import Flask
-from backend.models.db import db
+from models.db import db
 from flask_socketio import SocketIO
 from controllers.socketio_controller import socketio_bp, init_socketio
 from flask_cors import CORS
