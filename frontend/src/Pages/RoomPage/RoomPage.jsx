@@ -1,54 +1,36 @@
-import React, {useContext, useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import { Box, Grid } from "@mui/material";
 import ProductCard from "../../components/ProductTable/ProductTable.jsx";
-import Grid2 from '@mui/material/Unstable_Grid2';
 import GuessControls from "../../components/GuessControls/GuessControls.jsx";
 import GuessCounter from "../../components/GuessCounter/GuessCounter.jsx";
-// import io from "socket.io-client";
 import { SocketContext } from '../../SocketioConnection.jsx';
 import LeaderBoard from "../../components/LiveLeaderboard/LiveLeaderboard.jsx";
 import Chatbox from "../../components/Chatbox/Chatbox.jsx";
 import Stack from "@mui/material/Stack";
 
-
 function RoomPage() {
-
     const socket = useContext(SocketContext);
     const [guessCount, setGuessCount] = useState(0);
     const [listing, setListing] = useState(null);
     const [leaderboard, setLeaderboard] = useState([]);
 
-
-
-
-
     useEffect(() => {
-    // 🔹 Emit request for data
-    socket.emit("take_vehicle_data", "otomobil"); // or "bus", etc.
-    socket.emit("take_leaderboard_data")
-    socket.on("leaderboard_data", data => {
-        if (data.leaderboard == null) {
-            setLeaderboard(null)
-        }
-        setLeaderboard(data);
-    })
+        socket.emit("take_vehicle_data", "otomobil");
+        socket.emit("take_leaderboard_data");
 
-    // 🔹 Listen for the server's response
-    socket.on("vehicle_data:", (data) => {
-        console.log("imöei siktim", data);
-      console.log("Received vehicle data:", data.data);
-      console.log("photos", data.photos)
-      console.log("photo1", data.photos["1"]) // fotolara erismek icin böyle
-      setListing(data)
-      // You can update state here if needed
-    });
+        socket.on("leaderboard_data", data => {
+            setLeaderboard(data?.leaderboard ?? null);
+        });
 
-    // 🔹 Clean up the listener
-    return () => {
-      socket.off("vehicle_data:");
-    };
-  }, [socket]);
+        socket.on("vehicle_data:", data => {
+            console.log("Vehicle data:", data);
+            setListing(data);
+        });
 
+        return () => {
+            socket.off("vehicle_data:");
+        };
+    }, [socket]);
 
     return (
         <Box
@@ -65,30 +47,24 @@ function RoomPage() {
                 overflowY: "auto",
             }}
         >
+            {listing && (
+                <Grid container spacing={2} sx={{ mt: 2, width: "100%" }} justifyContent="center">
+                    {/* ProductCard - daha geniş alan */}
+                    <Grid item xs={12} md={6}>
+                        <ProductCard
+                            listing={listing}
+                            guessCount={guessCount}
+                            setGuessCount={setGuessCount}
+                        />
+                    </Grid>
 
-            {
-                listing && (
-                    <Grid2 container spacing={1} sx={{ mt: 2, width: "100%" }} justifyContent="center">
-
-                        {/* ProductCard - daha geniş (7/12) */}
-                        <Grid2 xs={12} md={6}>
-                            <ProductCard
-                                listing={listing}
-                                guessCount={guessCount}
-                                setGuessCount={setGuessCount}
-                            />
-                        </Grid2>
-
-                        {/* Leaderboard - geri kalan alan (3/12) */}
-                        <Grid2 xs={12} md={3}>
-                            <LeaderBoard leaderboard={leaderboard} />
-                        </Grid2>
-                    </Grid2>
-
-                )
-            }
+                    {/* Leaderboard */}
+                    <Grid item xs={12} md={3}>
+                        <LeaderBoard leaderboard={leaderboard} />
+                    </Grid>
+                </Grid>
+            )}
             <Chatbox />
-
         </Box>
     );
 }
