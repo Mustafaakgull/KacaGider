@@ -7,6 +7,7 @@ from backend.models.tables import User
 from backend.models.redis_client import redis_client
 from backend.controllers.game_logic_controller import game_finished, room_name_converter
 from backend.controllers.session_controller import  get_session_username
+from backend.controllers.scraping import scrape_vehicle
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -86,6 +87,11 @@ def game_handlers():
     @socketio.on('game_finished')
     def games_finished():
         game_finished()
+        cookie_session = backend.controllers.session_controller.session_id_global
+        leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', "current_room")}", 0, -1, withscores=True)
+        data = [{"username": name, "score": int(score)} for name, score in leaderboard]
+
+        print("leaderboard data", data)
         scrape_vehicle()
 
     @socketio.on("join_room")
@@ -104,38 +110,29 @@ def game_handlers():
 def info_handler():
 
     @socketio.on("take_vehicle_data")
-    def send_vehicle_data(type):
-        data = redis_client.hgetall(f"info:{type}")
-        photos = redis_client.lrange(f"photos:{type}", 0, -1)
+    def send_vehicle_data(room_name):
+        room_name = room_name_converter(room_name)
+        data = redis_client.hgetall(f"info:{room_name}")
+        photos = redis_client.lrange(f"photos:{room_name}", 0, -1)
         emit("vehicle_data:", {"data": data, "photos": photos})
         print("vehicle_data:", data)
 
     @socketio.on("take_leaderboard_data")
     def send_leaderboard_data(room_name):
-        room_name_copy = room_name_converter(room_name)
-        if room_name_copy is None:
-            leaderboard = redis_client.zrevrange(f"leaderboard:{room_name}", 0, -1, withscores=True)
-            data = [{"username": name, "score": int(score)} for name, score in leaderboard]
+        room_name = room_name_converter(room_name)
+        leaderboard = redis_client.zrevrange(f"leaderboard:{room_name}", 0, -1, withscores=True)
+        data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
-        else:
-            leaderboard = redis_client.zrevrange(f"leaderboard:{room_name}", 0, -1, withscores=True)
-            data = [{"username": name, "score": int(score)} for name, score in leaderboard]
-
-        emit("leaderboard_data", data)
-        print("leaderboard_data:", data)
+        emit("leaderboard_data", leaderboard)
+        print("leaderboard_data:", leaderboard)
 
     @socketio.on("take_top3_leaderboard_data")
     def send_top3_from_leaderboard(room_name):
         room_name = room_name_converter(room_name)
-        if room_name_copy is None:
-            leaderboard = redis_client.get(f"leaderboard_top3:{room_name}")
-            data = [{"username": name, "score": int(score)} for name, score in leaderboard]
+        leaderboard = redis_client.get(f"leaderboard_top3:{room_name}")
 
-        else:
-            leaderboard = redis_client.get(f"leaderboard_top3:{room_name}")
-            data = [{"username": name, "score": int(score)} for name, score in leaderboard]
-        emit("leaderboard_data_top3", data)
-        print("leaderboard_data_top3:", data)
+        emit("leaderboard_data_top3", leaderboard)
+        print("leaderboard_data_top3:", leaderboard)
 
     @socketio.on("take_user_count")
     def send_user_count(room_name):

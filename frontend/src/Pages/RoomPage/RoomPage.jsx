@@ -24,22 +24,15 @@ function RoomPage() {
                     setIsAuthenticated(true);
                 }
             })
-            .catch(() => setIsAuthenticated(false));
+            .catch(() => setIsAuthenticated(true));
     }, []);
+    const path = window.location.pathname;
+    const parts = path.split("/"); // ["", "room", "car"]
+    const roomName = parts[2];
 
     useEffect(() => {
-        socket.emit("take_vehicle_data", "otomobil");
-        socket.emit("take_leaderboard_data");
+        socket.emit("take_vehicle_data", roomName);
 
-        socket.on("leaderboard_data", data => {
-            if (Array.isArray(data)) {
-                setLeaderboard(data);
-            } else if (Array.isArray(data.leaderboard)) {
-                setLeaderboard(data.leaderboard);
-            } else {
-                setLeaderboard([]);
-            }
-        });
 
         socket.on("vehicle_data:", (data) => {
             setListing(data);
@@ -59,7 +52,13 @@ function RoomPage() {
                 setShowResults(false);
                 setGuessCount(0);
             }, 5000);
-        }, 3000);
+            socket.emit("game_finished")
+            socket.emit("take_leaderboard_data", roomName);
+            socket.on("leaderboard_data", data => {
+            console.log("leaderboardYdata", data)
+        });
+            console.log("game finished")
+        }, 8000);
 
         return () => {
             socket.off("vehicle_data:");

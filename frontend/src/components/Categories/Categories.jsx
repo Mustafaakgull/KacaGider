@@ -9,7 +9,7 @@ function Categories() {
 
     const categories = [
         {id: 1, name: 'Car', player: 26},
-        {id: 2, name: 'Bike', player: 15},
+        {id: 2, name: 'Motorcycle', player: 15},
     ];
 
     return (
