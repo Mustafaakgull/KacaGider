@@ -1,5 +1,4 @@
-import { Box, Typography, Button } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Typography, Button, Grid } from "@mui/material";
 import RoomCard from '../../components/RoomCard/RoomCard';
 
 const dummyRooms = [
@@ -33,7 +32,7 @@ export default function UserRoomsPage() {
 
             <Grid container spacing={3}>
                 {dummyRooms.map(room => (
-                    <Grid xs={12} sm={6} md={4} lg={3} key={room.id}> {/* ✅ Responsive Grid v2 */}
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={room.id}>
                         <RoomCard room={room} />
                     </Grid>
                 ))}
