@@ -5,6 +5,7 @@ from flask_socketio import SocketIO
 from controllers.socketio_controller import socketio_bp, init_socketio
 from flask_cors import CORS
 from models.redis_client import redis_client
+from models.tables import User
 from controllers.scraping import scrape_vehicle
 app = Flask(__name__)
 #CORS(app, resources={r"/*": {"origins": "*"}})  # geliştirme için
@@ -42,6 +43,14 @@ def test_redis():
         return {"message": value}, 200
     except Exception as e:
         return {"error": str(e)}, 500
+
+with app.app_context():
+    db.create_all()
+    user1 = User(username="mustafa", email="mustafa@gmail.com", password="1234")
+    user2 = User(username="omer", email="omer@gmail.com", password="12345")
+    user3 = User(username="mmmm", email="mmmm@gmail.com", password="12346")
+    db.session.add_all([user1, user2, user3])
+    db.session.commit()
 
 
 if __name__ == '__main__':
