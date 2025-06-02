@@ -46,11 +46,7 @@ def test_redis():
 
 with app.app_context():
     db.create_all()
-    user1 = User(username="mustafa", email="mustafa@gmail.com", password="1234")
-    user2 = User(username="omer", email="omer@gmail.com", password="12345")
-    user3 = User(username="mmmm", email="mmmm@gmail.com", password="12346")
-    db.session.add_all([user1, user2, user3])
-    db.session.commit()
+
 
 
 if __name__ == '__main__':
