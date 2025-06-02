@@ -11,7 +11,7 @@ def scrape_vehicle(type_of):
     if type_of == "" or None:
         type_of = "otomobil"
 
-    page_num = random.randint(1, 50)
+    page_num = random.randint(1, 20)
     minimal_page_num = random.randint(1, 10)
     list_item_num = random.randint(0, 49)
     info_key_list = []
