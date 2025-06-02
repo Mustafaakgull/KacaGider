@@ -10,9 +10,13 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:incirseverim123@localhost:3306/kaca_gider'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/kaca_gider'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/kaca_gider'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    f"mysql://{os.environ.get('MYSQLUSER')}:{os.environ.get('MYSQLPASSWORD')}"
+    f"@{os.environ.get('MYSQLHOST')}:{os.environ.get('MYSQLPORT')}/{os.environ.get('MYSQLDATABASE')}"
+)
 db.init_app(app)
 
 from controllers.auth_controller import auth_bp
