@@ -1,8 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Box } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
 import './Register.css'
-import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
 
@@ -11,7 +9,6 @@ const url = "http://127.0.0.1:5000";
 function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, setEmail, setPassword, username, email, password }) {
 
 
-    const [captchaToken, setCaptchaToken] = useState(null);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -21,8 +18,6 @@ function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, 
             setEmail(value);
         } else if (name === "password") {
             setPassword(value);
-        } else if (name === "captcha") {
-            setCaptchaToken(value);
         }
     };
 
@@ -110,10 +105,7 @@ function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, 
                         onChange={handleChange}
                         className={'input'}
                     />
-                    <ReCAPTCHA
-                        sitekey="6LdQ0PIqAAAAAI7ot30prHy0ue9j9O2Ly5TeYzWB"
-                        onChange={handleChange}
-                    />
+
                 </Box>
             </DialogContent>
 

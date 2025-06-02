@@ -1,7 +1,6 @@
-import GuessControls from "../GuessControls/GuessControls.jsx";
 import {Button, Card, CardContent, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useContext, useState} from "react";
+import { useState} from "react";
 import Box from "@mui/material/Box";
 import Slider from "react-slick";
 
@@ -16,13 +15,14 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import WarningIcon from '@mui/icons-material/Warning';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import PersonIcon from '@mui/icons-material/Person';
-import { SocketContext } from '../../SocketioConnection.jsx';
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import Stack from "@mui/material/Stack";
 
-const ProductCard = ({ listing }) => {
-    const socket = useContext(SocketContext);
+// socket bağlancak
+const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) => {
     const [price, setPrice] = useState("");
-    const [guessCount, setGuessCount] = useState(0);
     const [feedback, setFeedback] = useState("");
+
 
     if (!listing) return null;
 
@@ -39,14 +39,53 @@ const ProductCard = ({ listing }) => {
         }
     };
 
-    const handleSubmit = () => {
-        socket.emit("guess_button_clicked", price);
+    const GuessControls = ({ onChange, disabled }) => {
+        const handleChange = (amount) => {
+            if (!disabled) onChange?.(amount);
+        };
+
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 3,
+                }}
+            >
+                <Stack spacing={2}>
+                    <Stack direction="row" spacing={2} justifyContent="center">
+                        <Button variant="contained" color="success" disabled={disabled} onClick={() => handleChange(100000)}>
+                            + 100.000 ₺
+                        </Button>
+                        <Button variant="contained" color="success" disabled={disabled} onClick={() => handleChange(25000)}>
+                            + 25.000 ₺
+                        </Button>
+                        <Button variant="contained" color="success" disabled={disabled} onClick={() => handleChange(5000)}>
+                            + 5.000 ₺
+                        </Button>
+                    </Stack>
+                    <Stack direction="row" spacing={2} justifyContent="center">
+                        <Button variant="contained" color="error" disabled={disabled} onClick={() => handleChange(-100000)}>
+                            − 100.000 ₺
+                        </Button>
+                        <Button variant="contained" color="error" disabled={disabled} onClick={() => handleChange(-25000)}>
+                            − 25.000 ₺
+                        </Button>
+                        <Button variant="contained" color="error" disabled={disabled} onClick={() => handleChange(-5000)}>
+                            − 5.000 ₺
+                        </Button>
+                    </Stack>
+                </Stack>
+            </Box>
+        );
     };
+
+
     return (
         <Card
             className={'card'}
             sx={{
-                width: 500,
+                width: 600,
                 maxWidth: "100%",
                 margin: "auto",
                 padding: 5,
@@ -122,9 +161,9 @@ const ProductCard = ({ listing }) => {
                             icon: <FlashOnIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            key: "Ağır Hasarlı",
-                            label: "Damaged",
-                            icon: <WarningIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                            key: "Kasa Tipi",
+                            label: "Body Type",
+                            icon: <DirectionsCarIcon  fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
                             key: "Boya-değişen",
@@ -155,12 +194,13 @@ const ProductCard = ({ listing }) => {
                         if (label === "Seller")
                             value = value === "Bireysel" ? "Individual"
                                 : value === "Galeriden" ? "Dealer"
-                                    : value;
+                                    : value === "Sahibinden" ? "Individual"
+                                        : value;
 
-                        if (label === "Damaged" || label === "Paint/Changed Parts")
-                            value = value === "Evet" ? "Yes"
-                                : value === "Hayır" ? "No"
-                                    : value;
+                        if (label === "Paint/Changed Parts")
+                            value = value === "Belirtilmemiş" ? "no"
+                                : "yes"
+
 
                         return (
                             <Box
@@ -228,6 +268,7 @@ const ProductCard = ({ listing }) => {
                 )}
 
                 <GuessControls
+                    disabled={!isAuthenticated}
                     onChange={(amount) => {
                         setPrice(prev => Math.max(prev + amount, 0));
                     }}
@@ -236,15 +277,20 @@ const ProductCard = ({ listing }) => {
                 <Button
                     fullWidth
                     variant="contained"
-                    disabled={guessCount >= 3}
-                    sx={{ mt: 2, color: '#fff', backgroundColor: '#fbc02d' }}
+                    disabled={guessCount >= 3 || !isAuthenticated}
                     onClick={() => {
-                        handleSubmit();
-                        alert("clicked")
+                        setGuessCount(prev => prev + 1);
                     }}
+                    sx={{ mt: 2, color: '#fff', backgroundColor: '#fbc02d' }}
                 >
                     Submit Guess
                 </Button>
+
+                {!isAuthenticated && (
+                    <Typography sx={{ mt: 2 }} color="error">
+                        Lütfen tahmin yapmak için giriş yapın.
+                    </Typography>
+                )}
             </CardContent>
         </Card>
     );

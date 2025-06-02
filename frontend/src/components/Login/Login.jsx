@@ -2,14 +2,12 @@ import {Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Ic
 import CloseIcon from "@mui/icons-material/Close";
 import {useState} from "react";
 import './Login.css'
-import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
 
 function LoginDialog({open, handleClose, onLoginSuccess}) {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
-    const [captchaToken, setCaptchaToken] = useState(null);
     const url = "http://127.0.0.1:5000"
 
     function onChange(value) {
@@ -17,9 +15,6 @@ function LoginDialog({open, handleClose, onLoginSuccess}) {
     }
 
     const handleLogin = () => {
-        if (captchaToken === "") {
-            alert("Please complete the CAPTCHA");
-        }
         try {
             axios.post(url + '/login', {
                 username: username,
@@ -29,7 +24,6 @@ function LoginDialog({open, handleClose, onLoginSuccess}) {
 
                 if (r.data.message === "Login successful") {
                     onLoginSuccess(username)
-                    alert("Login successfulls12312");
                     handleClose();
                 } else if (r.data.message === "Invalid username or password") {
                     alert("Invalid username or password");
@@ -86,10 +80,6 @@ function LoginDialog({open, handleClose, onLoginSuccess}) {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={'input'}
-                    />
-                    <ReCAPTCHA
-                        sitekey="6LdQ0PIqAAAAAI7ot30prHy0ue9j9O2Ly5TeYzWB"
-                        onChange={onChange}
                     />
                 </Box>
             </DialogContent>
