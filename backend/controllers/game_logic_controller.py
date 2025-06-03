@@ -26,7 +26,10 @@ def game_finished():
     keys = redis_client.keys("guessed_prices:*")
     room_names = [key.split(':', 1)[1] for key in keys]
     room_names = [room_name_converter(room_name) for room_name in room_names]
-    room_names.remove("_testuser123")
+    try:
+        room_names.remove("_testuser123")
+    except:
+        pass
     user_keys = redis_client.keys("session:*")
     for key in user_keys:
         redis_client.hset(key, "guess_count", 0)

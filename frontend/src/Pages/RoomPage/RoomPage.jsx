@@ -31,49 +31,66 @@ function RoomPage() {
     const roomName = parts[2];
 
     useEffect(() => {
-    socket.emit("take_vehicle_data", roomName);
+        socket.emit("take_vehicle_data", roomName);
 
-    socket.on("vehicle_data:", (data) => {
-        setListing(data);
-    });
+        socket.on("vehicle_data:", (data) => {
+            console.log("Yeni ilan geldi:", data);
+            setListing(null);
+            setTimeout(() => {
+                setListing(data);
+            }, 10);
+        });
 
-    // 🔹 MOCK ROUND END (simulate backend trigger)
-    setTimeout(() => {
-        setRealPrice(384000);
-        setTopThree([
-            { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
-            { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
-            { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
-        ]);
-        setShowResults(true);
+        socket.on("leaderboard_data", (data) => {
+            console.log("leaderboard data", data);
+            setLeaderboard(data);
+        });
 
-        setTimeout(() => {
-            setShowResults(false);
-            setGuessCount(0);
-        }, 5000);
+        socket.on("leaderboard_data_top3", (data) => {
+            console.log("top3 leaderboard data", data);
+        });
 
-        if (!success) {
-            socket.emit("game_finished");
-            socket.emit("take_leaderboard_data", roomName);
-            socket.emit("take_top3_leaderboard_data", roomName)
-            socket.on("leaderboard_data_top3", (data) => {
-                console.log("top3 leaderboard data", data)
-            })
-            socket.on("leaderboard_data", (data) => {
-                console.log("leaderboardYdata", data);
-            });
+        const startRound = () => {
+            console.log("🔁 Yeni tur başladı");
 
-            setSuccess(true);
-        }
+            // 20 saniye ürün göster
+            setTimeout(() => {
+                setRealPrice(384000); // MOCK
+                setTopThree([
+                    { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
+                    { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
+                    { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
+                ]);
+                setShowResults(true);
 
-        console.log("game finished");
-    }, 8000);
+                // 5 saniye Top3 göster
+                setTimeout(() => {
+                    setShowResults(false);
+                    setGuessCount(0);
+                    socket.emit("game_finished");
+                    // Yeni ilan iste
+                    socket.emit("take_vehicle_data", roomName);
 
-    return () => {
-        socket.off("vehicle_data:");
-        socket.off("leaderboard_data");
-    };
-}, [socket]);
+                    // Oyun bitti eventlerini tetikle
+
+                    socket.emit("take_leaderboard_data", roomName);
+                    socket.emit("take_top3_leaderboard_data", roomName);
+
+                    // Yeni tur başlat
+                    startRound();
+                }, 5000);
+            }, 20000);
+        };
+
+        // İlk turu başlat
+        startRound();
+
+        return () => {
+            socket.off("vehicle_data:");
+            socket.off("leaderboard_data");
+            socket.off("leaderboard_data_top3");
+        };
+    }, [socket]);
 
 
     return (

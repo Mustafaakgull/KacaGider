@@ -90,9 +90,9 @@ def game_handlers():
         cookie_session = backend.controllers.session_controller.session_id_global
         leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', "current_room")}", 0, -1, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
+        scrape_vehicle()
 
         print("leaderboard data game finished", data)
-        scrape_vehicle()
 
     @socketio.on("join_room")
     def join_game_session(room_name):
