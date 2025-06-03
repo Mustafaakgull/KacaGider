@@ -16,7 +16,7 @@ function RoomPage() {
     const [showResults, setShowResults] = useState(false);
     const [topThree, setTopThree] = useState([]);
     const [realPrice, setRealPrice] = useState(null);
-
+    const [success, setSuccess] = useState(false)
     useEffect(() => {
         axios.get("http://localhost:5000/whoami", { withCredentials: true })
             .then(res => {
@@ -31,40 +31,50 @@ function RoomPage() {
     const roomName = parts[2];
 
     useEffect(() => {
-        socket.emit("take_vehicle_data", roomName);
+    socket.emit("take_vehicle_data", roomName);
 
+    socket.on("vehicle_data:", (data) => {
+        setListing(data);
+    });
 
-        socket.on("vehicle_data:", (data) => {
-            setListing(data);
-        });
+    // 🔹 MOCK ROUND END (simulate backend trigger)
+    setTimeout(() => {
+        setRealPrice(384000);
+        setTopThree([
+            { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
+            { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
+            { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
+        ]);
+        setShowResults(true);
 
-        // 🔹 MOCK ROUND END (simulate backend trigger)
         setTimeout(() => {
-            setRealPrice(384000);
-            setTopThree([
-                { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
-                { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
-                { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
-            ]);
-            setShowResults(true);
+            setShowResults(false);
+            setGuessCount(0);
+        }, 5000);
 
-            setTimeout(() => {
-                setShowResults(false);
-                setGuessCount(0);
-            }, 5000);
-            socket.emit("game_finished")
+        if (!success) {
+            socket.emit("game_finished");
             socket.emit("take_leaderboard_data", roomName);
-            socket.on("leaderboard_data", data => {
-            console.log("leaderboardYdata", data)
-        });
-            console.log("game finished")
-        }, 8000);
+            socket.emit("take_top3_leaderboard_data", roomName)
+            socket.on("leaderboard_data_top3", (data) => {
+                console.log("top3 leaderboard data", data)
+            })
+            socket.on("leaderboard_data", (data) => {
+                console.log("leaderboardYdata", data);
+            });
 
-        return () => {
-            socket.off("vehicle_data:");
-            socket.off("leaderboard_data");
-        };
-    }, [socket]);
+            setSuccess(true);
+        }
+
+        console.log("game finished");
+    }, 8000);
+
+    return () => {
+        socket.off("vehicle_data:");
+        socket.off("leaderboard_data");
+    };
+}, [socket]);
+
 
     return (
         <Box

@@ -3,6 +3,8 @@ from backend.models.redis_client import redis_client
 from flask import make_response, request
 import uuid
 import datetime
+import random
+import string
 SESSION_TIME = 3600
 GAME_TIME = 100
 session_id_global = None
