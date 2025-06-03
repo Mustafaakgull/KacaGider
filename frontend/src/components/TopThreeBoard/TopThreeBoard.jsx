@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Chip } from "@mui/material";
 
-const TopThreeLeaderboard = ({ realPrice, topThree, secondsLeft = 5 }) => {
+const TopThreeBoard = ({ realPrice, topThree, secondsLeft = 5 }) => {
     const [countdown, setCountdown] = useState(secondsLeft);
 
     useEffect(() => {
@@ -56,23 +56,17 @@ const TopThreeLeaderboard = ({ realPrice, topThree, secondsLeft = 5 }) => {
                     }}
                 >
                     <Typography fontWeight="bold">{user.username}</Typography>
-                    <Typography>{user.guess.toLocaleString("tr-TR")} ₺</Typography>
-                    <Chip
-                        label={`%${user.percentage}`}
-                        sx={{ backgroundColor: "#006400", color: "#fff", fontWeight: "bold" }}
-                    />
                     <Typography color="lightgreen" fontWeight="bold">
-                        +{user.score}
+                        Score: {user.score}
                     </Typography>
                 </Box>
             ))}
 
-            <Typography sx={{color: "#fff", fontWeight: "bold"}}>
+            <Typography sx={{ color: "#fff", fontWeight: "bold" }}>
                 Please wait for ({countdown}s)
             </Typography>
-
         </Box>
     );
 };
 
-export default TopThreeLeaderboard;
+export default TopThreeBoard;

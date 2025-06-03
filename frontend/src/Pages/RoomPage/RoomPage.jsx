@@ -47,40 +47,29 @@ function RoomPage() {
         });
 
         socket.on("leaderboard_data_top3", (data) => {
+            setTopThree(data)
             console.log("top3 leaderboard data", data);
         });
 
         const startRound = () => {
-            console.log("🔁 Yeni tur başladı");
+    console.log("🔁 Yeni tur başladı");
 
-            // 20 saniye ürün göster
-            setTimeout(() => {
-                setRealPrice(384000); // MOCK
-                setTopThree([
-                    { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
-                    { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
-                    { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
-                ]);
-                setShowResults(true);
+    setTimeout(() => {
+        setRealPrice(384000); // MOCK
+        setShowResults(true);
 
-                // 5 saniye Top3 göster
-                setTimeout(() => {
-                    setShowResults(false);
-                    setGuessCount(0);
-                    socket.emit("game_finished");
-                    // Yeni ilan iste
-                    socket.emit("take_vehicle_data", roomName);
+        setTimeout(() => {
+            setShowResults(false);
+            setGuessCount(0);
+            socket.emit("game_finished");
+            socket.emit("take_vehicle_data", roomName);
+            socket.emit("take_leaderboard_data", roomName);
+            socket.emit("take_top3_leaderboard_data", roomName);
+            startRound();
+        }, 5000);
+    }, 20000);
+};
 
-                    // Oyun bitti eventlerini tetikle
-
-                    socket.emit("take_leaderboard_data", roomName);
-                    socket.emit("take_top3_leaderboard_data", roomName);
-
-                    // Yeni tur başlat
-                    startRound();
-                }, 5000);
-            }, 20000);
-        };
 
         // İlk turu başlat
         startRound();
