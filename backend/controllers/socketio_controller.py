@@ -5,7 +5,7 @@ from flask_socketio import emit
 import backend.controllers.session_controller
 from backend.models.tables import User
 from backend.models.redis_client import redis_client
-from backend.controllers.game_logic_controller import game_finished, room_name_converter
+from backend.controllers.game_logic_controller import game_finished, room_name_converter, set_all_user_price_zero
 from backend.controllers.session_controller import  get_session_username
 from backend.controllers.scraping import scrape_vehicle
 # from backend.helpers import check_password_strength
@@ -101,7 +101,6 @@ def game_handlers():
         print("user before join", redis_client.hgetall(f"session:{cookie_session}"))
         redis_client.hset(f"session:{cookie_session}", "current_room", room_name)
         username = redis_client.hget(f"session:{cookie_session}", "username")
-        redis_client.zadd(f"leaderboard:{room_name}", {username: 0})
         print("user after join", redis_client.hgetall(f"session:{cookie_session}"))
 
 
@@ -126,7 +125,7 @@ def info_handler():
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
         emit("leaderboard_data", data)
-        print("leaderboard_data:", data)
+        print("leaderboard_data: TAKEN SENDED", data)
 
     @socketio.on("take_top3_leaderboard_data")
     def send_top3_from_leaderboard(room_name):

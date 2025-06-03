@@ -1,6 +1,6 @@
 import {Button, Card, CardContent, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useEffect, useRef, useState} from "react";
+import {useContext,useEffect, useRef, useState} from "react";
 import Box from "@mui/material/Box";
 import Slider from "react-slick";
 
@@ -17,6 +17,7 @@ import ColorLensIcon from '@mui/icons-material/ColorLens';
 import PersonIcon from '@mui/icons-material/Person';
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import Stack from "@mui/material/Stack";
+import { SocketContext } from '../../SocketioConnection.jsx';
 
 
 const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) => {
@@ -24,7 +25,8 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
     const [priceInput, setPriceInput] = useState("");
     const [feedback, setFeedback] = useState("");
     const inputRef = useRef(null);
-
+    const socket = useContext(SocketContext);
+    const [hint, setHint] = useState("")
     useEffect(() => {
         if(inputRef.current) {
             inputRef.current.focus();
@@ -38,6 +40,13 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
         : listing.photos || [];
 
     const product = listing.data;
+    const socketClick = () => {
+        socket.emit("guess_button_clicked", price);
+        socket.on("hint_message", data => {
+        setHint(data);
+        console.log("hint", data)
+    })
+    };
 
     const handleChange = (e) => {
         const value = e.target.value.replace(/\./g, "");
@@ -400,6 +409,8 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                     disabled={guessCount >= 3 || !isAuthenticated}
                     onClick={() => {
                         setGuessCount(prev => prev + 1);
+                        socketClick()
+                        alert("asda")
                     }}
                     sx={{
                         mt: 2,
@@ -418,8 +429,7 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                 >
                     Submit Guess
                 </Button>
-
-
+                <Box> {hint} </Box>
                 {!isAuthenticated && (
                     <Typography sx={{ mt: 2 }} color="error">
                         Lütfen tahmin yapmak için giriş yapın.
