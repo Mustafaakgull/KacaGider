@@ -92,10 +92,7 @@ function Navbar() {
 
 
                         <Box sx={{display: {xs: 'none', md: 'flex'}, flexDirection: 'row', alignItems: 'center'}}>
-                            <Box className="user-rooms-box" sx={{mr: 2}} onClick={() => navigate("/user-rooms")} style={{ cursor: 'pointer' }}>
-                                <PeopleAltOutlinedIcon className="user-icon" fontSize="large"/>
-                                <p className="user-rooms">User Rooms</p>
-                            </Box>
+
 
                             {loggedInUser ? (
                                 <Box sx={{ mr: 2 }} className="cup">
@@ -186,12 +183,7 @@ function Navbar() {
                 {/* Mobile Menu */}
                 {mobileMenuOpen && (
                     <Box sx={{display: {xs: 'flex', md: 'none'}, flexDirection: 'column', alignItems: 'center'}}>
-                        <Box className="mobile-menu-item">
-                            <IconButton className="icon">
-                                <PeopleAltOutlinedIcon className="user-icon" fontSize="large"/>
-                                <p className="user-rooms">User Rooms</p>
-                            </IconButton>
-                        </Box>
+
                         <Box sx={{mr: 2}} className="cup">
                             <IconButton className="icon">
                                 <EmojiEventsOutlinedIcon className="cup-icon" fontSize="large"/>

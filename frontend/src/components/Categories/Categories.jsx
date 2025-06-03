@@ -19,12 +19,7 @@ function Categories() {
                     <CategoryCard className={'category-card'} key={category.id} category={category}/>
                 ))}
             </div>
-            <div className={'button-container'}>
-                <Button variant="contained" className={'button'} onClick={() => setOpenDialog(true)}>
-                    Create Private Room
-                </Button>
-                <PrivateRoom open={openDialog} onClose={() => setOpenDialog(false)} />
-            </div>
+
 
         </>
     );

@@ -12,11 +12,18 @@ function RoomPage() {
     const [guessCount, setGuessCount] = useState(0);
     const [listing, setListing] = useState(null);
     const [leaderboard, setLeaderboard] = useState([]);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [showResults, setShowResults] = useState(false);
     const [topThree, setTopThree] = useState([]);
     const [realPrice, setRealPrice] = useState(null);
-    const [success, setSuccess] = useState(false)
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+    const [top3Received, setTop3Received] = useState(false);
+    const [leaderboardReceived, setLeaderboardReceived] = useState(false);
+    const [roundStarted, setRoundStarted] = useState(false);
+
+    const path = window.location.pathname;
+    const roomName = path.split("/")[2];
+
+    // Kullanıcı oturum kontrolü
     useEffect(() => {
         axios.get("http://localhost:5000/whoami", { withCredentials: true })
             .then(res => {
@@ -26,15 +33,15 @@ function RoomPage() {
             })
             .catch(() => setIsAuthenticated(true));
     }, []);
-    const path = window.location.pathname;
-    const parts = path.split("/"); // ["", "room", "car"]
-    const roomName = parts[2];
 
     useEffect(() => {
         socket.emit("take_vehicle_data", roomName);
+        socket.emit("take_leaderboard_data", roomName);
+        socket.emit("take_top3_leaderboard_data", roomName);
 
         socket.on("vehicle_data:", (data) => {
             console.log("Yeni ilan geldi:", data);
+            setRealPrice(data.data["fiyat"]);
             setListing(null);
             setTimeout(() => {
                 setListing(data);
@@ -44,34 +51,36 @@ function RoomPage() {
         socket.on("leaderboard_data", (data) => {
             console.log("leaderboard data", data);
             setLeaderboard(data);
+            setLeaderboardReceived(true);
         });
 
         socket.on("leaderboard_data_top3", (data) => {
-            setTopThree(data)
             console.log("top3 leaderboard data", data);
+            setTopThree(data);
+            setTop3Received(true);
         });
 
         const startRound = () => {
-    console.log("🔁 Yeni tur başladı");
+            console.log("🔁 Yeni tur başladı");
 
-    setTimeout(() => {
-        setRealPrice(384000); // MOCK
-        setShowResults(true);
+            setTimeout(() => {
+                setTop3Received(false);
+                setLeaderboardReceived(false);
 
-        setTimeout(() => {
-            setShowResults(false);
-            setGuessCount(0);
-            socket.emit("game_finished");
-            socket.emit("take_vehicle_data", roomName);
-            socket.emit("take_leaderboard_data", roomName);
-            socket.emit("take_top3_leaderboard_data", roomName);
-            startRound();
-        }, 5000);
-    }, 20000);
-};
+                socket.emit("take_leaderboard_data", roomName);
+                socket.emit("take_top3_leaderboard_data", roomName);
+                setRoundStarted(true); // bu turu bekle
+            }, 20000);
 
+            setTimeout(() => {
+                setShowResults(false);
+                setGuessCount(0);
+                socket.emit("game_finished");
+                socket.emit("take_vehicle_data", roomName);
+                startRound(); // yeni tura geç
+            }, 25000); // sonuç ekranı 5 saniye gösterilecek
+        };
 
-        // İlk turu başlat
         startRound();
 
         return () => {
@@ -81,6 +90,13 @@ function RoomPage() {
         };
     }, [socket]);
 
+    // Sadece veriler geldikten sonra sonuçları göster
+    useEffect(() => {
+        if (roundStarted && top3Received && leaderboardReceived) {
+            setShowResults(true);
+            setRoundStarted(false); // reset
+        }
+    }, [top3Received, leaderboardReceived, roundStarted]);
 
     return (
         <Box

@@ -410,7 +410,6 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                     onClick={() => {
                         setGuessCount(prev => prev + 1);
                         socketClick()
-                        alert("asda")
                     }}
                     sx={{
                         mt: 2,
