@@ -42,24 +42,40 @@ function RoomPage() {
         });
 
         socket.on("vehicle_data:", (data) => {
-            setListing(data);
+            console.log("Yeni ilan geldi:", data);
+            setListing(null);
+            setTimeout(() => {
+                setListing(data);
+            }, 10);
         });
 
-        // 🔹 MOCK ROUND END (simulate backend trigger)
-        setTimeout(() => {
-            setRealPrice(384000);
-            setTopThree([
-                { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
-                { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
-                { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
-            ]);
-            setShowResults(true);
-
+        const startRound = () => {
+            console.log("⏱️ Yeni tur başladı");
+            // 20 saniye sonra round sona ersin
             setTimeout(() => {
-                setShowResults(false);
-                setGuessCount(0);
-            }, 5000);
-        }, 3000);
+                // Mock sonuçlar
+                setRealPrice(384000);
+                setTopThree([
+                    { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
+                    { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
+                    { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
+                ]);
+                setShowResults(true);
+
+                // 5 saniye sonuç gösterilsin
+                setTimeout(() => {
+                    setShowResults(false);
+                    setGuessCount(0);
+                    socket.emit("take_vehicle_data", "otomobil");
+
+                    // 🔁 SONSUZ DÖNGÜ — yeni turu tekrar başlat
+                    startRound();
+                }, 5000);
+            }, 20000);
+        };
+
+        // İlk turu başlat
+        startRound();
 
         return () => {
             socket.off("vehicle_data:");
