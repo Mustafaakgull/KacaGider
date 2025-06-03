@@ -68,7 +68,7 @@ export default function PrivateRoom({ open, onClose, onCreate }) {
                                     onClick={() => setSelectedCategory(cat.key)}
                                     sx={{
                                         width: "100%",
-                                        height: 100,
+                                        height: "100%",
                                         cursor: "pointer",
                                         backgroundColor: selectedCategory === cat.key ? "#ffc107" : "#2c2c2c",
                                         color: selectedCategory === cat.key ? "#000" : "#fff",
@@ -76,16 +76,36 @@ export default function PrivateRoom({ open, onClose, onCreate }) {
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
-                                        transition: "none"
+                                        boxSizing: "border-box",
                                     }}
                                 >
-                                    <CardContent sx={{ textAlign: "center", p: 1 }}>
-                                        <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+                                    <CardContent
+                                        sx={{
+                                            width: "100%",
+                                            padding: "8px !important",
+                                            boxSizing: "border-box",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <Box
+                                            display="flex"
+                                            flexDirection="column"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            width="100%"
+                                            textAlign="center"
+                                        >
                                             {cat.icon}
-                                            <Typography variant="caption">{cat.label}</Typography>
+                                            <Typography variant="caption" noWrap>
+                                                {cat.label}
+                                            </Typography>
                                         </Box>
                                     </CardContent>
                                 </Card>
+
+
                             </Grid>
                         ))}
                     </Grid>

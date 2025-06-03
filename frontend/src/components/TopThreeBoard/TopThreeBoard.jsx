@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Chip } from "@mui/material";
 
-const TopThreeLeaderboard = ({ realPrice, topThree, secondsLeft }) => {
+const TopThreeLeaderboard = ({ realPrice, topThree, secondsLeft = 5 }) => {
+    const [countdown, setCountdown] = useState(secondsLeft);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCountdown((prev) => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [secondsLeft]);
+
     return (
         <Box
             sx={{
@@ -9,18 +25,18 @@ const TopThreeLeaderboard = ({ realPrice, topThree, secondsLeft }) => {
                 border: "3px solid #fbc02d",
                 borderRadius: 2,
                 padding: 3,
-                width: "100%",
-                maxWidth: 600,
+                width: 600,
+                maxWidth: "100%",
                 margin: "0 auto",
                 textAlign: "center",
             }}
         >
             <Typography variant="h5" fontWeight="bold" color="#fff" gutterBottom>
-                Tur Sonuçları
+                Round Results
             </Typography>
 
             <Typography variant="h6" fontWeight="bold" color="lightgreen" mb={3}>
-                Gerçek Fiyat: {realPrice.toLocaleString("tr-TR")} ₺
+                Real Price: {realPrice.toLocaleString("tr-TR")} ₺
             </Typography>
 
             {topThree.map((user, index) => (
@@ -51,19 +67,10 @@ const TopThreeLeaderboard = ({ realPrice, topThree, secondsLeft }) => {
                 </Box>
             ))}
 
-            <Box
-                sx={{
-                    backgroundColor: "#fbc02d",
-                    color: "#000",
-                    fontWeight: "bold",
-                    py: 1.5,
-                    borderRadius: 1,
-                    fontSize: "1rem",
-                    mt: 4,
-                }}
-            >
-                Lütfen Bekleyiniz ({secondsLeft}s)
-            </Box>
+            <Typography sx={{color: "#fff", fontWeight: "bold"}}>
+                Please wait for ({countdown}s)
+            </Typography>
+
         </Box>
     );
 };

@@ -6,6 +6,7 @@ import { Car } from "phosphor-react";
 import { FaMotorcycle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+import {  TwoWheeler } from "@mui/icons-material";
 
 
 const iconMap = {
@@ -23,7 +24,7 @@ function CategoryCard({ category }) {
         <Card className="card-container" onClick={handleClick}>
             <CardContent className={'content'}>
                 <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-                    {iconMap[category.name] || <CarRentalIcon className={'category-icon'}/>}
+                    {iconMap[category.name] || <TwoWheeler className={'category-icon'}/>}
                     <Typography variant="h6">{category.name}</Typography>
                     <Typography variant="body1">{category.player} Players</Typography>
                 </Box>

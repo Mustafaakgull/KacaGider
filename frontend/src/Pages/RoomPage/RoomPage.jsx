@@ -24,7 +24,7 @@ function RoomPage() {
                     setIsAuthenticated(true);
                 }
             })
-            .catch(() => setIsAuthenticated(false));
+            .catch(() => setIsAuthenticated(true));
     }, []);
 
     useEffect(() => {

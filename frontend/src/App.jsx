@@ -11,18 +11,22 @@ import UserRoomsPage from './Pages/UserRoomsPage/UserRoomsPage.jsx'; // 👈 yen
 function App() {
     return (
         <SocketContext.Provider value={socket}>
-        <Router>
-            <Navbar />
-            <Routes>
-                <Route path="/" element={<Categories />} />
-                <Route path="/room/:category" element={<RoomPage />} />
-                <Route path="/user-rooms" element={<UserRoomsPage />} />
-
-            </Routes>
-            <Footer />
-        </Router>
-         </SocketContext.Provider>
+            <Router>
+                <div className="app-wrapper">
+                    <Navbar />
+                    <div className="app-content">
+                        <Routes>
+                            <Route path="/" element={<Categories />} />
+                            <Route path="/room/:category" element={<RoomPage />} />
+                            <Route path="/user-rooms" element={<UserRoomsPage />} />
+                        </Routes>
+                    </div>
+                    <Footer />
+                </div>
+            </Router>
+        </SocketContext.Provider>
     );
 }
+
 
 export default App;
