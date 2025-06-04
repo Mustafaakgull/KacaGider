@@ -119,7 +119,7 @@ def info_handler():
         vehicle_data = redis_client.hgetall(f"info:{room_name}")
         photos = redis_client.lrange(f"photos:{room_name}", 0, -1)
         emit("vehicle_data:", {"data": vehicle_data, "photos": photos})
-        print("vehicle_data: ALLLLLLLL ARABA VERDİM", vehicle_data)
+        print("vehicle_data:", vehicle_data)
 
         leaderboard = redis_client.zrevrange(f"leaderboard:{room_name}", 0, -1, withscores=True)
         leaderboard_data = [{"username": name, "score": int(score)} for name, score in leaderboard]
