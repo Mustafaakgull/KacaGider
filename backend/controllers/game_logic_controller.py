@@ -51,14 +51,16 @@ def game_finished():
         redis_client.zadd(f"leaderboard:{room_names[0]}", {user: score})
 
         # redis_client.hset(f"guessed_prices:{room_name}", user, 0)
-        sorted_dict_desc = dict(sorted(top3_list.items(), key=lambda item: item[1], reverse=True))
-        redis_client.delete(f"leaderboard_top3:{room_names[0]}")
-        redis_client.zadd(f"leaderboard_top3:{room_names[0]}", {k: int(v) for k, v in sorted_dict_desc.items()})
-    redis_client.zadd("leaderboard:otomobil", {"pppppi": "90"})
-    redis_client.zadd("leaderboard:otomobil", {"pipi": "31"})
-    redis_client.zadd("leaderboard:otomobil", {"seeeeeeszeeekzs": "62"})
-    print("inside top3", redis_client.zrevrange(f"leaderboard_top3:{room_names[0]}", 0, -1, withscores=True))
-    print("ACTUAL LIST", redis_client.zrevrange(f"leaderboard:{room_names[0]}", 0, -1, withscores=True))
+    top3_list.update({"mustafa": 900})
+    top3_list.update({"omer": 760})
+    top3_list.update({"haitem": 120})
+
+    sorted_dict_desc = dict(sorted(top3_list.items(), key=lambda item: item[1], reverse=True))
+    redis_client.delete(f"leaderboard_top3:{room_names[0]}")
+    redis_client.zadd(f"leaderboard_top3:{room_names[0]}", {k: int(v) for k, v in sorted_dict_desc.items()})
+    redis_client.zadd("leaderboard:otomobil", {"mustafa": "900"})
+    redis_client.zadd("leaderboard:otomobil", {"omer": "760"})
+    redis_client.zadd("leaderboard:otomobil", {"haitem": "120"})
 
 def set_all_user_price_zero():
     keys = redis_client.keys("guessed_prices:*")
