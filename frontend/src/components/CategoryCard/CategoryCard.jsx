@@ -30,7 +30,7 @@ function CategoryCard({ category }) {
                 <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
                     {iconMap[category.name] || <TwoWheeler className={'category-icon'}/>}
                     <Typography variant="h6">{category.name}</Typography>
-                    <Typography variant="body1">{category.player} Players</Typography>
+                    <Typography variant="body1">{category.player} </Typography>
                 </Box>
             </CardContent>
         </Card>

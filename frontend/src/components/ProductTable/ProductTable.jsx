@@ -428,7 +428,7 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                 >
                     Submit Guess
                 </Button>
-                <Box> {hint} </Box>
+                <Box sx={{color:'#fff'}}> {hint} </Box>
                 {!isAuthenticated && (
                     <Typography sx={{ mt: 2 }} color="error">
                         Lütfen tahmin yapmak için giriş yapın.

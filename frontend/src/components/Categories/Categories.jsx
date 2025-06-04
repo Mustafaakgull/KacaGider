@@ -8,8 +8,8 @@ function Categories() {
     const [openDialog, setOpenDialog] = useState(false);
 
     const categories = [
-        {id: 1, name: 'Car', player: 26},
-        {id: 2, name: 'Motorcycle', player: 15},
+        {id: 1, name: 'Car'},
+        {id: 2, name: 'Motorcycle'},
     ];
 
     return (
