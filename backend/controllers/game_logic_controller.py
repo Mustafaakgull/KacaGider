@@ -14,16 +14,16 @@ def room_name_converter(room_name):
         return "otomobil"
     elif room_name == "motorcycle":
         return "motosiklet"
-    elif room_name == "rented-vehicle":
-        return "kiralik-arac"
+    elif room_name == "rented-vehicles":
+        return "kiralik-araclar"
     else:
         return room_name
 
 
 def game_finished():
     # room name sadece en sondaki kısmı almalı kacagider.net/rooms/car, mesela car almalı burda
-    top3 = {}
     keys = redis_client.keys("guessed_prices:*")
+    print(keys)
     room_names = [key.split(':', 1)[1] for key in keys]
     room_names = [room_name_converter(room_name) for room_name in room_names]
     try:
@@ -34,33 +34,31 @@ def game_finished():
     for key in user_keys:
         redis_client.hset(key, "guess_count", 0)
 
-    # for room_name in room_names:
-    print("sdas FIYAT", redis_client.hget(f"info:{room_names[0]}", "fiyat"), "room_name", room_names[0],"namesss",room_names)
-    real_price = int(redis_client.hget(f"info:{room_names[0]}", "fiyat"))
+    for room_name in room_names:
+        real_price = int(redis_client.hget(f"info:{room_name}", "fiyat"))
 
-    data = redis_client.hgetall(f"guessed_prices:{room_names[0]}")
-    print("daata for top3", data)
-    top3_list = {}
-    for user, guess in redis_client.hgetall(f"guessed_prices:{room_names[0]}").items():
-        print("GAMEFİNİSİHED USER",user)
-        print("proximity before guess", guess)
-        proximity = min(real_price,int(guess)) / max(real_price, int(guess))
-        score = round(proximity * 1000)
-        top3_list.update({user: score})
-        print("percentage_to_keep:", score)
-        redis_client.zadd(f"leaderboard:{room_names[0]}", {user: score})
+        data = redis_client.hgetall(f"guessed_prices:{room_name}")
+        top3_list = {}
+        for user, guess in data.items():
+            proximity = min(real_price,int(guess)) / max(real_price, int(guess))
+            score = round(proximity * 1000)
+            top3_list.update({user: score})
+            print("user of score", user ,"score:", score)
+            redis_client.zincrby(f"leaderboard:{room_name}", score, user)
 
-        # redis_client.hset(f"guessed_prices:{room_name}", user, 0)
-    top3_list.update({"mustafa": 900})
-    top3_list.update({"omer": 760})
-    top3_list.update({"haitem": 120})
+            # redis_client.hset(f"guessed_prices:{room_name}", user, 0)
+        top3_list.update({"mustafa": 900})
+        top3_list.update({"omer": 760})
+        top3_list.update({"haitem": 120})
 
-    sorted_dict_desc = dict(sorted(top3_list.items(), key=lambda item: item[1], reverse=True))
-    redis_client.delete(f"leaderboard_top3:{room_names[0]}")
-    redis_client.zadd(f"leaderboard_top3:{room_names[0]}", {k: int(v) for k, v in sorted_dict_desc.items()})
+        sorted_dict_desc = dict(sorted(top3_list.items(), key=lambda item: item[1], reverse=True))
+        redis_client.zadd(f"leaderboard_top3:{room_name}", {k: int(v) for k, v in sorted_dict_desc.items()})
+
+    # prop data
     redis_client.zadd("leaderboard:otomobil", {"mustafa": "900"})
     redis_client.zadd("leaderboard:otomobil", {"omer": "760"})
     redis_client.zadd("leaderboard:otomobil", {"haitem": "120"})
+
 
 def set_all_user_price_zero():
     keys = redis_client.keys("guessed_prices:*")

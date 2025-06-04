@@ -16,7 +16,6 @@ def create_session(username):
     print("sonradan sil, session id: "+session_id)
     redis_client.hset(f"session:{session_id}", mapping={
         "username": username,
-        "theme": "dark",
         "guess_count": 0,
         "current_room": "",
         "created_at": str(datetime.datetime.now())
@@ -33,12 +32,6 @@ def create_session(username):
         samesite='None',
         max_age=SESSION_TIME
     )
-
-    # SONRA SİLİNECEK
-    print("response" + str(response))
-    print("session id "+session_id)
-    print("global session id "+session_id_global)
-    print("redis_client ssesses", redis_client.hgetall(f"session:{session_id}"))
     return response
 
 

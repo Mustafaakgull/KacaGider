@@ -10,6 +10,7 @@ function Categories() {
     const categories = [
         {id: 1, name: 'Car'},
         {id: 2, name: 'Motorcycle'},
+        {id: 3, name: 'Rented-Vehicles'}
     ];
 
     return (

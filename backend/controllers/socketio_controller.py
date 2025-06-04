@@ -61,21 +61,17 @@ def game_handlers():
     def clicked_guess(guessed_price):
         # cookie_session = request.cookies.get("session_id")
         cookie_session = backend.controllers.session_controller.session_id_global
-        print("global sesion", cookie_session)
         user = redis_client.hgetall(f"session:{cookie_session}")
-        print("user", user)
         if int(user["guess_count"]) <= 3:
 
             redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
             real_price = redis_client.hget(f"info:{user['current_room']}", "fiyat")
-            print("user current room", user["current_room"])
-            print("realş", real_price)
+            proximity = min(int(real_price),int(guessed_price)) / max(int(real_price), int(guessed_price))
             percentage_price = (guessed_price / int(real_price)) * 100
-            print("user current room", user["current_room"])
-            print("user username", user["username"])
-            print("guessed price", guessed_price)
+            score = proximity * 1000
+            print(guessed_price)
             redis_client.hset(f"guessed_prices:{str(user['current_room'])}", user['username'], str(guessed_price))
-
+            redis_client.zadd(f"leaderboard_top3:{user['current_room']}", {user['username']: score})
             if percentage_price < 100:
                 emit("hint_message", "You need to guess higher")
             else:
@@ -86,12 +82,13 @@ def game_handlers():
 
     @socketio.on('game_finished')
     def games_finished():
+        print("games finished-------------------------------")
         game_finished()
         cookie_session = backend.controllers.session_controller.session_id_global
         leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', "current_room")}", 0, -1, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
         scrape_vehicle()
-
+        set_all_user_price_zero()
         print("leaderboard data game finished", data)
 
     @socketio.on("join_room")
@@ -125,12 +122,12 @@ def info_handler():
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
         emit("leaderboard_data", data)
-        print("leaderboard_data: TAKEN SENDED", data)
+        print("leaderboard_data: TAKEN, SEND OUT", data)
 
     @socketio.on("take_top3_leaderboard_data")
     def send_top3_from_leaderboard(room_name):
         room_name = room_name_converter(room_name)
-        leaderboard = redis_client.zrevrange(f"leaderboard_top3:{room_name}", 0, -1, withscores=True)
+        leaderboard = redis_client.zrevrange(f"leaderboard_top3:{room_name}", 0, 2, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
         emit("leaderboard_data_top3", data)
@@ -147,7 +144,6 @@ def chat_handler():
     @socketio.on('connect')
     def handle_connect():
         session_id = request.cookies.get('session_id')
-        print("ses", session_id)
         print('Client connected')
 
     @socketio.on('disconnect')

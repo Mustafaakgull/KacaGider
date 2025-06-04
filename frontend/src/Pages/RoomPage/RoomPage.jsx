@@ -5,37 +5,41 @@ import TopThreeLeaderboard from "../../components/TopThreeBoard/TopThreeBoard.js
 import { SocketContext } from '../../SocketioConnection.jsx';
 import LeaderBoard from "../../components/LiveLeaderboard/LiveLeaderboard.jsx";
 import Chatbox from "../../components/Chatbox/Chatbox.jsx";
-import axios from "axios";
+import CountdownTimer from "../../components/Timer/Timer.jsx";
+import {GameController} from "phosphor-react";
+// import axios from "axios";
 
 function RoomPage() {
     const socket = useContext(SocketContext);
-    const [guessCount, setGuessCount] = useState(0);
-    const [listing, setListing] = useState(null);
+    const [vehicleData, setVehicleData] = useState(null);
     const [leaderboard, setLeaderboard] = useState([]);
     const [topThree, setTopThree] = useState([]);
     const [realPrice, setRealPrice] = useState(null);
+    // for if user not logged in, cannot guess
     const [isAuthenticated, setIsAuthenticated] = useState(true);
+
     const [showResults, setShowResults] = useState(false);
     const [top3Received, setTop3Received] = useState(false);
     const [leaderboardReceived, setLeaderboardReceived] = useState(false);
-
+    const [roundDeadline, setRoundDeadline] = useState(Date.now() + 20000);
     const path = window.location.pathname;
     const roomName = path.split("/")[2];
 
-    // Kullanıcı oturum kontrolü
+    // initial start take the car info
     useEffect(() => {
-    socket.emit("take_leaderboard_data", roomName);
-    socket.emit("take_top3_leaderboard_data", roomName);
-    socket.emit("take_vehicle_data", roomName);
+        socket.emit("take_vehicle_data", roomName);
+        socket.emit("take_leaderboard_data", roomName)
+  }, []);
+
+
+        useEffect(() => {
 
     socket.on("vehicle_data:", (data) => {
         console.log("Yeni ilan geldi:", data);
         setRealPrice(data.data["fiyat"]);
-        setListing(null);
-        setTimeout(() => {
-            setListing(data);
-        }, 10);
+        setVehicleData(data);
     });
+
 
     socket.on("leaderboard_data", (data) => {
         setLeaderboard(data);
@@ -52,49 +56,54 @@ function RoomPage() {
         socket.off("leaderboard_data");
         socket.off("leaderboard_data_top3");
     };
-}, [socket]);
+}, [roomName, socket]);
 
 // Yeni round başlat
 const startNextRound = () => {
-    console.log("🔁 Yeni tur başlıyor...");
+    console.log("🔁 Tur bitti, top3 açıldı...");
     setTop3Received(false);
     setLeaderboardReceived(false);
-    setGuessCount(0);
+    socket.emit("game_finished");
     socket.emit("take_leaderboard_data", roomName);
     socket.emit("take_top3_leaderboard_data", roomName);
+    setRoundDeadline(Date.now() + 25000);
+
 };
 
-// Tüm veriler geldiyse sonuçları göster
 useEffect(() => {
     if (top3Received && leaderboardReceived) {
         setShowResults(true);
     }
 }, [top3Received, leaderboardReceived]);
 
-// Sonuçlar gösterildikten 5 saniye sonra yeni aracı al
+// SADECE SONUÇ GÖSTERME
 useEffect(() => {
     if (showResults) {
         const timer = setTimeout(() => {
             setShowResults(false); // Sonuç ekranını kapat
-            socket.emit("game_finished");
-            socket.emit("take_vehicle_data", roomName); // Yeni ilan al
-        }, 5000); // 5 saniye sonuç göster
+            socket.emit("take_vehicle_data", roomName);
+            socket.emit("take_leaderboard_data", roomName);
+            socket.emit("take_top3_leaderboard_data", roomName);
+
+        }, 5000);
+
 
         return () => clearTimeout(timer);
     }
-}, [showResults]);
+}, [roomName, showResults, socket]);
 
 // Yeni ilan geldiğinde -> yeni round başlat
 useEffect(() => {
-    if (listing && !showResults) {
-        // Yalnızca normal ekranda ve ilan varsa
+
+    // Yalnızca normal ekranda ve ilan varsa
+    if (vehicleData && !showResults) {
         const delay = setTimeout(() => {
             startNextRound();
         }, 20000); // kullanıcı tahmin yapmak için 20 saniye alır
 
         return () => clearTimeout(delay);
     }
-}, [listing, showResults]);
+}, [vehicleData, showResults, startNextRound]);
 
 
 
@@ -113,7 +122,9 @@ useEffect(() => {
                 overflowY: "auto",
             }}
         >
-            {listing && (
+                            {!showResults && <CountdownTimer deadline={roundDeadline} />}
+
+            {vehicleData && (
                 <Grid container spacing={2} sx={{ mt: 2, maxWidth: "1200px" }}>
                     <Grid item xs={12} md={7}>
                         {showResults ? (
@@ -124,10 +135,10 @@ useEffect(() => {
                             />
                         ) : (
                             <ProductCard
-                                listing={listing}
-                                guessCount={guessCount}
-                                setGuessCount={setGuessCount}
+                                vehicle_data={vehicleData}
                                 isAuthenticated={isAuthenticated}
+                                showResults={showResults}
+
                             />
                         )}
                     </Grid>

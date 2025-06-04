@@ -20,39 +20,52 @@ import Stack from "@mui/material/Stack";
 import { SocketContext } from '../../SocketioConnection.jsx';
 
 
-const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) => {
+const ProductCard = ({ vehicle_data, isAuthenticated, showResults}) => {
     const [price, setPrice] = useState(0);
     const [priceInput, setPriceInput] = useState("");
     const [feedback, setFeedback] = useState("");
     const inputRef = useRef(null);
     const socket = useContext(SocketContext);
     const [hint, setHint] = useState("")
+    const [guessCount, setGuessCount] = useState(0);
+    // const [value, setValue] = useState("");
     useEffect(() => {
         if(inputRef.current) {
             inputRef.current.focus();
         }
     }, [])
 
-    if (!listing) return null;
+    useEffect(() => {
+        if (showResults) {
+            setGuessCount(0)
 
-    const images = typeof listing.photos === "string"
-        ? JSON.parse(listing.photos)
-        : listing.photos || [];
+    }
 
-    const product = listing.data;
+  }, [showResults]);
+
+
+    if (!vehicle_data) return null;
+
+    const images = typeof vehicle_data.photos === "string"
+        ? JSON.parse(vehicle_data.photos)
+        : vehicle_data.photos || [];
+
+    const product = vehicle_data.data;
     const socketClick = () => {
         socket.emit("guess_button_clicked", price);
+        console.log("knk tikladim",price)
         socket.on("hint_message", data => {
         setHint(data);
-        console.log("hint", data)
+        socket.off("hint_message")
     })
     };
 
     const handleChange = (e) => {
-        const value = e.target.value.replace(/\./g, "");
+         let value = e.target.value.replace(/\./g, "");
         if (/^\d*$/.test(value)) {
             const num = Number(value);
             setPrice(num);
+            console.log("PRIIICEEE", price)
             setPriceInput(num.toLocaleString("tr-TR"));
         }
     };
@@ -60,6 +73,7 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && isAuthenticated && guessCount < 3) {
             setGuessCount(prev => prev + 1);
+            socketClick()
         }
     };
 
@@ -387,7 +401,7 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
 
                 {feedback && (
                     <Typography sx={{ mt: 1 }} color="info.main">
-                        {feedback}
+                        {feedback} + "saasass"
                     </Typography>
                 )}
 
@@ -409,6 +423,7 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                     disabled={guessCount >= 3 || !isAuthenticated}
                     onClick={() => {
                         setGuessCount(prev => prev + 1);
+                        // handleChange()
                         socketClick()
                     }}
                     sx={{
