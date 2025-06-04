@@ -19,20 +19,22 @@ function RoomPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(true);
 
     const [showResults, setShowResults] = useState(false);
-    const [top3Received, setTop3Received] = useState(false);
-    const [leaderboardReceived, setLeaderboardReceived] = useState(false);
     const [roundDeadline, setRoundDeadline] = useState(Date.now() + 20000);
     const path = window.location.pathname;
     const roomName = path.split("/")[2];
 
     // initial start take the car info
-    useEffect(() => {
-        socket.emit("take_vehicle_data", roomName);
-        socket.emit("take_leaderboard_data", roomName)
-  }, []);
+  //   useEffect(() => {
+  //       socket.emit("take_all_data", roomName)
+  // }, []);
 
 
         useEffect(() => {
+        socket.emit("take_all_data", roomName)
+        socket.emit("timer")
+        socket.on("timer_response", (data) => {
+            console.log("timer response", data)
+        })
 
     socket.on("vehicle_data:", (data) => {
         console.log("Yeni ilan geldi:", data);
@@ -43,12 +45,10 @@ function RoomPage() {
 
     socket.on("leaderboard_data", (data) => {
         setLeaderboard(data);
-        setLeaderboardReceived(true);
     });
 
     socket.on("leaderboard_data_top3", (data) => {
         setTopThree(data);
-        setTop3Received(true);
     });
 
     return () => {
@@ -61,29 +61,32 @@ function RoomPage() {
 // Yeni round başlat
 const startNextRound = () => {
     console.log("🔁 Tur bitti, top3 açıldı...");
-    setTop3Received(false);
-    setLeaderboardReceived(false);
-    socket.emit("game_finished");
-    socket.emit("take_leaderboard_data", roomName);
-    socket.emit("take_top3_leaderboard_data", roomName);
+    setShowResults(true)
+    const now = new Date();
+    console.log(now); // Full date and time
+
+        socket.emit("take_all_data", roomName)
+
     setRoundDeadline(Date.now() + 25000);
 
 };
 
-useEffect(() => {
-    if (top3Received && leaderboardReceived) {
-        setShowResults(true);
-    }
-}, [top3Received, leaderboardReceived]);
+// useEffect(() => {
+//     if (top3Received && leaderboardReceived) {
+//
+//         setShowResults(true);
+//     }
+// }, [top3Received, leaderboardReceived]);
 
 // SADECE SONUÇ GÖSTERME
 useEffect(() => {
     if (showResults) {
         const timer = setTimeout(() => {
             setShowResults(false); // Sonuç ekranını kapat
-            socket.emit("take_vehicle_data", roomName);
-            socket.emit("take_leaderboard_data", roomName);
-            socket.emit("take_top3_leaderboard_data", roomName);
+            console.log("show results true oldu suan")
+        socket.emit("take_all_data", roomName)
+        socket.emit("timer")
+
 
         }, 5000);
 

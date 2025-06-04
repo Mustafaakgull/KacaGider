@@ -19,17 +19,17 @@ def room_name_converter(room_name):
     else:
         return room_name
 
+def game_starts():
+    pass
+
+
 
 def game_finished():
     # room name sadece en sondaki kısmı almalı kacagider.net/rooms/car, mesela car almalı burda
     keys = redis_client.keys("guessed_prices:*")
-    print(keys)
     room_names = [key.split(':', 1)[1] for key in keys]
     room_names = [room_name_converter(room_name) for room_name in room_names]
-    try:
-        room_names.remove("_testuser123")
-    except:
-        pass
+
     user_keys = redis_client.keys("session:*")
     for key in user_keys:
         redis_client.hset(key, "guess_count", 0)
@@ -43,7 +43,7 @@ def game_finished():
             proximity = min(real_price,int(guess)) / max(real_price, int(guess))
             score = round(proximity * 1000)
             top3_list.update({user: score})
-            print("user of score", user ,"score:", score)
+            print("OYUN SONU user of score", user ,"score:", score)
             redis_client.zincrby(f"leaderboard:{room_name}", score, user)
 
             # redis_client.hset(f"guessed_prices:{room_name}", user, 0)
@@ -52,7 +52,7 @@ def game_finished():
         top3_list.update({"haitem": 120})
 
         sorted_dict_desc = dict(sorted(top3_list.items(), key=lambda item: item[1], reverse=True))
-        redis_client.zadd(f"leaderboard_top3:{room_name}", {k: int(v) for k, v in sorted_dict_desc.items()})
+        # redis_client.zadd(f"leaderboard_top3:{room_name}", {k: int(v) for k, v in sorted_dict_desc.items()})
 
     # prop data
     redis_client.zadd("leaderboard:otomobil", {"mustafa": "900"})
@@ -64,6 +64,7 @@ def set_all_user_price_zero():
     keys = redis_client.keys("guessed_prices:*")
     room_names = [key.split(':', 1)[1] for key in keys]
     for room_name in room_names:
+        redis_client.delete(f"leaderboard_top3:{room_name}")
         users = redis_client.hkeys(f"guessed_prices:{room_name}")
         for hkey in users:
             redis_client.hset(f"guessed_prices:{room_name}", hkey, 0)
