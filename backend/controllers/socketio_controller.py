@@ -10,6 +10,7 @@ from backend.models.redis_client import redis_client
 from backend.controllers.game_logic_controller import game_finished, room_name_converter, set_all_user_price_zero
 from backend.controllers.session_controller import  get_session_username
 from backend.controllers.scraping import scrape_vehicle
+import backend.controllers.timer
 # from backend.helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
 
@@ -61,8 +62,8 @@ def game_handlers():
 
     @socketio.on("timer")
     def handle_timer():
-        emit("timer_response", 20)
-        socketio.sleep(20)
+        emit("timer_response", backend.controllers.timer.time_sended)
+        print("timer_emitted")
 
     @socketio.on('guess_button_clicked')
     def clicked_guess(guessed_price):

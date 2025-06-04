@@ -15,6 +15,7 @@ function RoomPage() {
     const [leaderboard, setLeaderboard] = useState([]);
     const [topThree, setTopThree] = useState([]);
     const [realPrice, setRealPrice] = useState(null);
+    const [timer, setTimer] = useState(20)
     // for if user not logged in, cannot guess
     const [isAuthenticated, setIsAuthenticated] = useState(true);
 
@@ -23,17 +24,37 @@ function RoomPage() {
     const path = window.location.pathname;
     const roomName = path.split("/")[2];
 
-    // initial start take the car info
-  //   useEffect(() => {
-  //       socket.emit("take_all_data", roomName)
-  // }, []);
+  //   initial start take the car info
+    useEffect(() => {
+        socket.emit("timer")
+  }, []);
+
+        useEffect(() => {
+
+    const interval = setInterval(() => {
+      console.log("This runs every second");
+      socket.emit("timer")
+        socket.on("timer_response", (data) => {
+            console.log("timer responsessssssssssssssssssss", data)
+            setTimer(data)
+            setRoundDeadline(Date.now() + timer*1000)
+        })
+    }, 1000);
 
 
+            return() => {
+                    socket.off("timer_response")
+                    clearInterval(interval);
+            }
+  },);
         useEffect(() => {
         socket.emit("take_all_data", roomName)
         socket.emit("timer")
+
         socket.on("timer_response", (data) => {
             console.log("timer response", data)
+                        setTimer(data)
+            setRoundDeadline(Date.now() + timer*1000)
         })
 
     socket.on("vehicle_data:", (data) => {
@@ -55,6 +76,7 @@ function RoomPage() {
         socket.off("vehicle_data:");
         socket.off("leaderboard_data");
         socket.off("leaderboard_data_top3");
+        socket.off("timer_response")
     };
 }, [roomName, socket]);
 
@@ -67,7 +89,7 @@ const startNextRound = () => {
 
         socket.emit("take_all_data", roomName)
 
-    setRoundDeadline(Date.now() + 25000);
+    setRoundDeadline(Date.now() + timer*1000+5000);
 
 };
 
@@ -102,11 +124,11 @@ useEffect(() => {
     if (vehicleData && !showResults) {
         const delay = setTimeout(() => {
             startNextRound();
-        }, 20000); // kullanıcı tahmin yapmak için 20 saniye alır
+        }, timer*1000); // kullanıcı tahmin yapmak için 20 saniye alır
 
         return () => clearTimeout(delay);
     }
-}, [vehicleData, showResults, startNextRound]);
+}, [vehicleData, showResults, startNextRound, timer]);
 
 
 
