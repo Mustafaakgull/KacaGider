@@ -5,7 +5,7 @@ from flask_socketio import emit
 import backend.controllers.session_controller
 from backend.models.tables import User
 from backend.models.redis_client import redis_client
-from backend.controllers.game_logic_controller import game_finished, room_name_converter
+from backend.controllers.game_logic_controller import game_finished, room_name_converter, set_all_user_price_zero
 from backend.controllers.session_controller import  get_session_username
 from backend.controllers.scraping import scrape_vehicle
 # from backend.helpers import check_password_strength
@@ -90,9 +90,9 @@ def game_handlers():
         cookie_session = backend.controllers.session_controller.session_id_global
         leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', "current_room")}", 0, -1, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
-
-        print("leaderboard data", data)
         scrape_vehicle()
+
+        print("leaderboard data game finished", data)
 
     @socketio.on("join_room")
     def join_game_session(room_name):
@@ -100,6 +100,7 @@ def game_handlers():
         room_name = room_name_converter(room_name)
         print("user before join", redis_client.hgetall(f"session:{cookie_session}"))
         redis_client.hset(f"session:{cookie_session}", "current_room", room_name)
+        username = redis_client.hget(f"session:{cookie_session}", "username")
         print("user after join", redis_client.hgetall(f"session:{cookie_session}"))
 
 
@@ -123,16 +124,17 @@ def info_handler():
         leaderboard = redis_client.zrevrange(f"leaderboard:{room_name}", 0, -1, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
-        emit("leaderboard_data", leaderboard)
-        print("leaderboard_data:", leaderboard)
+        emit("leaderboard_data", data)
+        print("leaderboard_data: TAKEN SENDED", data)
 
     @socketio.on("take_top3_leaderboard_data")
     def send_top3_from_leaderboard(room_name):
         room_name = room_name_converter(room_name)
-        leaderboard = redis_client.get(f"leaderboard_top3:{room_name}")
+        leaderboard = redis_client.zrevrange(f"leaderboard_top3:{room_name}", 0, -1, withscores=True)
+        data = [{"username": name, "score": int(score)} for name, score in leaderboard]
 
-        emit("leaderboard_data_top3", leaderboard)
-        print("leaderboard_data_top3:", leaderboard)
+        emit("leaderboard_data_top3", data)
+        print("leaderboard_data_top3:", data)
 
     @socketio.on("take_user_count")
     def send_user_count(room_name):

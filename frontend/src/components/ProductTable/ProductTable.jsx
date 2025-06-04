@@ -1,6 +1,6 @@
 import {Button, Card, CardContent, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useEffect,useContext, useState} from "react";
+import {useContext,useEffect, useRef, useState} from "react";
 import Box from "@mui/material/Box";
 import Slider from "react-slick";
 
@@ -19,16 +19,19 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import Stack from "@mui/material/Stack";
 import { SocketContext } from '../../SocketioConnection.jsx';
 
-// socket bağlancak
+
 const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) => {
-    const [price, setPrice] = useState("");
+    const [price, setPrice] = useState(0);
+    const [priceInput, setPriceInput] = useState("");
     const [feedback, setFeedback] = useState("");
+    const inputRef = useRef(null);
     const socket = useContext(SocketContext);
     const [hint, setHint] = useState("")
-
     useEffect(() => {
-
-        });
+        if(inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [])
 
     if (!listing) return null;
 
@@ -46,11 +49,20 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
     };
 
     const handleChange = (e) => {
-        const value = e.target.value;
+        const value = e.target.value.replace(/\./g, "");
         if (/^\d*$/.test(value)) {
-            setPrice(value === "" ? 0 : Number(value));
+            const num = Number(value);
+            setPrice(num);
+            setPriceInput(num.toLocaleString("tr-TR"));
         }
     };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && isAuthenticated && guessCount < 3) {
+            setGuessCount(prev => prev + 1);
+        }
+    };
+
 
     const GuessControls = ({ onChange, disabled }) => {
         const handleChange = (amount) => {
@@ -67,24 +79,121 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
             >
                 <Stack spacing={2}>
                     <Stack direction="row" spacing={2} justifyContent="center">
-                        <Button variant="contained" color="success" disabled={disabled} onClick={() => handleChange(100000)}>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(100000)}
+                            sx={{
+                                backgroundColor: '#2e7d32',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#1b5e20',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#2e7d32',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
                             + 100.000 ₺
                         </Button>
-                        <Button variant="contained" color="success" disabled={disabled} onClick={() => handleChange(25000)}>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(25000)}
+                            sx={{
+                                backgroundColor: '#2e7d32',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#1b5e20',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#2e7d32',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
                             + 25.000 ₺
                         </Button>
-                        <Button variant="contained" color="success" disabled={disabled} onClick={() => handleChange(5000)}>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(5000)}
+                            sx={{
+                                backgroundColor: '#2e7d32',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#1b5e20',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#2e7d32',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
                             + 5.000 ₺
                         </Button>
                     </Stack>
+
                     <Stack direction="row" spacing={2} justifyContent="center">
-                        <Button variant="contained" color="error" disabled={disabled} onClick={() => handleChange(-100000)}>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(-100000)}
+                            sx={{
+                                backgroundColor: '#d32f2f',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#9a0007',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#d32f2f',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
                             − 100.000 ₺
                         </Button>
-                        <Button variant="contained" color="error" disabled={disabled} onClick={() => handleChange(-25000)}>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(-25000)}
+                            sx={{
+                                backgroundColor: '#d32f2f',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#9a0007',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#d32f2f',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
                             − 25.000 ₺
                         </Button>
-                        <Button variant="contained" color="error" disabled={disabled} onClick={() => handleChange(-5000)}>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(-5000)}
+                            sx={{
+                                backgroundColor: '#d32f2f',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#9a0007',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#d32f2f',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
                             − 5.000 ₺
                         </Button>
                     </Stack>
@@ -241,10 +350,11 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
 
             <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <TextField
+                    inputRef={inputRef}
                     variant="outlined"
-                    type="number"
-                    value={price}
+                    value={priceInput}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                     disabled={guessCount >= 3}
                     placeholder={"0"}
                     label="Your Guess"
@@ -274,6 +384,7 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                     InputLabelProps={{ style: { color: 'white' } }}
                 />
 
+
                 {feedback && (
                     <Typography sx={{ mt: 1 }} color="info.main">
                         {feedback}
@@ -281,11 +392,16 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                 )}
 
                 <GuessControls
-                    disabled={!isAuthenticated}
+                    disabled={!isAuthenticated || guessCount >= 3}
                     onChange={(amount) => {
-                        setPrice(prev => Math.max(prev + amount, 0));
+                        setPrice(prev => {
+                            const updated = Math.max(prev + amount, 0);
+                            setPriceInput(updated.toLocaleString("tr-TR"));
+                            return updated;
+                        });
                     }}
                 />
+
 
                 <Button
                     fullWidth
@@ -294,9 +410,21 @@ const ProductCard = ({ listing, isAuthenticated, guessCount, setGuessCount }) =>
                     onClick={() => {
                         setGuessCount(prev => prev + 1);
                         socketClick()
-                        alert("asda")
                     }}
-                    sx={{ mt: 2, color: '#fff', backgroundColor: '#fbc02d' }}
+                    sx={{
+                        mt: 2,
+                        backgroundColor: '#fbc02d',
+                        fontWeight: 'bold',
+                        color: 'white',
+                        '&:hover': {
+                            backgroundColor: '#c49000',
+                        },
+                        '&.Mui-disabled': {
+                            backgroundColor: '#fbc02d',
+                            color: 'white',
+                            opacity: 0.5,
+                        },
+                    }}
                 >
                     Submit Guess
                 </Button>

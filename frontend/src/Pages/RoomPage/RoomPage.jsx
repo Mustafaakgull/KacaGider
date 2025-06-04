@@ -12,11 +12,18 @@ function RoomPage() {
     const [guessCount, setGuessCount] = useState(0);
     const [listing, setListing] = useState(null);
     const [leaderboard, setLeaderboard] = useState([]);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [showResults, setShowResults] = useState(false);
     const [topThree, setTopThree] = useState([]);
     const [realPrice, setRealPrice] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+    const [top3Received, setTop3Received] = useState(false);
+    const [leaderboardReceived, setLeaderboardReceived] = useState(false);
+    const [roundStarted, setRoundStarted] = useState(false);
 
+    const path = window.location.pathname;
+    const roomName = path.split("/")[2];
+
+    // Kullanıcı oturum kontrolü
     useEffect(() => {
         axios.get("http://localhost:5000/whoami", { withCredentials: true })
             .then(res => {
@@ -26,45 +33,70 @@ function RoomPage() {
             })
             .catch(() => setIsAuthenticated(true));
     }, []);
-    const path = window.location.pathname;
-    const parts = path.split("/"); // ["", "room", "car"]
-    const roomName = parts[2];
 
     useEffect(() => {
         socket.emit("take_vehicle_data", roomName);
-
+        socket.emit("take_leaderboard_data", roomName);
+        socket.emit("take_top3_leaderboard_data", roomName);
 
         socket.on("vehicle_data:", (data) => {
-            setListing(data);
+            console.log("Yeni ilan geldi:", data);
+            setRealPrice(data.data["fiyat"]);
+            setListing(null);
+            setTimeout(() => {
+                setListing(data);
+            }, 10);
         });
 
-        // 🔹 MOCK ROUND END (simulate backend trigger)
-        setTimeout(() => {
-            setRealPrice(384000);
-            setTopThree([
-                { username: "yurt68", guess: 380000, percentage: 99.0, score: 1093 },
-                { username: "Kaanehxheh", guess: 380000, percentage: 99.0, score: 1067 },
-                { username: "ygmrrr", guess: 385000, percentage: 99.7, score: 1066 }
-            ]);
-            setShowResults(true);
+        socket.on("leaderboard_data", (data) => {
+            console.log("leaderboard data", data);
+            setLeaderboard(data);
+            setLeaderboardReceived(true);
+        });
+
+        socket.on("leaderboard_data_top3", (data) => {
+            console.log("top3 leaderboard data", data);
+            setTopThree(data);
+            setTop3Received(true);
+        });
+
+        const startRound = () => {
+            console.log("🔁 Yeni tur başladı");
+
+            setTimeout(() => {
+                setTop3Received(false);
+                setLeaderboardReceived(false);
+
+                socket.emit("take_leaderboard_data", roomName);
+                socket.emit("take_top3_leaderboard_data", roomName);
+                setRoundStarted(true); // bu turu bekle
+            }, 20000);
 
             setTimeout(() => {
                 setShowResults(false);
                 setGuessCount(0);
-            }, 5000);
-            socket.emit("game_finished")
-            socket.emit("take_leaderboard_data", roomName);
-            socket.on("leaderboard_data", data => {
-            console.log("leaderboardYdata", data)
-        });
-            console.log("game finished")
-        }, 8000);
+                socket.emit("game_finished");
+                socket.emit("take_vehicle_data", roomName);
+                startRound(); // yeni tura geç
+            }, 25000); // sonuç ekranı 5 saniye gösterilecek
+        };
+
+        startRound();
 
         return () => {
             socket.off("vehicle_data:");
             socket.off("leaderboard_data");
+            socket.off("leaderboard_data_top3");
         };
     }, [socket]);
+
+    // Sadece veriler geldikten sonra sonuçları göster
+    useEffect(() => {
+        if (roundStarted && top3Received && leaderboardReceived) {
+            setShowResults(true);
+            setRoundStarted(false); // reset
+        }
+    }, [top3Received, leaderboardReceived, roundStarted]);
 
     return (
         <Box
