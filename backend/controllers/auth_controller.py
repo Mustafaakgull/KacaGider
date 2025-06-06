@@ -6,7 +6,7 @@ from models.db import db
 from controllers.mail_controller import send_verification_mail, verify_code
 from controllers.session_controller import create_session, delete_session, get_session_username
 from models.redis_client import redis_client
-from scraping import scrape_vehicle
+from controllers.scraping import scrape_vehicle
 
 auth_bp = Blueprint('auth_bp', __name__)
 api = Api(auth_bp)
