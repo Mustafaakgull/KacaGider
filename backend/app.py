@@ -8,7 +8,7 @@ from controllers.auth_controller import auth_bp
 from controllers.user_controller import user_bp
 # from controllers.test_calls import test_call_bp
 from controllers.timer import fetch_data_every
-
+import os
 app = Flask(__name__)
 #CORS(app, resources={r"/*": {"origins": "*"}})  # geliştirme için
 CORS(app, supports_credentials=True, origins=["https://app.kacagider.net/"])
