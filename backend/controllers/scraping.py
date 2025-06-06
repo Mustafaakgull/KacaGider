@@ -18,7 +18,7 @@ def scrape_vehicle():
                 }
                 page_num = random.randint(1, 30)
                 minimal_page_num = random.randint(1, 5)
-                list_item_num = random.randint(1, 40)
+                list_item_num = random.randint(1, 30)
                 info_key_list = []
                 info_value_list = []
                 photo_link_list = []
@@ -35,9 +35,9 @@ def scrape_vehicle():
                     car_page_links.append(cars.find('a')['href'])
 
                 page_url = "https://www.arabam.com" + car_page_links[list_item_num]
+                print("mainurl",main_url_for_cars, "pageurl", page_url, "pagenum", page_num, "listitemnum", list_item_num )
                 response = requests.get(page_url)
                 car_page_res = response.text
-
                 soup2 = BeautifulSoup(car_page_res, "html.parser")
                 photos = soup2.find_all("div", class_="swiper-slide")
                 values = soup2.find_all("div", class_="property-item")
@@ -60,9 +60,7 @@ def scrape_vehicle():
                 res = redis_client.lrange(f"photos:{type_of}", 0, -1)
                 success = True
             except Exception as e:
-                print("printed",e)
-                logging.error(e)
-
+                print("printed",e, "mainurl", main_url_for_cars)
         success = False
 
 # scrape_vehicle("otomobil")
