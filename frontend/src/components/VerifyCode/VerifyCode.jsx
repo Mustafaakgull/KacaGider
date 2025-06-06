@@ -3,10 +3,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 
-function VerifyCodeDialog({ open, handleClose, email, username, password }) {
+function VerifyCodeDialog({ open, handleClose, email, username, password, onVerifySuccess }) {
     const [code, setCode] = useState(["", "", "", ""]);
     const inputRefs = useRef([]);
-    const url = "http://127.0.0.1:5000";
+    const url = "https://api.kacagider.net";
 
     useEffect(() => {
         setCode(["", "", "", ""]);
@@ -20,7 +20,6 @@ function VerifyCodeDialog({ open, handleClose, email, username, password }) {
             password: password,
             code: code.join("")
         }
-        console.log(typeof data, data);
         try{
             axios.post(url + '/verify', {
                 email: data.email,
@@ -30,6 +29,7 @@ function VerifyCodeDialog({ open, handleClose, email, username, password }) {
             }).then(r => {
                 handleClose();
             })
+            onVerifySuccess(username)
         }
         catch (error) {
             console.error("Error during verification:", error);
@@ -49,7 +49,6 @@ function VerifyCodeDialog({ open, handleClose, email, username, password }) {
 
             // eğer tüm kod girildiyse
             if (newCode.every(char => char !== "")) {
-                console.log("Final Code:", newCode.join(""));
                 // burada backend'e kodu göndererek doğrulama yapılabilir
             }
         }

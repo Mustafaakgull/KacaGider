@@ -1,7 +1,6 @@
-import GuessControls from "../GuessControls/GuessControls.jsx";
 import {Button, Card, CardContent, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { useState} from "react";
+import {useContext,useEffect, useRef, useState} from "react";
 import Box from "@mui/material/Box";
 import Slider from "react-slick";
 
@@ -16,33 +15,211 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import WarningIcon from '@mui/icons-material/Warning';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import PersonIcon from '@mui/icons-material/Person';
-import {socket} from "../../SocketioConnection.jsx";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import Stack from "@mui/material/Stack";
+import { SocketContext } from '../../SocketioConnection.jsx';
 
-const ProductCard = ({ listing }) => {
-    const [price, setPrice] = useState("");
-    const [guessCount, setGuessCount] = useState(0);
+
+const ProductCard = ({ vehicle_data, isAuthenticated, showResults}) => {
+    const [price, setPrice] = useState(0);
+    const [priceInput, setPriceInput] = useState("");
     const [feedback, setFeedback] = useState("");
+    const inputRef = useRef(null);
+    const socket = useContext(SocketContext);
+    const [hint, setHint] = useState("")
+    const [guessCount, setGuessCount] = useState(0);
+    // const [value, setValue] = useState("");
+    useEffect(() => {
+        if(inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [])
 
-    if (!listing) return null;
+    useEffect(() => {
+        if (showResults) {
+            setGuessCount(0)
 
-    const images = typeof listing.photos === "string"
-        ? JSON.parse(listing.photos)
-        : listing.photos || [];
+    }
 
-    const product = listing.data;
+  }, [showResults]);
+
+
+    if (!vehicle_data) return null;
+
+    const images = typeof vehicle_data.photos === "string"
+        ? JSON.parse(vehicle_data.photos)
+        : vehicle_data.photos || [];
+
+    const product = vehicle_data.data;
+    const socketClick = () => {
+        socket.emit("guess_button_clicked", price);
+        socket.on("hint_message", data => {
+        setHint(data);
+        socket.off("hint_message")
+    })
+    };
 
     const handleChange = (e) => {
-        const value = e.target.value;
+         let value = e.target.value.replace(/\./g, "");
         if (/^\d*$/.test(value)) {
-            setPrice(value === "" ? 0 : Number(value));
+            const num = Number(value);
+            setPrice(num);
+            setPriceInput(num.toLocaleString("tr-TR"));
         }
     };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && isAuthenticated && guessCount < 3) {
+            setGuessCount(prev => prev + 1);
+            socketClick()
+        }
+    };
+
+
+    const GuessControls = ({ onChange, disabled }) => {
+        const handleChange = (amount) => {
+            if (!disabled) onChange?.(amount);
+        };
+
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mt: 3,
+                }}
+            >
+                <Stack spacing={2}>
+                    <Stack direction="row" spacing={2} justifyContent="center">
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(100000)}
+                            sx={{
+                                backgroundColor: '#2e7d32',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#1b5e20',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#2e7d32',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
+                            + 100.000 ₺
+                        </Button>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(25000)}
+                            sx={{
+                                backgroundColor: '#2e7d32',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#1b5e20',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#2e7d32',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
+                            + 25.000 ₺
+                        </Button>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(5000)}
+                            sx={{
+                                backgroundColor: '#2e7d32',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#1b5e20',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#2e7d32',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
+                            + 5.000 ₺
+                        </Button>
+                    </Stack>
+
+                    <Stack direction="row" spacing={2} justifyContent="center">
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(-100000)}
+                            sx={{
+                                backgroundColor: '#d32f2f',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#9a0007',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#d32f2f',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
+                            − 100.000 ₺
+                        </Button>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(-25000)}
+                            sx={{
+                                backgroundColor: '#d32f2f',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#9a0007',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#d32f2f',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
+                            − 25.000 ₺
+                        </Button>
+                        <Button
+                            variant="contained"
+                            disabled={disabled}
+                            onClick={() => handleChange(-5000)}
+                            sx={{
+                                backgroundColor: '#d32f2f',
+                                color: 'white',
+                                '&:hover': {
+                                    backgroundColor: '#9a0007',
+                                },
+                                '&.Mui-disabled': {
+                                    backgroundColor: '#d32f2f',
+                                    color: 'white',
+                                    opacity: 0.5,
+                                },
+                            }}
+                        >
+                            − 5.000 ₺
+                        </Button>
+                    </Stack>
+                </Stack>
+            </Box>
+        );
+    };
+
 
     return (
         <Card
             className={'card'}
             sx={{
-                width: 500,
+                width: 600,
                 maxWidth: "100%",
                 margin: "auto",
                 padding: 5,
@@ -118,9 +295,9 @@ const ProductCard = ({ listing }) => {
                             icon: <FlashOnIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
-                            key: "Ağır Hasarlı",
-                            label: "Damaged",
-                            icon: <WarningIcon fontSize="small" sx={{ color: "#fbc02d" }} />,
+                            key: "Kasa Tipi",
+                            label: "Body Type",
+                            icon: <DirectionsCarIcon  fontSize="small" sx={{ color: "#fbc02d" }} />,
                         },
                         {
                             key: "Boya-değişen",
@@ -134,7 +311,7 @@ const ProductCard = ({ listing }) => {
                         },
                     ].map(({ key, label, icon }, i) => {
                         let value = product[key];
-
+                        if (label === "Body Type")
                         if (label === "Gearbox")
                             value = value === "Manuel" ? "Manual"
                                 : value === "Otomatik" ? "Automatic"
@@ -151,12 +328,13 @@ const ProductCard = ({ listing }) => {
                         if (label === "Seller")
                             value = value === "Bireysel" ? "Individual"
                                 : value === "Galeriden" ? "Dealer"
-                                    : value;
+                                    : value === "Sahibinden" ? "Individual"
+                                        : value;
 
-                        if (label === "Damaged" || label === "Paint/Changed Parts")
-                            value = value === "Evet" ? "Yes"
-                                : value === "Hayır" ? "No"
-                                    : value;
+                        if (label === "Paint/Changed Parts")
+                            value = value === "Belirtilmemiş" ? "no"
+                                : "yes"
+
 
                         return (
                             <Box
@@ -184,10 +362,11 @@ const ProductCard = ({ listing }) => {
 
             <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <TextField
+                    inputRef={inputRef}
                     variant="outlined"
-                    type="number"
-                    value={price}
+                    value={priceInput}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                     disabled={guessCount >= 3}
                     placeholder={"0"}
                     label="Your Guess"
@@ -217,26 +396,57 @@ const ProductCard = ({ listing }) => {
                     InputLabelProps={{ style: { color: 'white' } }}
                 />
 
+
                 {feedback && (
                     <Typography sx={{ mt: 1 }} color="info.main">
-                        {feedback}
+                        {feedback} + "saasass"
                     </Typography>
                 )}
 
                 <GuessControls
+                    disabled={!isAuthenticated || guessCount >= 3}
                     onChange={(amount) => {
-                        setPrice(prev => Math.max(prev + amount, 0));
+                        setPrice(prev => {
+                            const updated = Math.max(prev + amount, 0);
+                            setPriceInput(updated.toLocaleString("tr-TR"));
+                            return updated;
+                        });
                     }}
                 />
+
 
                 <Button
                     fullWidth
                     variant="contained"
-                    disabled={guessCount >= 3}
-                    sx={{ mt: 2, color: '#fff', backgroundColor: '#fbc02d' }}
+                    disabled={guessCount >= 3 || !isAuthenticated}
+                    onClick={() => {
+                        setGuessCount(prev => prev + 1);
+                        // handleChange()
+                        socketClick()
+                    }}
+                    sx={{
+                        mt: 2,
+                        backgroundColor: '#fbc02d',
+                        fontWeight: 'bold',
+                        color: 'white',
+                        '&:hover': {
+                            backgroundColor: '#c49000',
+                        },
+                        '&.Mui-disabled': {
+                            backgroundColor: '#fbc02d',
+                            color: 'white',
+                            opacity: 0.5,
+                        },
+                    }}
                 >
                     Submit Guess
                 </Button>
+                <Box sx={{color:'#fff'}}> {hint} </Box>
+                {!isAuthenticated && (
+                    <Typography sx={{ mt: 2 }} color="error">
+                        Lütfen tahmin yapmak için giriş yapın.
+                    </Typography>
+                )}
             </CardContent>
         </Card>
     );

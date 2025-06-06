@@ -1,52 +1,67 @@
-from models.redis_client import redis_client
-# noinspection PyUnresolvedReferences
 from flask import make_response, request
+from models.redis_client import redis_client
+from controllers.session_controller import create_game_session
+from controllers.scraping import scrape_vehicle
+import json
+import copy
 SESSION_TIME = 3600
-GAME_TIME = 100
 
 
-def clicked_guess(guessed_price):
-    cookie_session = request.cookies.get("session_id")
-    user = redis_client.hgetall(f"session:{cookie_session}")
-
-    if int(user["guess_count"]) <= 3:
-
-        redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
-
-        real_price = redis_client.hget(f"info:otomobil", "fiyat")
-        real_price = int(real_price)
-        percentage_price = (guessed_price / real_price) * 100
-
-        redis_client.hset(f"guessed_prices:{user['current_room']}", {user['username']}, guessed_price)
-        print(percentage_price)
-        print(real_price)
-        print(guessed_price)
-        print(user)
-
-        if percentage_price < 100:
-            return {"message": "successfully guessed", "hint": "You need to guess higher", "status": 200}
-        else:
-            return {"message": "successfully guessed", "hint": "You need to guess lower", "status": 200}
-
+def room_name_converter(room_name):
+    if room_name == "car":
+        return "otomobil"
+    elif room_name == "motorcycle":
+        return "motosiklet"
+    elif room_name == "rented-vehicles":
+        return "kiralik-araclar"
     else:
-        return {"message": "maximum number of guesses reached", "status": 400}
+        return room_name
+
+def game_starts():
+    pass
 
 
-def game_finished(game_session):
-    cookie_session = request.cookies.get("session_id")
-    real_price = redis_client.hget(f"test:car", "price")
 
-    data = redis_client.hgetall(f"guessed_prices:{game_session}")
+def game_finished():
+    # room name sadece en sondaki kısmı almalı kacagider.net/rooms/car, mesela car almalı burda
+    keys = redis_client.keys("guessed_prices:*")
+    room_names = [key.split(':', 1)[1] for key in keys]
+    room_names = [room_name_converter(room_name) for room_name in room_names]
 
-    # burada muhtemelen gerekli userların countu 0 olmayacak da 1 tanesinin olacak, bug var muhtemel
-    redis_client.hset(f"session:{cookie_session}", "guess_count", 0)
+    user_keys = redis_client.keys("session:*")
+    for key in user_keys:
+        redis_client.hset(key, "guess_count", 0)
 
-    real_price = int(real_price)
+    for room_name in room_names:
+        real_price = int(redis_client.hget(f"info:{room_name}", "fiyat"))
 
-    for user, guess in data.items():
-        int(guess)
-        percentage_to_keep = (guess / real_price) * 100
-        leaderboard_key = f"leaderboard:{game_session}"
-        redis_client.zadd(leaderboard_key, {user: percentage_to_keep})
-        redis_client.hset(f"guessed_prices:{game_session}", user, 0)
-        print(f"Added {user} with score {percentage_to_keep} to {leaderboard_key}")
+        data = redis_client.hgetall(f"guessed_prices:{room_name}")
+        top3_list = {}
+        for user, guess in data.items():
+            proximity = min(real_price,int(guess)) / max(real_price, int(guess))
+            score = round(proximity * 1000)
+            top3_list.update({user: score})
+            redis_client.zincrby(f"leaderboard:{room_name}", score, user)
+
+            # redis_client.hset(f"guessed_prices:{room_name}", user, 0)
+        top3_list.update({"mustafa": 900})
+        top3_list.update({"omer": 760})
+        top3_list.update({"haitem": 120})
+
+        sorted_dict_desc = dict(sorted(top3_list.items(), key=lambda item: item[1], reverse=True))
+        # redis_client.zadd(f"leaderboard_top3:{room_name}", {k: int(v) for k, v in sorted_dict_desc.items()})
+
+    # prop data
+    redis_client.zadd("leaderboard:otomobil", {"mustafa": "900"})
+    redis_client.zadd("leaderboard:otomobil", {"omer": "760"})
+    redis_client.zadd("leaderboard:otomobil", {"haitem": "120"})
+
+
+def set_all_user_price_zero():
+    keys = redis_client.keys("guessed_prices:*")
+    room_names = [key.split(':', 1)[1] for key in keys]
+    for room_name in room_names:
+        redis_client.delete(f"leaderboard_top3:{room_name}")
+        users = redis_client.hkeys(f"guessed_prices:{room_name}")
+        for hkey in users:
+            redis_client.hset(f"guessed_prices:{room_name}", hkey, 0)

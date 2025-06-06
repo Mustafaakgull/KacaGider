@@ -1,57 +1,51 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Box } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
 import './Register.css'
-import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
+import {useState} from "react";
 
 
-const url = "http://127.0.0.1:5000";
+const url = "https://api.kacagider.net";
 
 function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, setEmail, setPassword, username, email, password }) {
 
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
-    const [captchaToken, setCaptchaToken] = useState(null);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+
         if (name === "username") {
             setUsername(value);
         } else if (name === "email") {
             setEmail(value);
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            setEmailError(emailRegex.test(value) ? "" : "Enter a valid email address");
         } else if (name === "password") {
             setPassword(value);
-        } else if (name === "captcha") {
-            setCaptchaToken(value);
+            setPasswordError(value.length >= 5 ? "" : "Password should be at least 5 characters");
         }
     };
 
 
 
+
     const handleRegister = () => {
-        if (!email || !username || !password) {
-            alert("Please fill in all fields");
+        if (!email || !username || !password || emailError || passwordError) {
             return;
         }
-        const data= {
-            username: username,
-            password: password,
-            email: email,
-        }
+
+        const data = { username, password, email };
         try {
-            axios.post(url + '/register', {
-                username: data.username,
-                password: data.password,
-                email: data.email,
-            }).then(r => r)
-        }
-        catch (error) {
+            axios.post(url + '/register', data).then(r => r);
+            handleClose();
+            openVerifyCodeDialog();
+        } catch (error) {
             console.error("Error during registration:", error);
         }
+    };
 
-        handleClose();
-        openVerifyCodeDialog();
-    }
 
 
     return (
@@ -88,7 +82,10 @@ function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, 
                         value={email}
                         onChange={handleChange}
                         className={'input'}
+                        error={!!emailError}
+                        helperText={emailError}
                     />
+
                     <TextField
                         label="Username"
                         name="username"
@@ -99,6 +96,7 @@ function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, 
                         onChange={handleChange}
                         className={'input'}
                     />
+
                     <TextField
                         label="Password"
                         name="password"
@@ -109,11 +107,11 @@ function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, 
                         value={password}
                         onChange={handleChange}
                         className={'input'}
+                        error={!!passwordError}
+                        helperText={passwordError}
                     />
-                    <ReCAPTCHA
-                        sitekey="6LdQ0PIqAAAAAI7ot30prHy0ue9j9O2Ly5TeYzWB"
-                        onChange={handleChange}
-                    />
+
+
                 </Box>
             </DialogContent>
 

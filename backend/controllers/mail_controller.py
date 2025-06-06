@@ -28,8 +28,6 @@ def send_verification_mail(mail):
     server.login(my_email, password)
     server.send_message(msg)
 
-    print("Email sent successfully!")
-    print("FOR TESTING, LATER ON NEEDED TO BE DELETED", verification_code)
     return verification_code
 
 

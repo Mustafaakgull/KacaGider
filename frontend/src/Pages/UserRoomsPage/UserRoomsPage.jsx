@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Grid } from "@mui/material";
+import { Box, Typography, Button } from '@mui/material';
 import RoomCard from '../../components/RoomCard/RoomCard';
 
 const dummyRooms = [
@@ -30,13 +30,26 @@ export default function UserRoomsPage() {
                 </Button>
             </Box>
 
-            <Grid container spacing={3}>
+            {/* Responsive Card Container */}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 3,
+                }}
+            >
                 {dummyRooms.map(room => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={room.id}>
+                    <Box
+                        key={room.id}
+                        sx={{
+                            flex: "0 0 calc(25% - 24px)",
+                            minWidth: "280px",             // minimum width for small screens
+                        }}
+                    >
                         <RoomCard room={room} />
-                    </Grid>
+                    </Box>
                 ))}
-            </Grid>
+            </Box>
         </Box>
     );
 }

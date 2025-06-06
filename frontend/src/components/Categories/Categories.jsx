@@ -8,8 +8,9 @@ function Categories() {
     const [openDialog, setOpenDialog] = useState(false);
 
     const categories = [
-        {id: 1, name: 'Car', player: 26},
-        {id: 2, name: 'Bike', player: 15},
+        {id: 1, name: 'Car'},
+        {id: 2, name: 'Motorcycle'},
+        {id: 3, name: 'Rented-Vehicles'}
     ];
 
     return (
@@ -19,12 +20,7 @@ function Categories() {
                     <CategoryCard className={'category-card'} key={category.id} category={category}/>
                 ))}
             </div>
-            <div className={'button-container'}>
-                <Button variant="contained" className={'button'} onClick={() => setOpenDialog(true)}>
-                    Create Private Room
-                </Button>
-                <PrivateRoom open={openDialog} onClose={() => setOpenDialog(false)} />
-            </div>
+
 
         </>
     );

@@ -19,7 +19,7 @@ function EditProfileDialog({ open, onClose, email, onUpdateSuccess }) {
     const handleUsernameChange = async () => {
         if (!newUsername) return;
         try {
-            await axios.post('http://127.0.0.1:5000/reset_username', {
+            await axios.post('https://api.kacagider.net/reset_username', {
                 email,
                 new_username: newUsername,
             }, { withCredentials: true });
@@ -33,7 +33,7 @@ function EditProfileDialog({ open, onClose, email, onUpdateSuccess }) {
     const handlePasswordChange = async () => {
         if (!newPassword) return;
         try {
-            await axios.post('http://127.0.0.1:5000/reset_password', {
+            await axios.post('https://api.kacagider.net/reset_password', {
                 email,
                 new_password: newPassword,
             }, { withCredentials: true });

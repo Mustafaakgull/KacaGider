@@ -20,13 +20,15 @@ import RegisterDialog from "../Register/Register.jsx"
 import VerifyCodeDialog from "../VerifyCode/VerifyCode.jsx"
 import LoginDialog from "../Login/Login.jsx"
 import EditProfileDialog from '../EditProfile/EditProfile.jsx';
-import { useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { SocketContext } from '../../SocketioConnection.jsx';
 
 import axios from "axios";
 
 function Navbar() {
+    const socket = useContext(SocketContext);
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const navigate = useNavigate(); // Navbar fonksiyonu içinde
 
@@ -62,6 +64,22 @@ function Navbar() {
     const closeLoginDialog = () => {
         setLoginDialogOpen(false);
     }
+    useEffect(() => {
+        socket.emit("current_user")
+        socket.on("current_user_username", (data) => {
+            if (data === "none"){
+                setLoggedInUser(null)
+            }
+            else {
+                setLoggedInUser(data)
+
+            }
+
+        })
+         return () => {
+        socket.off("current_user_username");
+    };
+  }, []);
 
     return (
         <>
@@ -86,16 +104,13 @@ function Navbar() {
                                     textDecoration: 'none',
                                 }}
                             >
-                                KACA GIDER???
+                                KACA GIDER
                             </Typography>
                         </Box>
 
 
                         <Box sx={{display: {xs: 'none', md: 'flex'}, flexDirection: 'row', alignItems: 'center'}}>
-                            <Box className="user-rooms-box" sx={{mr: 2}} onClick={() => navigate("/user-rooms")} style={{ cursor: 'pointer' }}>
-                                <PeopleAltOutlinedIcon className="user-icon" fontSize="large"/>
-                                <p className="user-rooms">User Rooms</p>
-                            </Box>
+
 
                             {loggedInUser ? (
                                 <Box sx={{ mr: 2 }} className="cup">
@@ -145,7 +160,7 @@ function Navbar() {
                                         </MenuItem>
                                         <MenuItem
                                             onClick={async () => {
-                                                await axios.post("http://127.0.0.1:5000/logout", {}, { withCredentials: true });
+                                                await axios.post("https://api.kacagider.net/logout", {}, { withCredentials: true });
                                                 setLoggedInUser(null);
                                                 setAnchorEl(null);
                                             }}
@@ -178,12 +193,7 @@ function Navbar() {
                                 </>
                             )}
 
-                            <Box sx={{mr: 2}} className="box">
-                                <LightModeOutlinedIcon fontSize="large"/>
-                            </Box>
-                            <Box sx={{mr: 2}} className="box">
-                                <NotificationsNoneOutlinedIcon fontSize="large"/>
-                            </Box>
+
                         </Box>
                     </Toolbar>
                 </Container>
@@ -191,12 +201,7 @@ function Navbar() {
                 {/* Mobile Menu */}
                 {mobileMenuOpen && (
                     <Box sx={{display: {xs: 'flex', md: 'none'}, flexDirection: 'column', alignItems: 'center'}}>
-                        <Box className="mobile-menu-item">
-                            <IconButton className="icon">
-                                <PeopleAltOutlinedIcon className="user-icon" fontSize="large"/>
-                                <p className="user-rooms">User Rooms</p>
-                            </IconButton>
-                        </Box>
+
                         <Box sx={{mr: 2}} className="cup">
                             <IconButton className="icon">
                                 <EmojiEventsOutlinedIcon className="cup-icon" fontSize="large"/>
@@ -240,6 +245,7 @@ function Navbar() {
                 username={registerUsername}
                 email={registerEmail}
                 password={registerPassword}
+                onVerifySuccess={(username) => setLoggedInUser(username)}
             />
             <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}
                          onLoginSuccess={(username) => setLoggedInUser(username)}/>
@@ -249,9 +255,6 @@ function Navbar() {
                 email={registerEmail}
                 onUpdateSuccess={(newUsername) => setLoggedInUser(newUsername)}
             />
-
-
-
 
         </>
     );

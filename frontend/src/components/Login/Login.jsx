@@ -1,47 +1,54 @@
-import {Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Box} from "@mui/material";
+import {
+    Dialog, DialogTitle, DialogContent, DialogActions,
+    Button, TextField, IconButton, Box
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {useState} from "react";
-import './Login.css'
-import ReCAPTCHA from "react-google-recaptcha";
+import { useState } from "react";
+import './Login.css';
 import axios from "axios";
 
+function LoginDialog({ open, handleClose, onLoginSuccess }) {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
-function LoginDialog({open, handleClose, onLoginSuccess}) {
-    const [username, setUsername] = useState();
-    const [password, setPassword] = useState();
-    const [captchaToken, setCaptchaToken] = useState(null);
-    const url = "http://127.0.0.1:5000"
+    const url = "https://api.kacagider.net";
 
-    function onChange(value) {
-        console.log("Captcha value:", value);
-    }
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+    };
+
+    const handlePasswordChange = (e) => {
+        const value = e.target.value;
+        setPassword(value);
+        setPasswordError(value.length >= 5 ? "" : "Password should be at least 5 characters!");
+    };
 
     const handleLogin = () => {
-        if (captchaToken === "") {
-            alert("Please complete the CAPTCHA");
+        if (!username || !password || passwordError) {
+            if (!password) setPasswordError("Şifre boş olamaz");
+            return;
         }
-        try {
-            axios.post(url + '/login', {
-                username: username,
-                password: password,
-            }, {withCredentials: true}).then(r => {
-                console.log("r.data", r.data.message);
 
+        try {
+            axios.post(`${url}/login`, {
+                username,
+                password,
+            }, { withCredentials: true }).then(r => {
                 if (r.data.message === "Login successful") {
-                    onLoginSuccess(username)
-                    alert("Login successfulls12312");
+                    onLoginSuccess(username);
                     handleClose();
                 } else if (r.data.message === "Invalid username or password") {
-                    alert("Invalid username or password");
+                    setPasswordError("Kullanıcı adı veya şifre hatalı");
                 } else {
-                    alert("Login failed2");
+                    setPasswordError("Bilinmeyen bir hata oluştu");
                 }
             });
         } catch (e) {
             console.error("Login error:", e);
-            alert("Login failed1");
+            setPasswordError("Sunucu hatası oluştu");
         }
-    }
+    };
 
     return (
         <Dialog
@@ -59,22 +66,22 @@ function LoginDialog({open, handleClose, onLoginSuccess}) {
                 }
             }}
         >
-            <DialogTitle className={'register-dialog-title'} sx={{py: 1, px: 2}}>
+            <DialogTitle className={'register-dialog-title'} sx={{ py: 1, px: 2 }}>
                 Login
-                <IconButton onClick={handleClose} sx={{color: "#fff"}}>
-                    <CloseIcon/>
+                <IconButton onClick={handleClose} sx={{ color: "#fff" }}>
+                    <CloseIcon />
                 </IconButton>
             </DialogTitle>
 
-            <DialogContent sx={{px: 2, py: 1}}>
-                <Box className={'form-box'} sx={{gap: 1.5}}>
+            <DialogContent sx={{ px: 2, py: 1 }}>
+                <Box className={'form-box'} sx={{ gap: 1.5 }}>
                     <TextField
                         label="Username"
                         variant="outlined"
                         fullWidth
                         size="small"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={handleUsernameChange}
                         className={'input'}
                     />
                     <TextField
@@ -84,17 +91,15 @@ function LoginDialog({open, handleClose, onLoginSuccess}) {
                         fullWidth
                         size="small"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handlePasswordChange}
                         className={'input'}
-                    />
-                    <ReCAPTCHA
-                        sitekey="6LdQ0PIqAAAAAI7ot30prHy0ue9j9O2Ly5TeYzWB"
-                        onChange={onChange}
+                        error={!!passwordError}
+                        helperText={passwordError}
                     />
                 </Box>
             </DialogContent>
 
-            <DialogActions sx={{px: 2, pb: 2}}>
+            <DialogActions sx={{ px: 2, pb: 2 }}>
                 <Button
                     onClick={handleLogin}
                     fullWidth

@@ -21,7 +21,7 @@ function Footer() {
         >
             <Container maxWidth="xl" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Typography variant="body2" sx={{ fontSize: "0.9rem" }}>
-                    © 2025 Kacagider. All rights are reserved.
+                    © 2025 Kacagider. Educational purposes only.
                 </Typography>
                 <Box sx={{ display: "flex", gap: 2 }}>
                 </Box>
