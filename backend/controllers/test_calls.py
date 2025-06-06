@@ -1,13 +1,13 @@
-from flask import Blueprint, request
-from flask_restx import Api, Resource
-from werkzeug.security import check_password_hash, generate_password_hash
-from backend.models.tables import User
-from backend.models.db import db
-from backend.controllers.mail_controller import send_verification_mail, verify_code
-from backend.controllers.session_controller import create_session
-from backend.models.redis_client import redis_client
-test_call_bp = Blueprint('test_call_bp', __name__)
-api = Api(test_call_bp)
+# from flask import Blueprint, request
+# from flask_restx import Api, Resource
+# from werkzeug.security import check_password_hash, generate_password_hash
+# from backend.models.tables import User
+# from backend.models.db import db
+# from backend.controllers.mail_controller import send_verification_mail, verify_code
+# from backend.controllers.session_controller import create_session
+# from backend.models.redis_client import redis_client
+# test_call_bp = Blueprint('test_call_bp', __name__)
+# api = Api(test_call_bp)
 
 
 # print(check_password_hash("scrypt:32768:8:1$J6fKjSZJxla229Cb$f7b1f22cf106b8748667f6ffc83a964aa2c573d309dc6ec474aeda0e3e82889b749009cc38d7d0adc74370059480cc8e28842e19cea6ad1eb00055d6fa3c266e","1"))

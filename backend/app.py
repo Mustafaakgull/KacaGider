@@ -24,7 +24,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 db.init_app(app)
 
 
-app.register_blueprint(test_call_bp)
+# app.register_blueprint(test_call_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(socketio_bp)
