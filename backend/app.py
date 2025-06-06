@@ -11,7 +11,7 @@ from controllers.timer import fetch_data_every
 import os
 app = Flask(__name__)
 #CORS(app, resources={r"/*": {"origins": "*"}})  # geliştirme için
-CORS(app, supports_credentials=True, origins=["https://app.kacagider.net/"])
+CORS(app, supports_credentials=True, origins=["https://app.kacagider.net"])
 
 socketio = SocketIO(app, cors_allowed_origins=[
     "https://app.kacagider.net"
