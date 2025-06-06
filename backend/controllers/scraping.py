@@ -18,7 +18,7 @@ def scrape_vehicle():
                 }
                 page_num = random.randint(1, 30)
                 minimal_page_num = random.randint(1, 5)
-                list_item_num = random.randint(1, 30)
+                list_item_num = random.randint(1, 10)
                 info_key_list = []
                 info_value_list = []
                 photo_link_list = []
@@ -59,7 +59,7 @@ def scrape_vehicle():
                 res = redis_client.lrange(f"photos:{type_of}", 0, -1)
                 success = True
             except Exception as e:
-                print("printed",e, "mainurl", main_url_for_cars, "listitemnum", list_item_num , "pageurl", page_url)
+                print("printed",e, "mainurl", main_url_for_cars, "listitemnum", list_item_num )
         success = False
 
 # scrape_vehicle("otomobil")
