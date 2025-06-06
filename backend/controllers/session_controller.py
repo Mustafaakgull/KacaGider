@@ -7,12 +7,9 @@ import random
 import string
 SESSION_TIME = 3600
 GAME_TIME = 100
-session_id_global = None
 
 def create_session(username):
     session_id = str(uuid.uuid4())
-    global session_id_global
-    session_id_global = session_id
     redis_client.hset(f"session:{session_id}", mapping={
         "username": username,
         "guess_count": 0,

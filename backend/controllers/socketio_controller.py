@@ -67,7 +67,7 @@ def game_handlers():
     @socketio.on('guess_button_clicked')
     def clicked_guess(guessed_price):
         # cookie_session = request.cookies.get("session_id")
-        cookie_session = controllers.session_controller.session_id_global
+        cookie_session = request.cookies.get('session_id')
         user = redis_client.hgetall(f"session:{cookie_session}")
         if int(user["guess_count"]) <= 3:
 
@@ -89,14 +89,14 @@ def game_handlers():
     @socketio.on('game_finished')
     def games_finished():
         game_finished()
-        cookie_session = controllers.session_controller.session_id_global
+        cookie_session = request.cookies.get('session_id')
         leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', 'current_room')}", 0, -1, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
         scrape_vehicle()
         set_all_user_price_zero()
     @socketio.on("join_room")
     def join_game_session(room_name):
-        cookie_session = controllers.session_controller.session_id_global
+        cookie_session = request.cookies.get('session_id')
         room_name = room_name_converter(room_name)
         redis_client.hset(f"session:{cookie_session}", "current_room", room_name)
         username = redis_client.hget(f"session:{cookie_session}", "username")
@@ -164,7 +164,8 @@ def chat_handler():
 
     @socketio.on('send_message')
     def handle_message(data):
-        cookie_session = controllers.session_controller.session_id_global
+        cookie_session = request.cookies.get('session_id')
+
         username = redis_client.hget(f"session:{cookie_session}", "username")
         message = data.get('message', '')
 
