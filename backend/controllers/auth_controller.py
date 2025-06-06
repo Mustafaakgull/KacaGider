@@ -129,4 +129,4 @@ class Contact(Resource):
 @api.route('/scraping')
 class Scraping(Resource):
     def get(self):
-        return {redis_client.hget("info:otomobil")}
+        return {redis_client.hgetall("info:otomobil")}
