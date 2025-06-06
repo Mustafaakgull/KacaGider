@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import random
-from backend.models.redis_client import redis_client
+from models.redis_client import redis_client
 import re
 
 def scrape_vehicle():
