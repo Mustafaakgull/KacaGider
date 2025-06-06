@@ -32,11 +32,11 @@ function RoomPage() {
         useEffect(() => {
 
     const interval = setInterval(() => {
-      console.log("This runs every second");
       socket.emit("timer")
+
         socket.on("timer_response", (data) => {
-            console.log("timer responsessssssssssssssssssss", data)
             setTimer(data)
+            if (timer === 0) {setTimeout(() => {}, 1000);}
             setRoundDeadline(Date.now() + timer*1000)
         })
     }, 1000);
@@ -105,12 +105,12 @@ useEffect(() => {
     if (showResults) {
         const timer = setTimeout(() => {
             setShowResults(false); // Sonuç ekranını kapat
-            console.log("show results true oldu suan")
+            console.log("show results oldu suan")
         socket.emit("take_all_data", roomName)
         socket.emit("timer")
 
 
-        }, 5000);
+        }, 6000);
 
 
         return () => clearTimeout(timer);

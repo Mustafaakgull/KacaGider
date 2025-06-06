@@ -3,7 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 
-function VerifyCodeDialog({ open, handleClose, email, username, password }) {
+function VerifyCodeDialog({ open, handleClose, email, username, password, onVerifySuccess }) {
     const [code, setCode] = useState(["", "", "", ""]);
     const inputRefs = useRef([]);
     const url = "http://127.0.0.1:5000";
@@ -30,8 +30,10 @@ function VerifyCodeDialog({ open, handleClose, email, username, password }) {
             }).then(r => {
                 handleClose();
             })
+            onVerifySuccess(username)
         }
         catch (error) {
+            console.log("seeeeks")
             console.error("Error during verification:", error);
         }
     }

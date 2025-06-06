@@ -21,9 +21,10 @@ def fetch_data_every(interval,wait):
             #
             # time.sleep(interval)
             time_sended = 0
+            time_sended = interval
             game_finished()
-            set_all_user_price_zero()
             time.sleep(wait)
+            set_all_user_price_zero()
 
     thread = threading.Thread(target=task, daemon=True)
     thread.start()

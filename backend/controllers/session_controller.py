@@ -64,6 +64,9 @@ def join_private_game_session(private_room_name, password):
         redis_client.hset(f"session:{request.cookies.get('session_id')}", mapping={
             "current_room": private_room_name
         })
+        return {"message": "success"}
+    else:
+        return {"message": "fail"}
 
 
 def get_session_username():
@@ -71,4 +74,9 @@ def get_session_username():
 
 
 def delete_session():
-    redis_client.delete(f"session:{request.cookies.get('session_id')}")
+    username = get_session_username()
+    redis_client.delete(f"session:{cookie}")
+    keys = redis_client.keys(f"leaderboard:*")
+    for key in keys:
+        redis_client.delete(key, username)
+

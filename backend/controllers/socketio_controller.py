@@ -128,7 +128,6 @@ def info_handler():
         emit("leaderboard_data", leaderboard_data)
         leaderboard_top3 = redis_client.zrevrange(f"leaderboard_top3:{room_name}", 0, 2, withscores=True)
         leaderboard_top3_data = [{"username": name, "score": int(score)} for name, score in leaderboard_top3]
-
         emit("leaderboard_data_top3", leaderboard_top3_data)
         user_count_data = redis_client.hlen(room_name)
         emit("room_user_count", user_count_data)
@@ -164,6 +163,13 @@ def info_handler():
     #     data = redis_client.hlen(room_name)
     #     emit("room_user_count", data)
     #     print("room_user_count:", data)
+    @socketio.on("current_user")
+    def current_user():
+         username = get_session_username()
+         if username is None:
+             emit("current_user_username", "none")
+         else:
+            emit("current_user_username", username)
 
 
 def chat_handler():

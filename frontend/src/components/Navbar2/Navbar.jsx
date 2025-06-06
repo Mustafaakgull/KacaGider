@@ -20,13 +20,15 @@ import RegisterDialog from "../Register/Register.jsx"
 import VerifyCodeDialog from "../VerifyCode/VerifyCode.jsx"
 import LoginDialog from "../Login/Login.jsx"
 import EditProfileDialog from '../EditProfile/EditProfile.jsx';
-import { useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { SocketContext } from '../../SocketioConnection.jsx';
 
 import axios from "axios";
 
 function Navbar() {
+    const socket = useContext(SocketContext);
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const navigate = useNavigate(); // Navbar fonksiyonu içinde
 
@@ -62,6 +64,22 @@ function Navbar() {
     const closeLoginDialog = () => {
         setLoginDialogOpen(false);
     }
+    useEffect(() => {
+        socket.emit("current_user")
+        socket.on("current_user_username", (data) => {
+            if (data === "none"){
+                setLoggedInUser(null)
+            }
+            else {
+                setLoggedInUser(data)
+
+            }
+
+        })
+         return () => {
+        socket.off("current_user_username");
+    };
+  }, []);
 
     return (
         <>
@@ -86,7 +104,7 @@ function Navbar() {
                                     textDecoration: 'none',
                                 }}
                             >
-                                KACA GIDER???
+                                KACA GIDER
                             </Typography>
                         </Box>
 
@@ -227,6 +245,7 @@ function Navbar() {
                 username={registerUsername}
                 email={registerEmail}
                 password={registerPassword}
+                onVerifySuccess={(username) => setLoggedInUser(username)}
             />
             <LoginDialog open={loginDialogOpen} handleClose={closeLoginDialog}
                          onLoginSuccess={(username) => setLoggedInUser(username)}/>

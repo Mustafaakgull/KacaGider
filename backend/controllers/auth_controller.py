@@ -105,18 +105,24 @@ class ResetUsername(Resource):
         res = create_session(new_username)
         return res
 
-@api.route('/whoami')
-class WhoAmI(Resource):
-    def get(self):
-        session_id = request.cookies.get("session_id")
-        print("session_id", session_id)
-        if not session_id:
-            return {"username": None}, 401
+# @api.route('/whoami')
+# class WhoAmI(Resource):
+#     def get(self):
+#         session_id = request.cookies.get("session_id")
+#         print("session_id", session_id)
+#         if not session_id:
+#             return {"username": None}, 401
+#
+#         username = redis_client.hget(f"session:{session_id}", "username")
+#         if username:
+#             print('username', username)
+#             return {"username": username, "session_id": session_id}
+#
+#         return {"username": None}, 401
 
-        username = redis_client.hget(f"session:{session_id}", "username")
-        if username:
-            print('username', username)
-            return {"username": username, "session_id": session_id}
-
-        return {"username": None}, 401
+@api.route('/contact')
+class Contact(Resource):
+    def post(self):
+        data = request.get_json()
+        print(data)
 

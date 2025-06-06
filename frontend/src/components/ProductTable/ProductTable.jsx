@@ -65,7 +65,6 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults}) => {
         if (/^\d*$/.test(value)) {
             const num = Number(value);
             setPrice(num);
-            console.log("PRIIICEEE", price)
             setPriceInput(num.toLocaleString("tr-TR"));
         }
     };
@@ -313,7 +312,7 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults}) => {
                         },
                     ].map(({ key, label, icon }, i) => {
                         let value = product[key];
-
+                        if (label === "Body Type")
                         if (label === "Gearbox")
                             value = value === "Manuel" ? "Manual"
                                 : value === "Otomatik" ? "Automatic"
