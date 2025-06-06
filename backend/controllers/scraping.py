@@ -35,7 +35,6 @@ def scrape_vehicle():
                     car_page_links.append(cars.find('a')['href'])
 
                 page_url = "https://www.arabam.com" + car_page_links[list_item_num]
-                print("mainurl",main_url_for_cars, "pageurl", page_url, "pagenum", page_num, "listitemnum", list_item_num )
                 response = requests.get(page_url)
                 car_page_res = response.text
                 soup2 = BeautifulSoup(car_page_res, "html.parser")
@@ -60,7 +59,7 @@ def scrape_vehicle():
                 res = redis_client.lrange(f"photos:{type_of}", 0, -1)
                 success = True
             except Exception as e:
-                print("printed",e, "mainurl", main_url_for_cars)
+                print("printed",e, "mainurl", main_url_for_cars, "listitemnum", list_item_num , "pageurl", page_url)
         success = False
 
 # scrape_vehicle("otomobil")
