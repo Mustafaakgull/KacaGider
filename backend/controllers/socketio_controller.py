@@ -90,7 +90,7 @@ def game_handlers():
     def games_finished():
         game_finished()
         cookie_session = controllers.session_controller.session_id_global
-        leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', "current_room")}", 0, -1, withscores=True)
+        leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', 'current_room')}", 0, -1, withscores=True)
         data = [{"username": name, "score": int(score)} for name, score in leaderboard]
         scrape_vehicle()
         set_all_user_price_zero()
@@ -112,7 +112,7 @@ def info_handler():
         room_name = room_name_converter(room_name)
         vehicle_data = redis_client.hgetall(f"info:{room_name}")
         photos = redis_client.lrange(f"photos:{room_name}", 0, -1)
-        emit("vehicle_data:", {"data": vehicle_data, "photos": photos})
+        emit("vehicle_data:", {'data': vehicle_data, 'photos': photos})
 
         leaderboard = redis_client.zrevrange(f"leaderboard:{room_name}", 0, -1, withscores=True)
         leaderboard_data = [{"username": name, "score": int(score)} for name, score in leaderboard]

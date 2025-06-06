@@ -70,7 +70,7 @@ def join_private_game_session(private_room_name, password):
 
 
 def get_session_username():
-    return redis_client.hget(f"session:{request.cookies.get('session_id')}", "username")
+    return redis_client.hget(f"session:{request.cookies.get('session_id')}", 'username')
 
 
 def delete_session():
