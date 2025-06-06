@@ -13,6 +13,9 @@ def scrape_vehicle():
                 # kiralik-araclar, motosiklet, otomobil, suanlık bu kadar
                 # kiralik-araclar içeriği daha farklı
 
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
+                }
                 page_num = random.randint(1, 30)
                 minimal_page_num = random.randint(1, 5)
                 list_item_num = random.randint(1, 40)
@@ -23,9 +26,6 @@ def scrape_vehicle():
                 main_url_for_cars = f"https://www.arabam.com/ikinci-el/{type_of}?sort=price.desc&take=50&page={page_num}"
                 if type_of == "kiralik-araclar":
                     main_url_for_cars = f"https://www.arabam.com/ikinci-el/{type_of}?sort=price.desc&take=50&page={minimal_page_num}"
-                    headers = {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
-                    }
                 main_response = requests.get(main_url_for_cars, headers=headers)
                 main_res = main_response.text
                 soup1 = BeautifulSoup(main_res, 'html.parser')
