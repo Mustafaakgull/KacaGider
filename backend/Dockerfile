@@ -27,4 +27,4 @@ RUN pip install gunicorn eventlet
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-k", "eventlet", "-w", "1", "-b", "0.0.0.0:5000", "app:socketio"]
+CMD ["gunicorn", "-k", "eventlet", "-w", "1", "-b", "0.0.0.0:5000", "app:app"]

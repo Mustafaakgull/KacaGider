@@ -32,3 +32,6 @@ app.register_blueprint(socketio_bp)
 init_socketio(socketio)
 
 fetch_data_every(20, 5)
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port=5000)
+
