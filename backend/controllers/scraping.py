@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import random
 from models.redis_client import redis_client
 import re
-
+import logging
 def scrape_vehicle():
     success = False
     types = ["otomobil", "motosiklet", "kiralik-araclar"]
@@ -59,8 +59,10 @@ def scrape_vehicle():
                 redis_client.rpush(f"photos:{type_of}", *photo_link_list)
                 res = redis_client.lrange(f"photos:{type_of}", 0, -1)
                 success = True
-            except:
-                pass
+            except Exception as e:
+                print("printed",e)
+                logging.error(e)
+
         success = False
 
 # scrape_vehicle("otomobil")
