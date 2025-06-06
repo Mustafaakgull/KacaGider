@@ -56,7 +56,6 @@ def scrape_vehicle():
                 redis_client.rpush(f"photos:{type_of}", *photo_link_list)
                 res = redis_client.lrange(f"photos:{type_of}", 0, -1)
                 success = True
-                print(main_url_for_cars)
             except:
                 pass
         success = False

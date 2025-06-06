@@ -1,11 +1,11 @@
 from flask import Blueprint, request
 from flask_restx import Api, Resource
 from werkzeug.security import check_password_hash, generate_password_hash
-from backend.models.tables import User
-from backend.models.db import db
-from backend.controllers.mail_controller import send_verification_mail, verify_code
-from backend.controllers.session_controller import create_session, delete_session, get_session_username
-from backend.models.redis_client import redis_client
+from models.tables import User
+from models.db import db
+from controllers.mail_controller import send_verification_mail, verify_code
+from controllers.session_controller import create_session, delete_session, get_session_username
+from models.redis_client import redis_client
 
 
 auth_bp = Blueprint('auth_bp', __name__)

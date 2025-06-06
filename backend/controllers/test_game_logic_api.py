@@ -22,7 +22,6 @@
 #
 #         redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
 #
-#         # TODO REAL PRICE WILL BE IN ANOTHER REDIS DB THAT COMES FROM SCRAPING
 #         real_price = redis_client.hget(f"test:car", "price")
 #         real_price = int(real_price)
 #         percentage_to_keep = (guessed_price / real_price) * 100

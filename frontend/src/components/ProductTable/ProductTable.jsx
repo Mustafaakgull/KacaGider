@@ -53,7 +53,6 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults}) => {
     const product = vehicle_data.data;
     const socketClick = () => {
         socket.emit("guess_button_clicked", price);
-        console.log("knk tikladim",price)
         socket.on("hint_message", data => {
         setHint(data);
         socket.off("hint_message")

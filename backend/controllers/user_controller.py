@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_restx import Api, Resource
-from backend.models.tables import User
+from models.tables import User
 
 user_bp = Blueprint('user_bp', __name__)
 

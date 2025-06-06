@@ -1,5 +1,5 @@
 from datetime import datetime
-from backend.models.redis_client import redis_client
+from models.redis_client import redis_client
 from flask import make_response, request
 import uuid
 import datetime
@@ -13,7 +13,6 @@ def create_session(username):
     session_id = str(uuid.uuid4())
     global session_id_global
     session_id_global = session_id
-    print("sonradan sil, session id: "+session_id)
     redis_client.hset(f"session:{session_id}", mapping={
         "username": username,
         "guess_count": 0,
@@ -27,6 +26,7 @@ def create_session(username):
     response.set_cookie(
         'session_id',
         session_id,
+        domain=".kacagider.net",
         httponly=True,
         secure=True,
         samesite='None',

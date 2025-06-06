@@ -5,7 +5,7 @@ import axios from "axios";
 import {useState} from "react";
 
 
-const url = "http://127.0.0.1:5000";
+const url = "https://api.kacagider.net";
 
 function RegisterDialog({ open, handleClose, openVerifyCodeDialog, setUsername, setEmail, setPassword, username, email, password }) {
 

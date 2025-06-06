@@ -52,13 +52,11 @@ function RoomPage() {
         socket.emit("timer")
 
         socket.on("timer_response", (data) => {
-            console.log("timer response", data)
                         setTimer(data)
             setRoundDeadline(Date.now() + timer*1000)
         })
 
     socket.on("vehicle_data:", (data) => {
-        console.log("Yeni ilan geldi:", data);
         setRealPrice(data.data["fiyat"]);
         setVehicleData(data);
     });
@@ -82,10 +80,7 @@ function RoomPage() {
 
 // Yeni round başlat
 const startNextRound = () => {
-    console.log("🔁 Tur bitti, top3 açıldı...");
     setShowResults(true)
-    const now = new Date();
-    console.log(now); // Full date and time
 
         socket.emit("take_all_data", roomName)
 
@@ -105,7 +100,6 @@ useEffect(() => {
     if (showResults) {
         const timer = setTimeout(() => {
             setShowResults(false); // Sonuç ekranını kapat
-            console.log("show results oldu suan")
         socket.emit("take_all_data", roomName)
         socket.emit("timer")
 

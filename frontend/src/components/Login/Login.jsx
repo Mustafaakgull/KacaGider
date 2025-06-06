@@ -12,7 +12,7 @@ function LoginDialog({ open, handleClose, onLoginSuccess }) {
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
-    const url = "http://127.0.0.1:5000";
+    const url = "https://api.kacagider.net";
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);

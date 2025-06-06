@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 import random
 from dotenv import load_dotenv
 from flask import jsonify
-from backend.models.redis_client import redis_client
+from models.redis_client import redis_client
 
 load_dotenv()
 # my_email = os.getenv("KACA_GİDER_EMAİL")
@@ -28,8 +28,6 @@ def send_verification_mail(mail):
     server.login(my_email, password)
     server.send_message(msg)
 
-    print("Email sent successfully!")
-    print("FOR TESTING, LATER ON NEEDED TO BE DELETED", verification_code)
     return verification_code
 
 

@@ -1,12 +1,10 @@
-from backend.models.redis_client import redis_client
-from backend.controllers.session_controller import create_game_session
-# noinspection PyUnresolvedReferences
 from flask import make_response, request
-from backend.controllers.scraping import scrape_vehicle
+from models.redis_client import redis_client
+from controllers.session_controller import create_game_session
+from controllers.scraping import scrape_vehicle
 import json
 import copy
 SESSION_TIME = 3600
-GAME_TIME = 100
 
 
 def room_name_converter(room_name):
@@ -43,7 +41,6 @@ def game_finished():
             proximity = min(real_price,int(guess)) / max(real_price, int(guess))
             score = round(proximity * 1000)
             top3_list.update({user: score})
-            print("OYUN SONU user of score", user ,"score:", score)
             redis_client.zincrby(f"leaderboard:{room_name}", score, user)
 
             # redis_client.hset(f"guessed_prices:{room_name}", user, 0)
