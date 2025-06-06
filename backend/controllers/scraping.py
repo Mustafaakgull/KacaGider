@@ -59,7 +59,7 @@ def scrape_vehicle():
                 res = redis_client.lrange(f"photos:{type_of}", 0, -1)
                 success = True
             except Exception as e:
-                print("printed",e, "mainurl", main_url_for_cars, "carpagelink", car_page_links)
+                print("printed",e, "mainurl", main_url_for_cars, "mainres", main_res, "mainresponse", main_response)
         success = False
 
 # scrape_vehicle("otomobil")
