@@ -34,7 +34,7 @@ def scrape_vehicle():
                 for cars in listed_cars:
                     car_page_links.append(cars.find('a')['href'])
 
-                page_url = "https://www.arabam.com" + car_page_links[list_item_num]
+                page_url = f"https://www.arabam.com{car_page_links[list_item_num]}"
                 response = requests.get(page_url)
                 car_page_res = response.text
                 soup2 = BeautifulSoup(car_page_res, "html.parser")
