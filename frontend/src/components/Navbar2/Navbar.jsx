@@ -81,6 +81,29 @@ function Navbar() {
     };
   }, []);
 
+    useEffect(() => {
+
+    const interval = setInterval(() => {
+         socket.emit("current_user")
+        socket.on("current_user_username", (data) => {
+            if (data === "none"){
+                setLoggedInUser(null)
+            }
+            else {
+                setLoggedInUser(data)
+
+            }
+
+        })
+    }, 1000);
+
+
+            return() => {
+                    socket.off("timer_response")
+                    clearInterval(interval);
+            }
+  },);
+
     return (
         <>
             <AppBar position="fixed" className="navbar">
