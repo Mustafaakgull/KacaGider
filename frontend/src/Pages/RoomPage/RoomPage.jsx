@@ -18,7 +18,7 @@ function RoomPage() {
     const [realPrice, setRealPrice] = useState(null);
     const [timer, setTimer] = useState(20)
     // for if user not logged in, cannot guess
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const [showResults, setShowResults] = useState(false);
     const [roundDeadline, setRoundDeadline] = useState(Date.now() + 20000);
@@ -37,6 +37,7 @@ function RoomPage() {
                 if (response.data.username !== null){
                     setCookie(response.data.session_id)
                     setDisabled(true);
+                    setIsAuthenticated(true)
 
                 }
             });
@@ -48,6 +49,7 @@ function RoomPage() {
   //   initial start take the car info
     useEffect(() => {
         socket.emit("timer")
+        socket.emit("join_room", roomName)
   }, []);
 
         useEffect(() => {
@@ -59,6 +61,7 @@ function RoomPage() {
             setTimer(data)
             if (timer === 0) {setTimeout(() => {}, 1000);}
             setRoundDeadline(Date.now() + timer*1000)
+
         })
     }, 1000);
 
