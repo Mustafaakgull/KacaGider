@@ -67,7 +67,7 @@ def game_handlers():
     @socketio.on('guess_button_clicked')
     def clicked_guess(guessed_price):
         # cookie_session = request.cookies.get("session_id")
-        response = requests.post("api.kacagider.net/whoami")
+        response = requests.post("https://api.kacagider.net/whoami")
         data = response.json()
         cookie_session = data.get("session_id")
         user = redis_client.hgetall(f"session:{cookie_session}")
@@ -92,7 +92,7 @@ def game_handlers():
 
     @socketio.on("join_room")
     def join_game_session(room_name):
-        response = requests.post("api.kacagider.net/whoami")
+        response = requests.post("https://api.kacagider.net/whoami")
         data = response.json()
         cookie_session = data.get("session_id")
         room_name = room_name_converter(room_name)
@@ -151,7 +151,7 @@ def info_handler():
     #     emit("room_user_count", data)
     @socketio.on("current_user")
     def current_user():
-         response = requests.post("api.kacagider.net/whoami")
+         response = requests.post("https://api.kacagider.net/whoami")
          data = response.json()
          username = data.get('username')
          if username is None:
@@ -164,7 +164,7 @@ def chat_handler():
 
     @socketio.on('send_message')
     def handle_message(data):
-        response = requests.post("api.kacagider.net/whoami")
+        response = requests.post("https://api.kacagider.net/whoami")
         data = response.json()
         cookie_session = data.get("session_id")
 
