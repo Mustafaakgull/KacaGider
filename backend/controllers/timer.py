@@ -1,6 +1,6 @@
 import threading
 import time
-from controllers.scaping_to_local import take_vehicle_info_locally
+from controllers.scraping_to_local import take_vehicle_info_locally
 from controllers.game_logic_controller import game_finished, set_all_user_price_zero
 
 time_sended = 0
