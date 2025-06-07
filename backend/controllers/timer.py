@@ -1,23 +1,18 @@
-import threading
-import time
-from controllers.scraping import scrape_vehicle
-from controllers.game_logic_controller import game_finished, set_all_user_price_zero
+import multiprocessing
 
-
-# when game starts
-# redis_client.delete(f"leaderboard_top3:{room_name}")
-
-time_sended = 0
-def fetch_data_every(interval,wait):
+def fetch_data_every(interval, wait):
     def task():
         global time_sended
         while True:
-            scrape_vehicle()
+            # Spawn a subprocess to run the scraper safely
+            p = multiprocessing.Process(target=scrape_vehicle)
+            p.start()
+            p.join()
+
             for i in range(interval):
                 time_sended = interval - i
                 time.sleep(1)
-            #
-            # time.sleep(interval)
+
             time_sended = 0
             time_sended = interval
             game_finished()
@@ -26,4 +21,3 @@ def fetch_data_every(interval,wait):
 
     thread = threading.Thread(target=task, daemon=True)
     thread.start()
-

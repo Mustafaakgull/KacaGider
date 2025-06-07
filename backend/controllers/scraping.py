@@ -56,6 +56,7 @@ def scrape_vehicle():
                     redis_client.delete(f"photos:{type_of}")
                     redis_client.rpush(f"photos:{type_of}", *photo_link_list)
                     success = True
+                    print("tepki")
             except Exception as e:
                 print("printed",e, "mainurl", main_url_for_cars, "mainres", main_res, "mainresponse", main_response)
         success = False
