@@ -1,5 +1,5 @@
 import multiprocessing
-
+import threading
 def fetch_data_every(interval, wait):
     def task():
         global time_sended
