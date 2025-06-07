@@ -15,7 +15,7 @@ CORS(app, supports_credentials=True, origins=["https://app.kacagider.net"])
 
 socketio = SocketIO(app, cors_allowed_origins=[
     "https://app.kacagider.net"
-], async_mode="threading")
+], async_mode="gevent")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f"mysql://{os.environ.get('MYSQLUSER')}:{os.environ.get('MYSQLPASSWORD')}"

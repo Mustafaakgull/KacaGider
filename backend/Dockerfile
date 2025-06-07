@@ -53,4 +53,4 @@ RUN python -m playwright install --with-deps
 EXPOSE 5000
 
 # Run server
-CMD ["gunicorn", "-k", "eventlet", "-w", "1", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-k", "gevent", "-w", "1", "-b", "0.0.0.0:5000", "app:app"]
