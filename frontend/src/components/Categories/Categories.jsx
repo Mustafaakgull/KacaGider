@@ -22,7 +22,6 @@ function Categories() {
     try {
         axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
         ).then(response => {
-           console.log("response", response)
             if (response.data.username !== null){
 
                 setCookie(response.data.session_id)

@@ -39,7 +39,7 @@ function RoomPage() {
                     setDisabled(true);
                     setIsAuthenticated(true)
                     socket.emit("join_room", roomName, cookie)
-                    console.log("roompage deyim join room calisti",roomName,cookie)
+                    console.log("roompage deyim join room calisti",roomName,cookie,response.data.session_id)
 
 
                 }
@@ -52,7 +52,7 @@ function RoomPage() {
   //   initial start take the car info
     useEffect(() => {
         socket.emit("timer")
-        socket.emit("join_room", roomName)
+        socket.emit("join_room", roomName, cookie)
   }, []);
 
         useEffect(() => {
