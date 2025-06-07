@@ -110,6 +110,7 @@ class WhoAmI(Resource):
         user = request.get_json()
         user = user.get('session_id')
         session_id = user
+        session_id23 = request.cookies.get('session_id')
         print("session_id", session_id)
         if not session_id:
             return {"username": None}, 401
@@ -117,7 +118,7 @@ class WhoAmI(Resource):
         username = redis_client.hget(f"session:{session_id}", "username")
         if username:
             print('username', username)
-            return {"username": username, "session_id": session_id}
+            return {"username": username, "session_id": session_id, "cookie session": session_id23}
 
         return {"username": None}, 401
 
