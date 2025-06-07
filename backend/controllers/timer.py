@@ -1,6 +1,8 @@
 import multiprocessing
 import threading
-from scraping import scrape_vehicle
+import time
+from controllers.scraping import scrape_vehicle
+from controllers.game_logic_controller import game_finished, set_all_user_price_zero
 
 
 def fetch_data_every(interval, wait):
