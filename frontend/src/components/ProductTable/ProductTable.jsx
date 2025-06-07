@@ -20,7 +20,7 @@ import Stack from "@mui/material/Stack";
 import { SocketContext } from '../../SocketioConnection.jsx';
 
 
-const ProductCard = ({ vehicle_data, isAuthenticated, showResults}) => {
+const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
     const [price, setPrice] = useState(0);
     const [priceInput, setPriceInput] = useState("");
     const [feedback, setFeedback] = useState("");
@@ -52,7 +52,7 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults}) => {
 
     const product = vehicle_data.data;
     const socketClick = () => {
-        socket.emit("guess_button_clicked", price);
+        socket.emit("guess_button_clicked", price, cookie);
         socket.on("hint_message", data => {
         setHint(data);
         socket.off("hint_message")

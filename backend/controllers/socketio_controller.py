@@ -65,11 +65,8 @@ def game_handlers():
         emit("timer_response", controllers.timer.time_sended)
 
     @socketio.on('guess_button_clicked')
-    def clicked_guess(guessed_price):
-        # cookie_session = request.cookies.get("session_id")
-        response = requests.post("https://api.kacagider.net/whoami")
-        data = response.json()
-        cookie_session = data.get("session_id")
+    def clicked_guess(guessed_price, cookie):
+        cookie_session = cookie
         user = redis_client.hgetall(f"session:{cookie_session}")
         print("session: ", user)
         test_username = redis_client.hget(f"session:{cookie_session}", "username")
@@ -91,10 +88,8 @@ def game_handlers():
             emit("hint_message", "maximum number of guesses reached")
 
     @socketio.on("join_room")
-    def join_game_session(room_name):
-        response = requests.post("https://api.kacagider.net/whoami")
-        data = response.json()
-        cookie_session = data.get("session_id")
+    def join_game_session(room_name, cookie):
+        cookie_session = cookie
         room_name = room_name_converter(room_name)
         redis_client.hset(f"session:{cookie_session}", "current_room", room_name)
         username = redis_client.hget(f"session:{cookie_session}", "username")
@@ -149,24 +144,13 @@ def info_handler():
     # def send_user_count(room_name):
     #     data = redis_client.hlen(room_name)
     #     emit("room_user_count", data)
-    @socketio.on("current_user")
-    def current_user():
-         response = requests.post("https://api.kacagider.net/whoami")
-         data = response.json()
-         username = data.get('username')
-         if username is None:
-             emit("current_user_username", "none")
-         else:
-            emit("current_user_username", username)
 
 
 def chat_handler():
 
     @socketio.on('send_message')
-    def handle_message(data):
-        response = requests.post("https://api.kacagider.net/whoami")
-        data = response.json()
-        cookie_session = data.get("session_id")
+    def handle_message(data, cookie):
+        cookie_session = cookie
 
         username = redis_client.hget(f"session:{cookie_session}", "username")
         message = data.get('message', '')

@@ -13,7 +13,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SendIcon from '@mui/icons-material/Send';
 
-function ChatRoom() {
+function ChatRoom({cookie}) {
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +31,7 @@ function ChatRoom() {
 
     const sendMessage = () => {
         if (message.trim()) {
-            socket.emit('send_message', { message });
+            socket.emit('send_message',  message, cookie);
             setMessage('');
         }
     };

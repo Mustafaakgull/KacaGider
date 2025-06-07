@@ -48,6 +48,8 @@ function Navbar() {
 
     const [loggedInUser, setLoggedInUser] = useState(null);
 
+  const [disabled, setDisabled] = useState(false);
+
 
     const openRegisterDialog = () => {
         setRegisterDialogOpen(true);
@@ -82,26 +84,22 @@ function Navbar() {
   }, []);
 
     useEffect(() => {
+    if (disabled) return;  // stop running if disabled
 
-    const interval = setInterval(() => {
-         socket.emit("current_user")
-        socket.on("current_user_username", (data) => {
-            if (data === "none"){
-                setLoggedInUser(null)
-            }
-            else {
-                setLoggedInUser(data)
+        try {
+            axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
+            ).then(response => {
+               console.log("response", response)
+                if (response.data.username !== null){
+                    setLoggedInUser(response.data.username)
+      setDisabled(true);
 
-            }
+                }
+            });
 
-        })
-    }, 1000);
-
-
-            return() => {
-                    socket.off("timer_response")
-                    clearInterval(interval);
-            }
+        } catch (e) {
+            console.error(e);
+        }
   },);
 
     return (

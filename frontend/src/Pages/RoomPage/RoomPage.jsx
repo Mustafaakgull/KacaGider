@@ -7,6 +7,7 @@ import LeaderBoard from "../../components/LiveLeaderboard/LiveLeaderboard.jsx";
 import Chatbox from "../../components/Chatbox/Chatbox.jsx";
 import CountdownTimer from "../../components/Timer/Timer.jsx";
 import {GameController} from "phosphor-react";
+import axios from "axios";
 // import axios from "axios";
 
 function RoomPage() {
@@ -23,7 +24,27 @@ function RoomPage() {
     const [roundDeadline, setRoundDeadline] = useState(Date.now() + 20000);
     const path = window.location.pathname;
     const roomName = path.split("/")[2];
+    const [cookie, setCookie] = useState(null)
+    const [disabled, setDisabled] = useState(false);
 
+        useEffect(() => {
+        if (disabled) return;  // stop running if disabled
+
+        try {
+            axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
+            ).then(response => {
+               console.log("response", response)
+                if (response.data.username !== null){
+                    setCookie(response.data.session_id)
+                    setDisabled(true);
+
+                }
+            });
+
+        } catch (e) {
+            console.error(e);
+        }
+  },);
   //   initial start take the car info
     useEffect(() => {
         socket.emit("timer")
@@ -157,6 +178,7 @@ useEffect(() => {
                                 vehicle_data={vehicleData}
                                 isAuthenticated={isAuthenticated}
                                 showResults={showResults}
+                                cookie={cookie}
 
                             />
                         )}
@@ -169,7 +191,9 @@ useEffect(() => {
                     </Grid>
                 </Grid>
             )}
-            <Chatbox />
+            <Chatbox
+            cookie={cookie}
+            />
         </Box>
     );
 }
