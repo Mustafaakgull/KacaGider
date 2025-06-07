@@ -1,5 +1,8 @@
 import multiprocessing
 import threading
+from scraping import scrape_vehicle
+
+
 def fetch_data_every(interval, wait):
     def task():
         global time_sended
