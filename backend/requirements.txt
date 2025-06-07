@@ -11,7 +11,6 @@ redis
 flask-cors
 requests
 beautifulsoup4
-playwright
 gunicorn
 eventlet
 gevent

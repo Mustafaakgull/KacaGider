@@ -44,10 +44,8 @@ ENV PYTHONPATH=/app
 # Install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN pip install gunicorn eventlet playwright
+RUN pip install gunicorn eventlet
 
-# Install Playwright browser binaries (e.g., Chromium)
-RUN python -m playwright install --with-deps
 
 # Expose port
 EXPOSE 5000

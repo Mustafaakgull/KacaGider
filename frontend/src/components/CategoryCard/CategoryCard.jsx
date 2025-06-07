@@ -25,6 +25,7 @@ function CategoryCard({ category, cookie }) {
 
     const handleClick = () => {
         const path = category.name.toLowerCase(); // örn. 'Car' → 'car'
+        console.log("join room calismasi lazım normalde click ccard", cookie)
         socket.emit("join_room", `${path}`, cookie)
         navigate(`/room/${path}`);
 

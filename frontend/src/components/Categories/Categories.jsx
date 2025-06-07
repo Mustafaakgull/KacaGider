@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import CategoryCard from '../CategoryCard/CategoryCard.jsx';
 import './Categories.css';
 import {Button} from "@mui/material";
@@ -8,7 +8,7 @@ import axios from "axios";
 function Categories() {
     const [openDialog, setOpenDialog] = useState(false);
     const [cookie, setCookie] = useState(null)
-  const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     const categories = [
         {id: 1, name: 'Car'},
@@ -18,14 +18,16 @@ function Categories() {
 
      useEffect(() => {
     if (disabled) return;  // stop running if disabled
-
+         console.log("category use effect içindeyim")
     try {
         axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
         ).then(response => {
            console.log("response", response)
             if (response.data.username !== null){
+
                 setCookie(response.data.session_id)
-                      setDisabled(true);
+                console.log("category if icindeyim", cookie)
+                setDisabled(true);
 
             }
         });
@@ -39,7 +41,10 @@ function Categories() {
         <>
             <div className="categories">
                 {categories.map((category) => (
-                    <CategoryCard className={'category-card'} key={category.id} category={category} cookie={cookie}/>
+                    <CategoryCard className={'category-card'} key={category.id} category={category} cookie={cookie}
+
+                    />
+
                 ))}
             </div>
 
