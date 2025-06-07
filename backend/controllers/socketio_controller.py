@@ -149,8 +149,8 @@ def info_handler():
 def chat_handler():
 
     @socketio.on('send_message')
-    def handle_message(data, cookie):
-        cookie_session = cookie
+    def handle_message(data):
+        cookie_session = data['cookie']
 
         username = redis_client.hget(f"session:{cookie_session}", "username")
         message = data.get('message', '')

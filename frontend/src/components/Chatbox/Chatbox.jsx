@@ -31,7 +31,7 @@ function ChatRoom({cookie}) {
 
     const sendMessage = () => {
         if (message.trim()) {
-            socket.emit('send_message',  message, cookie);
+            socket.emit('send_message',  {message, "cookie":cookie});
             setMessage('');
         }
     };
