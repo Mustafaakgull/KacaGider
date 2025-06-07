@@ -52,7 +52,11 @@ class Login(Resource):
 @api.route('/logout')
 class Logout(Resource):
     def post(self):
-        delete_session()
+        username = get_session_username()
+        redis_client.delete(f"session:{cookie}")
+        keys = redis_client.keys(f"leaderboard:*")
+        for key in keys:
+            redis_client.delete(key, username)
         return {"message": "Logout successful"}, 200
 
 

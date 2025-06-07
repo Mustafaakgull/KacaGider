@@ -181,7 +181,10 @@ function Navbar() {
                                         </MenuItem>
                                         <MenuItem
                                             onClick={async () => {
-                                                await axios.post("https://api.kacagider.net/logout", {}, { withCredentials: true });
+                                                await axios.post("https://api.kacagider.net/logout", {}, { withCredentials: true }
+                                                ).then(response =>
+                                                console.log(response)
+                                                );
                                                 setLoggedInUser(null);
                                                 setAnchorEl(null);
                                             }}

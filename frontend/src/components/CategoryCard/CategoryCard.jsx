@@ -16,30 +16,11 @@ const iconMap = {
 };
 
 
-function CategoryCard({ category }) {
+function CategoryCard({ category, cookie }) {
     const socket = useContext(SocketContext);
     const navigate = useNavigate(); // ← hook tanımı
-    const [cookie, setCookie] = useState(null)
-  const [disabled, setDisabled] = useState(false);
 
-    useEffect(() => {
-    if (disabled) return;  // stop running if disabled
 
-    try {
-        axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
-        ).then(response => {
-           console.log("response", response)
-            if (response.data.username !== null){
-                setCookie(response.data.session_id)
-                      setDisabled(true);
-
-            }
-        });
-
-    } catch (e) {
-        console.error(e);
-    }
-  },);
 
 
     const handleClick = () => {
