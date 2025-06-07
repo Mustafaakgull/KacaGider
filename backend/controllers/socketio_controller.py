@@ -66,27 +66,30 @@ def game_handlers():
 
     @socketio.on('guess_button_clicked')
     def clicked_guess(guessed_price):
-        # cookie_session = request.cookies.get("session_id")
-        cookie_session = request.cookies.get('session_id')
-        user = redis_client.hgetall(f"session:{cookie_session}")
-        print("session: ", user)
-        test_username = redis_client.hget(f"session:{cookie_session}", "username")
-        if int(user["guess_count"]) <= 3:
+        try:
+            # cookie_session = request.cookies.get("session_id")
+            cookie_session = request.cookies.get('session_id')
+            user = redis_client.hgetall(f"session:{cookie_session}")
+            print("session: ", user)
+            test_username = redis_client.hget(f"session:{cookie_session}", "username")
+            if int(user["guess_count"]) <= 3:
 
-            redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
-            real_price = redis_client.hget(f"info:{user['current_room']}", "fiyat")
-            proximity = min(int(real_price),int(guessed_price)) / max(int(real_price), int(guessed_price))
-            percentage_price = (guessed_price / int(real_price)) * 100
-            score = proximity * 1000
-            redis_client.hset(f"guessed_prices:{str(user['current_room'])}", test_username, str(guessed_price))
-            redis_client.zadd(f"leaderboard_top3:{user['current_room']}", {test_username: score})
-            if percentage_price < 100:
-                emit("hint_message", "You need to guess higher")
+                redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
+                real_price = redis_client.hget(f"info:{user['current_room']}", "fiyat")
+                proximity = min(int(real_price),int(guessed_price)) / max(int(real_price), int(guessed_price))
+                percentage_price = (guessed_price / int(real_price)) * 100
+                score = proximity * 1000
+                redis_client.hset(f"guessed_prices:{str(user['current_room'])}", test_username, str(guessed_price))
+                redis_client.zadd(f"leaderboard_top3:{user['current_room']}", {test_username: score})
+                if percentage_price < 100:
+                    emit("hint_message", "You need to guess higher")
+                else:
+                    emit("hint_message", "You need to guess lower")
+
             else:
-                emit("hint_message", "You need to guess lower")
-
-        else:
-            emit("hint_message", "maximum number of guesses reached")
+                emit("hint_message", "maximum number of guesses reached")
+        except Exception as e:
+            print(e)
 
     @socketio.on("join_room")
     def join_game_session(room_name):
