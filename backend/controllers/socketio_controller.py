@@ -66,34 +66,35 @@ def game_handlers():
 
     @socketio.on('guess_button_clicked')
     def clicked_guess(guessed_price):
-        try:
-            # cookie_session = request.cookies.get("session_id")
-            cookie_session = request.cookies.get('session_id')
-            user = redis_client.hgetall(f"session:{cookie_session}")
-            print("session: ", user)
-            test_username = redis_client.hget(f"session:{cookie_session}", "username")
-            if int(user["guess_count"]) <= 3:
+        # cookie_session = request.cookies.get("session_id")
+        response = requests.post("api.kacagider.net/whoami")
+        data = response.json()
+        cookie_session = data.get("session_id")
+        user = redis_client.hgetall(f"session:{cookie_session}")
+        print("session: ", user)
+        test_username = redis_client.hget(f"session:{cookie_session}", "username")
+        if int(user["guess_count"]) <= 3:
 
-                redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
-                real_price = redis_client.hget(f"info:{user['current_room']}", "fiyat")
-                proximity = min(int(real_price),int(guessed_price)) / max(int(real_price), int(guessed_price))
-                percentage_price = (guessed_price / int(real_price)) * 100
-                score = proximity * 1000
-                redis_client.hset(f"guessed_prices:{str(user['current_room'])}", test_username, str(guessed_price))
-                redis_client.zadd(f"leaderboard_top3:{user['current_room']}", {test_username: score})
-                if percentage_price < 100:
-                    emit("hint_message", "You need to guess higher")
-                else:
-                    emit("hint_message", "You need to guess lower")
-
+            redis_client.hincrby(f"session:{cookie_session}", "guess_count", 1)
+            real_price = redis_client.hget(f"info:{user['current_room']}", "fiyat")
+            proximity = min(int(real_price),int(guessed_price)) / max(int(real_price), int(guessed_price))
+            percentage_price = (guessed_price / int(real_price)) * 100
+            score = proximity * 1000
+            redis_client.hset(f"guessed_prices:{str(user['current_room'])}", test_username, str(guessed_price))
+            redis_client.zadd(f"leaderboard_top3:{user['current_room']}", {test_username: score})
+            if percentage_price < 100:
+                emit("hint_message", "You need to guess higher")
             else:
-                emit("hint_message", "maximum number of guesses reached")
-        except Exception as e:
-            print(e)
+                emit("hint_message", "You need to guess lower")
+
+        else:
+            emit("hint_message", "maximum number of guesses reached")
 
     @socketio.on("join_room")
     def join_game_session(room_name):
-        cookie_session = request.cookies.get('session_id')
+        response = requests.post("api.kacagider.net/whoami")
+        data = response.json()
+        cookie_session = data.get("session_id")
         room_name = room_name_converter(room_name)
         redis_client.hset(f"session:{cookie_session}", "current_room", room_name)
         username = redis_client.hget(f"session:{cookie_session}", "username")
@@ -150,7 +151,9 @@ def info_handler():
     #     emit("room_user_count", data)
     @socketio.on("current_user")
     def current_user():
-         username = get_session_username()
+         response = requests.post("api.kacagider.net/whoami")
+         data = response.json()
+         username = data.get('username')
          if username is None:
              emit("current_user_username", "none")
          else:
@@ -161,7 +164,9 @@ def chat_handler():
 
     @socketio.on('send_message')
     def handle_message(data):
-        cookie_session = request.cookies.get('session_id')
+        response = requests.post("api.kacagider.net/whoami")
+        data = response.json()
+        cookie_session = data.get("session_id")
 
         username = redis_client.hget(f"session:{cookie_session}", "username")
         message = data.get('message', '')
