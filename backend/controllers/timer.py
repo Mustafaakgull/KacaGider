@@ -4,6 +4,7 @@ import time
 from controllers.scraping import scrape_vehicle
 from controllers.game_logic_controller import game_finished, set_all_user_price_zero
 
+time_sended = 0
 
 def fetch_data_every(interval, wait):
     def task():
