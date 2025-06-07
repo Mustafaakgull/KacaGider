@@ -89,7 +89,6 @@ function Navbar() {
         try {
             axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
             ).then(response => {
-               console.log("response", response)
                 if (response.data.username !== null){
                     setLoggedInUser(response.data.username)
       setDisabled(true);
@@ -182,9 +181,7 @@ function Navbar() {
                                         <MenuItem
                                             onClick={async () => {
                                                 await axios.post("https://api.kacagider.net/logout", {}, { withCredentials: true }
-                                                ).then(response =>
-                                                console.log(response)
-                                                );
+                                                )
                                                 setLoggedInUser(null);
                                                 setAnchorEl(null);
                                             }}

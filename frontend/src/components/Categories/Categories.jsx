@@ -18,14 +18,12 @@ function Categories() {
 
      useEffect(() => {
     if (disabled) return;  // stop running if disabled
-         console.log("category use effect içindeyim")
     try {
         axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
         ).then(response => {
             if (response.data.username !== null){
 
                 setCookie(response.data.session_id)
-                console.log("category if icindeyim", cookie, response.data.session_id)
                 setDisabled(true);
 
             }

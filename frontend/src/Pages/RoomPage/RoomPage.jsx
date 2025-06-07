@@ -33,13 +33,11 @@ function RoomPage() {
         try {
             axios.post('https://api.kacagider.net/whoami', {}, { withCredentials: true }
             ).then(response => {
-               console.log("response", response)
                 if (response.data.username !== null){
                     setCookie(response.data.session_id)
                     setDisabled(true);
                     setIsAuthenticated(true)
                     socket.emit("join_room", roomName, response.data.session_id)
-                    console.log("roompage deyim join room calisti",roomName,cookie,response.data.session_id)
 
 
                 }

@@ -57,7 +57,7 @@ class Logout(Resource):
         redis_client.delete(f"session:{cookie}")
         keys = redis_client.keys(f"leaderboard:*")
         for key in keys:
-            redis_client.delete(key, username)
+            redis_client.zrem(key, username)
         return {"message": "Logout successful"}, 200
 
 

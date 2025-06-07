@@ -2,13 +2,12 @@ import './CategoryCard.css';
 import CarRentalIcon from '@mui/icons-material/CarRental';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Car } from "phosphor-react";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import { FaMotorcycle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from '../../SocketioConnection.jsx';
 
 import {  TwoWheeler } from "@mui/icons-material";
-import axios from "axios"
 
 const iconMap = {
     Car: <Car size={66} className={'category-icon'}/>,
@@ -25,7 +24,6 @@ function CategoryCard({ category, cookie }) {
 
     const handleClick = () => {
         const path = category.name.toLowerCase(); // örn. 'Car' → 'car'
-        console.log("join room calismasi lazım normalde click ccard", cookie)
         socket.emit("join_room", `${path}`, cookie)
         navigate(`/room/${path}`);
 
