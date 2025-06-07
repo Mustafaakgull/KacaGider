@@ -38,6 +38,8 @@ function RoomPage() {
                     setCookie(response.data.session_id)
                     setDisabled(true);
                     setIsAuthenticated(true)
+                    socket.emit("join_room", roomName)
+
 
                 }
             });

@@ -52,6 +52,7 @@ class Login(Resource):
 @api.route('/logout')
 class Logout(Resource):
     def post(self):
+        cookie = request.cookies.get('session_id')
         username = get_session_username()
         redis_client.delete(f"session:{cookie}")
         keys = redis_client.keys(f"leaderboard:*")
