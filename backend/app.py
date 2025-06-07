@@ -3,7 +3,6 @@ from models.db import db
 from flask_socketio import SocketIO
 from controllers.socketio_controller import socketio_bp, init_socketio
 from flask_cors import CORS
-from controllers.scraping import scrape_vehicle
 from controllers.auth_controller import auth_bp
 from controllers.user_controller import user_bp
 # from controllers.test_calls import test_call_bp

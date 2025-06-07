@@ -9,7 +9,6 @@ from models.tables import User
 from models.redis_client import redis_client
 from controllers.game_logic_controller import game_finished, room_name_converter, set_all_user_price_zero
 from controllers.session_controller import  get_session_username
-from controllers.scraping import scrape_vehicle
 import controllers.timer
 # from helpers import check_password_strength
 socketio_bp = Blueprint('socketio_bp', __name__)
@@ -86,14 +85,6 @@ def game_handlers():
         else:
             emit("hint_message", "maximum number of guesses reached")
 
-    @socketio.on('game_finished')
-    def games_finished():
-        game_finished()
-        cookie_session = request.cookies.get('session_id')
-        leaderboard = redis_client.zrevrange(f"leaderboard:{redis_client.hget(f'session:{cookie_session}', 'current_room')}", 0, -1, withscores=True)
-        data = [{"username": name, "score": int(score)} for name, score in leaderboard]
-        scrape_vehicle()
-        set_all_user_price_zero()
     @socketio.on("join_room")
     def join_game_session(room_name):
         cookie_session = request.cookies.get('session_id')

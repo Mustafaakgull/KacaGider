@@ -1,7 +1,6 @@
 from flask import make_response, request
 from models.redis_client import redis_client
 from controllers.session_controller import create_game_session
-from controllers.scraping import scrape_vehicle
 import json
 import copy
 SESSION_TIME = 3600
