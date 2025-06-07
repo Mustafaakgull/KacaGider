@@ -38,7 +38,7 @@ function RoomPage() {
                     setCookie(response.data.session_id)
                     setDisabled(true);
                     setIsAuthenticated(true)
-                    socket.emit("join_room", roomName, cookie)
+                    socket.emit("join_room", roomName, response.data.session_id)
                     console.log("roompage deyim join room calisti",roomName,cookie,response.data.session_id)
 
 

@@ -25,7 +25,7 @@ function Categories() {
             if (response.data.username !== null){
 
                 setCookie(response.data.session_id)
-                console.log("category if icindeyim", cookie)
+                console.log("category if icindeyim", cookie, response.data.session_id)
                 setDisabled(true);
 
             }
