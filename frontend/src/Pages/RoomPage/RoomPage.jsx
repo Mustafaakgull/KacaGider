@@ -39,7 +39,7 @@ function RoomPage() {
                     setDisabled(true);
                     setIsAuthenticated(true)
                     socket.emit("join_room", roomName, cookie)
-                    console.log("roompage deyim join room calisti")
+                    console.log("roompage deyim join room calisti",roomName,cookie)
 
 
                 }
