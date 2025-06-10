@@ -502,7 +502,20 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                 >
                     Submit Guess
                 </Button>
-                <Box sx={{color:'#fff'}}> {hint} </Box>
+                        <Box display="flex" justifyContent="center" alignItems="center">
+                            <Typography
+                                sx={{
+                                    color: '#ff6961',
+                                    fontSize: '16px',
+                                    fontWeight: 500,
+                                    width: '300px',
+                                    height: '25px',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                {hint}
+                            </Typography>
+                        </Box>
                 {!isAuthenticated && (
                     <Box
                         sx={{
