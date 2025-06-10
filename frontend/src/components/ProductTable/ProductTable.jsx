@@ -502,6 +502,7 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                 >
                     Submit Guess
                 </Button>
+                {guessCount > 0 &&
                         <Box
                         sx={{
                             mt: 2,
@@ -527,7 +528,7 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                             </Typography>
                         </Box>
 
-                    </Box>
+                    </Box>}
                 {!isAuthenticated && (
                     <Box
                         sx={{
