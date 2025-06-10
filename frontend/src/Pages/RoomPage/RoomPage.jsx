@@ -166,7 +166,11 @@ useEffect(() => {
                 overflowY: "auto",
             }}
         >
-                            {!showResults && <CountdownTimer deadline={roundDeadline} />}
+                            {!showResults && <Box sx={{ position: "relative", top: "15px" }}>
+                                <CountdownTimer deadline={roundDeadline} />
+                            </Box>
+
+                            }
 
             {vehicleData && (
                 <Grid container spacing={2} sx={{ mt: 2, maxWidth: "1200px" }}>

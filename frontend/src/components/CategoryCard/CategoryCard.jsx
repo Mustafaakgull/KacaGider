@@ -2,24 +2,44 @@ import './CategoryCard.css';
 import CarRentalIcon from '@mui/icons-material/CarRental';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Car } from "phosphor-react";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { FaMotorcycle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from '../../SocketioConnection.jsx';
 
 import {  TwoWheeler } from "@mui/icons-material";
-
+import GarageIcon from '@mui/icons-material/Garage';
 const iconMap = {
-    Car: <Car size={66} className={'category-icon'}/>,
-    Bike: <FaMotorcycle size={66} className={'category-icon'} />,
+    Car: <Car size={66} className={'category-icon'} />,
+    Motorcycle: <FaMotorcycle size={66} className={'category-icon'} />,
+    'Rented-Vehicles': <GarageIcon className={'category-icon'} style={{ fontSize: 66 }} />,
 };
+
 
 
 function CategoryCard({ category, cookie }) {
     const socket = useContext(SocketContext);
     const navigate = useNavigate(); // ← hook tanımı
+    const [userCount, setUserCount] = useState(0);
 
 
+    useEffect(() => {
+        const categoryKey = category.name.toLowerCase();
+
+        socket.emit("take_user_count", categoryKey);
+
+        const handleUserCount = (data) => {
+            if (data.category === categoryKey) {
+                setUserCount(data.count); // `count` backend’den gelen kullanıcı sayısı
+            }
+        };
+
+        socket.on("room_user_count", handleUserCount);
+
+        return () => {
+            socket.off("room_user_count", handleUserCount);
+        };
+    }, [category.name]);
 
 
     const handleClick = () => {
@@ -32,9 +52,9 @@ function CategoryCard({ category, cookie }) {
         <Card className="card-container" onClick={handleClick}>
             <CardContent className={'content'}>
                 <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-                    {iconMap[category.name] || <TwoWheeler className={'category-icon'}/>}
+                    {iconMap[category.name] || <GarageIcon className={'category-icon'}/>}
                     <Typography variant="h6">{category.name}</Typography>
-                    <Typography variant="body1">{category.player} </Typography>
+                    <Typography variant="body1">{userCount} player(s)</Typography>
                 </Box>
             </CardContent>
         </Card>

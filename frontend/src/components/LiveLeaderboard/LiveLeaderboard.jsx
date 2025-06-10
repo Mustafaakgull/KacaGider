@@ -3,27 +3,8 @@ import { Box, Typography, Chip, Divider } from '@mui/material';
 
 function LiveLeaderBoard({ leaderboard }) {
     const dummyLeaderboard = [
-        { username: "miracalp", score: 61697 },
-        { username: "keb1b", score: 32352 },
-        { username: "creamdassak", score: 31624 },
-        { username: "Andy41", score: 38192 },
-        { username: "OmerTR", score: 27005 },
-        { username: "emiw", score: 15327 },
-        { username: "Altug00276272", score: 13324 },
-        { username: "huseyin321", score: 5882 },
-        { username: "emre0841", score: 18326 },
-        { username: "volkan", score: 13200 },
-        { username: "kerem", score: 11300 },
-        { username: "ozan", score: 10800 },
-        { username: "ozan1", score: 10800 },
-        { username: "oza2n", score: 10800 },
-        { username: "oza3n", score: 10800 },
-        { username: "oz4an", score: 10800 },
-        { username: "oz4a3n", score: 10800 },
-        { username: "oz4a1n", score: 10800 },
-        { username: "oz42an", score: 10800 },
-        { username: "oz43adn", score: 10800 },
-        { username: "oz4gan", score: 10800 },
+        { username: "admin", score: 0 },
+
 
     ];
 
