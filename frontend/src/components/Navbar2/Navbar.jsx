@@ -87,7 +87,7 @@ function Navbar() {
     if (disabled) return;  // stop running if disabled
 
         try {
-            axios.post('https://localhost:5000', {}, { withCredentials: true }
+            axios.post('http://127.0.0.1:5000/whoami', {}, { withCredentials: true }
             ).then(response => {
                 if (response.data.username !== null){
                     setLoggedInUser(response.data.username)
