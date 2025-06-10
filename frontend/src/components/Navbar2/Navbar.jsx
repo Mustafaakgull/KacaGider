@@ -48,6 +48,8 @@ function Navbar() {
 
     const [loggedInUser, setLoggedInUser] = useState(null);
 
+  const [disabled, setDisabled] = useState(false);
+
 
     const openRegisterDialog = () => {
         setRegisterDialogOpen(true);
@@ -80,6 +82,24 @@ function Navbar() {
         socket.off("current_user_username");
     };
   }, []);
+
+    useEffect(() => {
+    if (disabled) return;  // stop running if disabled
+
+        try {
+            axios.post('https://localhost:5000', {}, { withCredentials: true }
+            ).then(response => {
+                if (response.data.username !== null){
+                    setLoggedInUser(response.data.username)
+      setDisabled(true);
+
+                }
+            });
+
+        } catch (e) {
+            console.error(e);
+        }
+  },);
 
     return (
         <>
@@ -160,7 +180,8 @@ function Navbar() {
                                         </MenuItem>
                                         <MenuItem
                                             onClick={async () => {
-                                                await axios.post("http://127.0.0.1:5000/logout", {}, { withCredentials: true });
+                                                await axios.post("https://api.kacagider.net/logout", {}, { withCredentials: true }
+                                                )
                                                 setLoggedInUser(null);
                                                 setAnchorEl(null);
                                             }}
