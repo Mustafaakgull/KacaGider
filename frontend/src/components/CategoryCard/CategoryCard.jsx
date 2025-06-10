@@ -2,7 +2,7 @@ import './CategoryCard.css';
 import CarRentalIcon from '@mui/icons-material/CarRental';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Car } from "phosphor-react";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import { FaMotorcycle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from '../../SocketioConnection.jsx';
@@ -20,26 +20,9 @@ const iconMap = {
 function CategoryCard({ category, cookie }) {
     const socket = useContext(SocketContext);
     const navigate = useNavigate(); // ← hook tanımı
-    const [userCount, setUserCount] = useState(0);
 
 
-    useEffect(() => {
-        const categoryKey = category.name.toLowerCase();
 
-        socket.emit("take_user_count", categoryKey);
-
-        const handleUserCount = (data) => {
-            if (data.category === categoryKey) {
-                setUserCount(data.count); // `count` backend’den gelen kullanıcı sayısı
-            }
-        };
-
-        socket.on("room_user_count", handleUserCount);
-
-        return () => {
-            socket.off("room_user_count", handleUserCount);
-        };
-    }, [category.name]);
 
 
     const handleClick = () => {
@@ -54,7 +37,6 @@ function CategoryCard({ category, cookie }) {
                 <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
                     {iconMap[category.name] || <GarageIcon className={'category-icon'}/>}
                     <Typography variant="h6">{category.name}</Typography>
-                    <Typography variant="body1">{userCount} player(s)</Typography>
                 </Box>
             </CardContent>
         </Card>
