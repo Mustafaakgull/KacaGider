@@ -20,10 +20,10 @@ def game_starts():
     pass
 
 def username_not_exists(username):
-    for key in redis_client.scan_iter("session:*"):
+    for key in redis_client.keys("session:*"):
         try:
             stored_username = redis_client.hget(key, "username")
-            if stored_username and stored_username.decode() == username:
+            if stored_username == username:
                 return False
         except Exception as e:
             print(f"Error checking {key}: {e}")
@@ -72,6 +72,7 @@ def set_all_user_price_zero():
         for user in users_in_leaderboard:
             if username_not_exists(user):
                 redis_client.zrem(f"leaderboard:{room_name}", user)
+                redis_client.hdel(f"guessed_prices:{room_name}", user)
 
         redis_client.delete(f"leaderboard_top3:{room_name}")
         users = redis_client.hkeys(f"guessed_prices:{room_name}")
