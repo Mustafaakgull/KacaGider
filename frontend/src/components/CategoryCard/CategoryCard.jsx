@@ -9,18 +9,22 @@ import { SocketContext } from '../../SocketioConnection.jsx';
 
 import {  TwoWheeler } from "@mui/icons-material";
 
-
 const iconMap = {
     Car: <Car size={66} className={'category-icon'}/>,
     Bike: <FaMotorcycle size={66} className={'category-icon'} />,
 };
 
-function CategoryCard({ category }) {
+
+function CategoryCard({ category, cookie }) {
     const socket = useContext(SocketContext);
     const navigate = useNavigate(); // ← hook tanımı
+
+
+
+
     const handleClick = () => {
         const path = category.name.toLowerCase(); // örn. 'Car' → 'car'
-        socket.emit("join_room", `${path}`)
+        socket.emit("join_room", `${path}`, cookie)
         navigate(`/room/${path}`);
 
     };
