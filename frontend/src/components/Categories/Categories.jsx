@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import CategoryCard from '../CategoryCard/CategoryCard.jsx';
 import './Categories.css';
 import {Button} from "@mui/material";
 import PrivateRoom from "../PrivateRoom/PrivateRoom.jsx";
+import axios from "axios";
 
 function Categories() {
     const [openDialog, setOpenDialog] = useState(false);
+    const [cookie, setCookie] = useState(null)
+    const [disabled, setDisabled] = useState(false);
 
     const categories = [
         {id: 1, name: 'Car'},
@@ -13,11 +16,32 @@ function Categories() {
         {id: 3, name: 'Rented-Vehicles'}
     ];
 
+     useEffect(() => {
+    if (disabled) return;  // stop running if disabled
+    try {
+        axios.post('https://localhost:5000', {}, { withCredentials: true }
+        ).then(response => {
+            if (response.data.username !== null){
+
+                setCookie(response.data.session_id)
+                setDisabled(true);
+
+            }
+        });
+
+    } catch (e) {
+        console.error(e);
+    }
+  },);
+
     return (
         <>
             <div className="categories">
                 {categories.map((category) => (
-                    <CategoryCard className={'category-card'} key={category.id} category={category}/>
+                    <CategoryCard className={'category-card'} key={category.id} category={category} cookie={cookie}
+
+                    />
+
                 ))}
             </div>
 
