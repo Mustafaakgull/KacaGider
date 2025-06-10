@@ -7,6 +7,7 @@ import LeaderBoard from "../../components/LiveLeaderboard/LiveLeaderboard.jsx";
 import Chatbox from "../../components/Chatbox/Chatbox.jsx";
 import CountdownTimer from "../../components/Timer/Timer.jsx";
 import {GameController} from "phosphor-react";
+import axios from "axios";
 // import axios from "axios";
 
 function RoomPage() {
@@ -17,16 +18,39 @@ function RoomPage() {
     const [realPrice, setRealPrice] = useState(null);
     const [timer, setTimer] = useState(20)
     // for if user not logged in, cannot guess
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const [showResults, setShowResults] = useState(false);
     const [roundDeadline, setRoundDeadline] = useState(Date.now() + 20000);
     const path = window.location.pathname;
     const roomName = path.split("/")[2];
+    const [cookie, setCookie] = useState(null)
+    const [disabled, setDisabled] = useState(false);
 
+        useEffect(() => {
+        if (disabled) return;  // stop running if disabled
+
+        try {
+            axios.post('https://localhost:5000', {}, { withCredentials: true }
+            ).then(response => {
+                if (response.data.username !== null){
+                    setCookie(response.data.session_id)
+                    setDisabled(true);
+                    setIsAuthenticated(true)
+                    socket.emit("join_room", roomName, response.data.session_id)
+
+
+                }
+            });
+
+        } catch (e) {
+            console.error(e);
+        }
+  },);
   //   initial start take the car info
     useEffect(() => {
         socket.emit("timer")
+        socket.emit("join_room", roomName, cookie)
   }, []);
 
         useEffect(() => {
@@ -38,6 +62,7 @@ function RoomPage() {
             setTimer(data)
             if (timer === 0) {setTimeout(() => {}, 1000);}
             setRoundDeadline(Date.now() + timer*1000)
+
         })
     }, 1000);
 
@@ -52,13 +77,11 @@ function RoomPage() {
         socket.emit("timer")
 
         socket.on("timer_response", (data) => {
-            console.log("timer response", data)
                         setTimer(data)
             setRoundDeadline(Date.now() + timer*1000)
         })
 
     socket.on("vehicle_data:", (data) => {
-        console.log("Yeni ilan geldi:", data);
         setRealPrice(data.data["fiyat"]);
         setVehicleData(data);
     });
@@ -82,10 +105,7 @@ function RoomPage() {
 
 // Yeni round başlat
 const startNextRound = () => {
-    console.log("🔁 Tur bitti, top3 açıldı...");
     setShowResults(true)
-    const now = new Date();
-    console.log(now); // Full date and time
 
         socket.emit("take_all_data", roomName)
 
@@ -105,7 +125,6 @@ useEffect(() => {
     if (showResults) {
         const timer = setTimeout(() => {
             setShowResults(false); // Sonuç ekranını kapat
-            console.log("show results oldu suan")
         socket.emit("take_all_data", roomName)
         socket.emit("timer")
 
@@ -163,6 +182,7 @@ useEffect(() => {
                                 vehicle_data={vehicleData}
                                 isAuthenticated={isAuthenticated}
                                 showResults={showResults}
+                                cookie={cookie}
 
                             />
                         )}
@@ -175,7 +195,9 @@ useEffect(() => {
                     </Grid>
                 </Grid>
             )}
-            <Chatbox />
+            <Chatbox
+            cookie={cookie}
+            />
         </Box>
     );
 }
