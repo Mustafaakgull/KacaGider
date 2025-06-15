@@ -76,7 +76,6 @@ class Verify(Resource):
             try:
                 db.session.add(new_user)
                 db.session.commit()
-                create_session(username)
                 return {"message": "User registered successfully"}, 201
             except Exception as e:
                 db.session.rollback()
