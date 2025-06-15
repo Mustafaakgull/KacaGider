@@ -19,6 +19,15 @@ def room_name_converter(room_name):
 def game_starts():
     pass
 
+def username_not_exists(username):
+    for key in redis_client.keys("session:*"):
+        try:
+            stored_username = redis_client.hget(key, "username")
+            if stored_username == username:
+                return False
+        except Exception as e:
+            print(f"Error checking {key}: {e}")
+    return True
 
 
 def game_finished():
@@ -51,15 +60,20 @@ def game_finished():
         # redis_client.zadd(f"leaderboard_top3:{room_name}", {k: int(v) for k, v in sorted_dict_desc.items()})
 
     # prop data
-    redis_client.zadd("leaderboard:otomobil", {"mustafa": "900"})
-    redis_client.zadd("leaderboard:otomobil", {"omer": "760"})
-    redis_client.zadd("leaderboard:otomobil", {"haitem": "120"})
+    # redis_client.zadd("leaderboard:otomobil", {"mustafa": "900"})
+    # redis_client.zadd("leaderboard:otomobil", {"omer": "760"})
 
 
 def set_all_user_price_zero():
     keys = redis_client.keys("guessed_prices:*")
     room_names = [key.split(':', 1)[1] for key in keys]
     for room_name in room_names:
+        users_in_leaderboard = redis_client.zrange(f'leaderboard:{room_name}', 0, -1)
+        for user in users_in_leaderboard:
+            if username_not_exists(user):
+                redis_client.zrem(f"leaderboard:{room_name}", user)
+                redis_client.hdel(f"guessed_prices:{room_name}", user)
+
         redis_client.delete(f"leaderboard_top3:{room_name}")
         users = redis_client.hkeys(f"guessed_prices:{room_name}")
         for hkey in users:

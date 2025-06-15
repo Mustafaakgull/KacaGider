@@ -140,11 +140,10 @@ def info_handler():
     #
     #     emit("leaderboard_data_top3", data)
     #
-    # @socketio.on("take_user_count")
-    # def send_user_count(room_name):
-    #     data = redis_client.hlen(room_name)
-    #     emit("room_user_count", data)
-
+    @socketio.on("take_user_count")
+    def send_user_count(room_name):
+        data = redis_client.zcard(f"leaderboard:{room_name}")
+        emit("room_user_count", data)
 
 def chat_handler():
 

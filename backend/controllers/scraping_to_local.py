@@ -6,7 +6,7 @@ import re
 
 def take_vehicle_info_locally():
 
-    number = random.randint(1,500)
+    number = random.randint(1,499)
     result_otomobil = redis_client.hgetall(f"info:otomobil{number}")
     result_motosiklet = redis_client.hgetall(f"info:motosiklet{number}")
     result_kiralik_araclar = redis_client.hgetall(f"info:kiralik-araclar{number}")

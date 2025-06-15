@@ -70,10 +70,22 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && isAuthenticated && guessCount < 3) {
-            setGuessCount(prev => prev + 1);
-            socketClick()
+            e.preventDefault();
+            const rawValue = e.target.value.replace(/\./g, "");
+            const num = Number(rawValue);
+
+            if (!isNaN(num)) {
+                setPrice(num);
+                setPriceInput(num.toLocaleString("tr-TR"));
+                setGuessCount(prev => prev + 1);
+                socket.emit("guess_button_clicked", num, cookie);
+                socket.once("hint_message", data => {
+                    setHint(data);
+                });
+            }
         }
     };
+
 
 
     const GuessControls = ({ onChange, disabled }) => {
@@ -311,7 +323,42 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                         },
                     ].map(({ key, label, icon }, i) => {
                         let value = product[key];
-                        if (label === "Body Type")
+                        let displayLabel = label;
+                        let displayIcon = icon;
+
+                        if (key === "Kasa Tipi") {
+                            if (!value || value.trim() === "" || value === "Belirtilmemiş") {
+                                value = product["Motosiklet Tipi"] || "Unknown";
+                            }
+                        }
+
+                        if (key === "Kilometre") {
+                            if (!value || value.trim() === "" || value === "Belirtilmemiş") {
+                                const raw = product["Ödeme Şekli"];
+                                displayLabel = "Payment Method";
+                                displayIcon = <LocalGasStationIcon fontSize="small" sx={{ color: "#fbc02d" }} />; // Para ikonu istersen değiştiririz
+
+                                value =
+                                    raw === "Hepsi" ? "All"
+                                        : raw === "Kredi Kartı" ? "Credit Card"
+                                            : raw === "Nakit" ? "Cash"
+                                                : raw || "Unknown";
+                            }
+                        }
+
+                        if (key === "Motor Gücü") {
+                            if (!value || value.trim() === "" || value === "Belirtilmemiş") {
+                                const raw = product["Kasko"];
+                                displayLabel = "Insurance";
+                                displayIcon = <WarningIcon fontSize="small" sx={{ color: "#fbc02d" }} />;
+
+                                value =
+                                    raw === "Yok" ? "No"
+                                        : raw === "Var" ? "Yes"
+                                            : raw || "Unknown";
+                            }
+                        }
+
                         if (label === "Gearbox")
                             value = value === "Manuel" ? "Manual"
                                 : value === "Otomatik" ? "Automatic"
@@ -332,8 +379,8 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                                         : value;
 
                         if (label === "Paint/Changed Parts")
-                            value = value === "Belirtilmemiş" ? "no"
-                                : "yes"
+                            value = value === "Belirtilmemiş" ? "no" : "yes";
+
 
 
                         return (
@@ -350,10 +397,11 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                                     color: "white",
                                 }}
                             >
-                                {icon}
+                                {displayIcon}
                                 <Typography variant="body2" sx={{ ml: 1 }}>
-                                    <strong>{label}:</strong> {value}
+                                    <strong>{displayLabel}:</strong> {value}
                                 </Typography>
+
                             </Box>
                         );
                     })}
@@ -368,7 +416,7 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     disabled={guessCount >= 3}
-                    placeholder={"0"}
+                    placeholder="0"
                     label="Your Guess"
                     fullWidth
                     sx={{
@@ -384,6 +432,15 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                             '&.Mui-focused fieldset': {
                                 borderColor: '#fff',
                             },
+                            '&.Mui-disabled': {
+                                color: '#ccc', // iç yazı rengi (soluk beyaz)
+                                '& fieldset': {
+                                    borderColor: '#888', // kenarlık (soluk beyaz)
+                                },
+                            },
+                        },
+                        '& .MuiInputBase-input.Mui-disabled': {
+                            color: '#ccc', // input içindeki text rengi
                         },
                         '& .MuiInputLabel-root': {
                             color: 'white',
@@ -391,10 +448,14 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                         '& .MuiInputLabel-root.Mui-focused': {
                             color: '#fff',
                         },
+                        '& .MuiInputLabel-root.Mui-disabled': {
+                            color: '#bbb', // label rengi disable olunca
+                        },
                     }}
                     InputProps={{ style: { color: 'white' } }}
                     InputLabelProps={{ style: { color: 'white' } }}
                 />
+
 
 
                 {feedback && (
@@ -441,12 +502,62 @@ const ProductCard = ({ vehicle_data, isAuthenticated, showResults, cookie}) => {
                 >
                     Submit Guess
                 </Button>
-                <Box sx={{color:'#fff'}}> {hint} </Box>
+                {guessCount > 0 &&
+                        <Box
+                        sx={{
+                            mt: 2,
+                            backgroundColor: '#801919',
+                            borderRadius: '4px',
+                            px: 2,
+                            py: 0.5,
+                            display: 'inline-block',
+                        }}
+                    >
+                        <Box display="flex" justifyContent="center" alignItems="center">
+                            <Typography
+                                sx={{
+                                    color: '#ff6961',
+                                    fontSize: '16px',
+                                    fontWeight: 500,
+                                    width: '300px',
+                                    height: '25px',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                {hint}
+                            </Typography>
+                        </Box>
+
+                    </Box>}
                 {!isAuthenticated && (
-                    <Typography sx={{ mt: 2 }} color="error">
-                        Lütfen tahmin yapmak için giriş yapın.
-                    </Typography>
+                    <Box
+                        sx={{
+                            mt: 2,
+                            backgroundColor: '#801919',
+                            borderRadius: '4px',
+                            px: 2,
+                            py: 0.5,
+                            display: 'inline-block',
+                        }}
+                    >
+                        <Box display="flex" justifyContent="center" alignItems="center">
+                            <Typography
+                                sx={{
+                                    color: '#ff6961',
+                                    fontSize: '16px',
+                                    fontWeight: 500,
+                                    width: '300px',
+                                    height: '25px',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                Please login to play
+                            </Typography>
+                        </Box>
+
+                    </Box>
                 )}
+
             </CardContent>
         </Card>
     );

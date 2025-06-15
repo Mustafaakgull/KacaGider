@@ -8,16 +8,19 @@ import { useNavigate } from "react-router-dom";
 import { SocketContext } from '../../SocketioConnection.jsx';
 
 import {  TwoWheeler } from "@mui/icons-material";
-
+import GarageIcon from '@mui/icons-material/Garage';
 const iconMap = {
-    Car: <Car size={66} className={'category-icon'}/>,
-    Bike: <FaMotorcycle size={66} className={'category-icon'} />,
+    Car: <Car size={66} className={'category-icon'} />,
+    Motorcycle: <FaMotorcycle size={66} className={'category-icon'} />,
+    'Rented-Vehicles': <GarageIcon className={'category-icon'} style={{ fontSize: 66 }} />,
 };
+
 
 
 function CategoryCard({ category, cookie }) {
     const socket = useContext(SocketContext);
     const navigate = useNavigate(); // ← hook tanımı
+
 
 
 
@@ -32,9 +35,8 @@ function CategoryCard({ category, cookie }) {
         <Card className="card-container" onClick={handleClick}>
             <CardContent className={'content'}>
                 <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-                    {iconMap[category.name] || <TwoWheeler className={'category-icon'}/>}
+                    {iconMap[category.name] || <GarageIcon className={'category-icon'}/>}
                     <Typography variant="h6">{category.name}</Typography>
-                    <Typography variant="body1">{category.player} </Typography>
                 </Box>
             </CardContent>
         </Card>

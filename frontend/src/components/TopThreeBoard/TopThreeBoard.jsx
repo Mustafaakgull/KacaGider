@@ -36,7 +36,8 @@ const TopThreeBoard = ({ realPrice, topThree, secondsLeft = 5 }) => {
             </Typography>
 
             <Typography variant="h6" fontWeight="bold" color="lightgreen" mb={3}>
-                Real Price: {realPrice.toLocaleString("tr-TR")} ₺
+                Real Price: {Number(realPrice).toLocaleString("tr-TR")} ₺
+
             </Typography>
 
             {topThree.map((user, index) => (
